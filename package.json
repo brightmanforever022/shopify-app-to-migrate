@@ -1,0 +1,47 @@
+{
+  "name": "display4sale-order",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --dest public/frontend src/main.js"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "@rails/webpacker": "^4.0.7",
+    "@shopify/app-bridge-react": "^1.6.7",
+    "@shopify/polaris": "^3.21.0",
+    "axios": "^0.19.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "connected-react-router": "^6.5.2",
+    "jquery": "^3.4.1",
+    "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-currency-format": "^1.0.0",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "react-router-redux": "^4.0.8",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.0.5",
+    "redux-thunk": "^2.3.0",
+    "regenerator-runtime": "^0.13.3",
+    "resolve-url-loader": "^3.1.0",
+    "vue": "^2.6.10",
+    "vue-fragment": "^1.5.1",
+    "vue-i18n": "^8.14.0",
+    "vue-loading-overlay": "^3.2.0",
+    "vue-router": "^3.1.2",
+    "vuex": "^3.1.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.3.1",
+    "vue-template-compiler": "^2.6.10",
+    "webpack-dev-server": "^3.7.2"
+  }
+}

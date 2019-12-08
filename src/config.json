@@ -1,0 +1,4 @@
+{
+  "API_HOST": "https://display4sale-order-app.herokuapp.com/",
+  "API_NAMESPACE": "api/frontend"
+}

@@ -1,0 +1,21 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Displays 4 Sale Orders
+    = csrf_meta_tags
+    = csp_meta_tag
+    %link{:href => "https://sdks.shopifycdn.com/polaris/3.21.0/polaris.min.css", :rel => "stylesheet"}/
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+    = javascript_pack_tag 'application'
+  %body
+    .app-wrapper
+      .app-content
+        %main{:role => "main"}
+          = yield
+    = render 'layouts/flash_messages'
+    %script{:src => "https://cdn.shopify.com/s/assets/external/app.js?#{Time.now.strftime('%Y%m%d%H')}"}
+    - if content_for?(:javascript)
+      #ContentForJavascript
+        = yield :javascript
