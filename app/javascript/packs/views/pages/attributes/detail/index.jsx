@@ -32,6 +32,8 @@ class NewAttribute extends Component {
       confirming: false,
       confirmModal: false
     }
+
+    this.handleTypeChange = this.handleTypeChange.bind(this)
   }
 
   componentWillMount () {
@@ -61,10 +63,16 @@ class NewAttribute extends Component {
         }
       })
     }
+
   }
 
   handleChange = property => value => {
     this.setState({[property]: value})
+  }
+
+  handleTypeChange = event => {
+    console.log("type value: ", event.target.value)
+    this.setState({price_type: event.target.value})
   }
 
   handleSave = () => {
@@ -114,12 +122,7 @@ class NewAttribute extends Component {
     }
 
     const secondaryActions = null
-
-    const priceTypeOptions = [
-      {label: 'Add on', value: false},
-      {label: 'Percent', value: true}
-    ]
-
+    
     return (
       <Fragment>
         {
@@ -156,12 +159,13 @@ class NewAttribute extends Component {
                           onChange={this.handleChange('price')}
                           label="Price"
                         />
-                        <Select
-                          label="Upcharge Type"
-                          options={priceTypeOptions}
-                          onChange={this.handleChange('price_type')}
-                          value={price_type}
-                        />
+                        <label>
+                          Upcharge Type<br/>
+                          <select value={price_type} onChange={this.handleTypeChange} className="select-type">
+                            <option value="false">Add On</option>
+                            <option value="true">Percent</option>
+                          </select>
+                        </label>
                         <TextField
                           value={attribute_code}
                           onChange={this.handleChange('attribute_code')}
