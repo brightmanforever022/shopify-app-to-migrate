@@ -71,7 +71,6 @@ class NewAttribute extends Component {
   }
 
   handleTypeChange = event => {
-    console.log("type value: ", event.target.value)
     this.setState({price_type: event.target.value})
   }
 

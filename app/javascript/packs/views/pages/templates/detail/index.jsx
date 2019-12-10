@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup } from '@shopify/polaris'
+import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon } from '@shopify/polaris'
 import { SearchMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 import ProductPicker from '../shared/product-picker'
@@ -28,7 +28,7 @@ class NewTemplate extends Component {
       modal: false,
       modalType: 'variant',
       product: null,
-      lable: '',
+      label: '',
       id: null,
       variants: [],
       groups: [],
@@ -37,8 +37,15 @@ class NewTemplate extends Component {
       saving: false,
       confirming: false,
       confirmModal: false,
-      selecteds: []
+      selecteds: [],
+      deselectedAttributeOptions: [],
+      attributeOptions: [],
+      selectedAttributeOptions: [],
+      inputAttributeValue: '',
+      newOptionShow: []
     }
+
+    this.handlePriceType = this.handlePriceType.bind(this)
   }
 
   componentWillMount () {
@@ -54,11 +61,30 @@ class NewTemplate extends Component {
       this.props.loadTemplate({
         id,
         cb: data => {
+          var attributeList = data.attributeList.map(att => {
+            return {
+              value: att.id,
+              label: att.label,
+              price: att.price,
+              price_type: att.price_type,
+              weight: att.weight,
+              width: att.width,
+              length: att.length,
+              girth: att.girth,
+              attribute_code: att.attibute_code ? att.attribute_code : ''
+            }
+          })
+          var newOptionShow = []
+          for (let i = 0; i < data.template.groups.length; i++) {
+            newOptionShow[i] = false            
+          }
           this.setState({
             variants: data.variants.data.nodes,
             groups: data.template.groups,
             label: data.template.label,
-            loading: false
+            loading: false,
+            deselectedAttributeOptions: attributeList,
+            newOptionShow: newOptionShow
           })
         }
       })
@@ -107,9 +133,9 @@ class NewTemplate extends Component {
     this.props.loadVariant({
       id,
       cb: data => {
-        groups[index].items[key].shopify_variant_id = id
-        groups[index].items[key].price = Number(data.data.price)
-        groups[index].items[key].shopify_variant_title = data.data.displayName
+        groups[index].dattributes[key].shopify_variant_id = id
+        groups[index].dattributes[key].price = Number(data.data.price)
+        groups[index].dattributes[key].shopify_variant_title = data.data.displayName
         this.setState({
           groups: groups
         })
@@ -133,7 +159,7 @@ class NewTemplate extends Component {
     let default_group = {
       label: '',
       is_required: false,
-      items: []
+      dattributes: []
     }
     this.setState({
       groups: [...groups, default_group]
@@ -154,21 +180,33 @@ class NewTemplate extends Component {
   }
 
   addOption = index => {
-    let default_option = {
-      label: '',
-      price: 0,
-      quantity: 1,
-      shopify_variant_id: null,
-      shopify_variant_title: null
-    }
-    let { groups } = this.state
-    groups[index].items = [...groups[index].items, default_option]
-    this.setState({groups: groups})
+    // let default_option = {
+    //   label: '',
+    //   price: 0,
+    //   price_type: false,
+    //   weight: 0,
+    //   width: 0,
+    //   length: 0,
+    //   girth: 0,
+    //   attribute_code: ''
+    // }
+    // let { groups } = this.state
+    // groups[index].dattributes = [...groups[index].dattributes, default_option]
+    // this.setState({groups: groups})
+    var newOptionShow = this.state.newOptionShow
+    newOptionShow[index] = true
+    this.setState({newOptionShow: newOptionShow})
   }
 
   handleItem = (property, index, key) => value => {
     let { groups } = this.state
-    groups[index].items[key][property] = value
+    groups[index].dattributes[key][property] = value
+    this.setState({groups: groups})
+  }
+
+  handlePriceType = (index, key) => evt => {
+    let { groups } = this.state
+    groups[index].dattributes[key]['price_type'] = evt.target.value
     this.setState({groups: groups})
   }
 
@@ -182,8 +220,8 @@ class NewTemplate extends Component {
 
   removeItem = (index, key) => {
     let {groups} = this.state
-    let items = groups[index].items.filter((item, i) => i !== +key)
-    groups[index].items = items
+    let dattributes = groups[index].dattributes.filter((item, i) => i !== +key)
+    groups[index].dattributes = dattributes
     this.setState({groups: groups})
   }
 
@@ -219,25 +257,61 @@ class NewTemplate extends Component {
     }
   }
 
-  assignVariant = (index, key) => {
-    const { groups } = this.state
-    let variant_id = groups[index].items[key].shopify_variant_id
-    const selecteds = variant_id ? [variant_id] : []
-    this.setState({
-      index,
-      key,
-      modalType: 'variant',
-      selecteds: selecteds,
-      modal: true
-    })
-  }
-
   convertId = graphId => {
     return Number(graphId.split('/')[graphId.split('/').length - 1])
   }
 
+  updateAttributeText = index => value => {
+    console.log('index: ', index)
+    console.log('value: ', value)
+    this.setState({inputAttributeValue: value})
+    
+    if (value === '') {
+      this.setState({attributeOptions: this.state.deselectedAttributeOptions})
+      return
+    }
+    
+    const filterRegex = new RegExp(value, 'i')
+    const resultOptions = this.state.deselectedAttributeOptions.filter((option) => {
+      return option.label.match(filterRegex)
+    })
+    this.setState({attributeOptions: resultOptions})
+  }
+
+  updateAttributeSelection = index => selected => {
+    console.log('index: ', index)
+    console.log('selected: ', selected)
+    const selectedValue = selected.map((selectedItem) => {
+      const matchedOption = this.state.attributeOptions.find((option) => option.value.toString().match(selectedItem))
+      return matchedOption
+    })
+
+    this.setState({selectedAttributeOptions: selected})
+    this.setState({inputAttributeValue: selectedValue[0].label})
+    console.log('result: ', selectedValue)
+
+    let newOption = {
+      id: selectedValue[0].value,
+      label: selectedValue[0].label,
+      price: selectedValue[0].price,
+      price_type: selectedValue[0].price_type,
+      weight: selectedValue[0].weight,
+      width: selectedValue[0].width,
+      length: selectedValue[0].length,
+      girth: selectedValue[0].girth,
+      attribute_code: selectedValue[0].attribute_code
+    }
+    let { groups } = this.state
+    groups[index].dattributes = [...groups[index].dattributes, newOption]
+
+    var newOptionShow = this.state.newOptionShow
+    newOptionShow[index] = false
+    this.setState({groups: groups, newOptionShow: newOptionShow})
+    console.log('groups: ', this.state.groups)
+  }
+
   render () {
-    const { label, loading, modal, productVariant, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds } = this.state
+    const { label, loading, modal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -346,6 +420,15 @@ class NewTemplate extends Component {
                   sectioned
                 >
                   {groups.map((group, index) => {
+                    const attributeTextField = (
+                      <Autocomplete.TextField
+                        onChange={this.updateAttributeText(index)}
+                        label="Items"
+                        value={inputAttributeValue}
+                        prefix={<Icon source={SearchMinor} color="inkLighter" />}
+                        placeholder="Search"
+                      />
+                    )
                     return (
                       <Card.Section
                         key={index}
@@ -369,7 +452,7 @@ class NewTemplate extends Component {
                         </Stack>
                         <Card.Subsection>
                         {
-                          group.items.length > 0 && group.items.map((item, key) => {
+                          group.dattributes.length > 0 && group.dattributes.filter(attribute => attribute.label != '').map((item, key) => {
                             return (
                               <Fragment
                                 key={key}
@@ -388,30 +471,73 @@ class NewTemplate extends Component {
                                     type="number"
                                     min="0"
                                   />
+                                  <label>
+                                    Upcharge Type<br/>
+                                    <select value={item.price_type} onChange={this.handlePriceType(index, key)} className="select-type">
+                                      <option value="false">Add On</option>
+                                      <option value="true">Percent</option>
+                                    </select>
+                                  </label>
                                   <TextField
-                                    value={item.quantity}
-                                    onChange={this.handleItem('quantity', index, key)}
-                                    label="Quantity"
+                                    value={item.weight}
+                                    onChange={this.handleItem('weight', index, key)}
+                                    label="Weight"
                                     type="number"
-                                    min="1"
+                                    min="0"
+                                  />
+                                  <TextField
+                                    value={item.width}
+                                    onChange={this.handleItem('width', index, key)}
+                                    label="Width"
+                                    type="number"
+                                    min="0"
+                                  />
+                                  <TextField
+                                    value={item.length}
+                                    onChange={this.handleItem('length', index, key)}
+                                    label="Length"
+                                    type="number"
+                                    min="0"
+                                  />
+                                  <TextField
+                                    value={item.girth}
+                                    onChange={this.handleItem('girth', index, key)}
+                                    label="Girth"
+                                    type="number"
+                                    min="0"
+                                  />
+                                  <TextField
+                                    value={item.attribute_code}
+                                    onChange={this.handleItem('attribute_code', index, key)}
+                                    label="Attribute Code"
                                   />
                                   <div className="action-btn mt-25">
                                     <ButtonGroup segmented>
-                                      <Button onClick={() => {this.assignVariant(index, key)}}>Add variant</Button>
                                       <Button onClick={() => {this.removeItem(index, key)}}>Remove</Button>
                                     </ButtonGroup>
                                   </div>
                                 </FormLayout.Group>
-                                <TextStyle
-                                  variation={item.shopify_variant_title ? '' : 'subdued'}
-                                >
-                                  <p className="ml-25 mt-5">{item.shopify_variant_title ? item.shopify_variant_title : 'No variant is assigned'}</p>
-                                </TextStyle>
+                                
                               </Fragment>
                             )
                           })
                         }
                         </Card.Subsection>
+                        
+                        {
+                          this.state.newOptionShow[index] ?
+                            <Card.Subsection>
+                                <Autocomplete
+                                options={attributeOptions}
+                                selected={selectedAttributeOptions}
+                                onSelect={this.updateAttributeSelection(index)}
+                                textField={attributeTextField}
+                                key={index}
+                              />
+                            </Card.Subsection>
+                            : null
+                        }
+                        
                       </Card.Section>
                     )
                   })}

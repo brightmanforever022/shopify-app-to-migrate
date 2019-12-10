@@ -74,6 +74,11 @@ class Api::V1::AttributesController < AuthenticatedController
     end
   end
 
+  def search_options
+    attributes = Dattribute
+      .filtered_attributes(attribute_index_params)
+      .limit(10)
+  end
   private
     def attribute_params
       params.except(:id, :controller, :action, :attribute)

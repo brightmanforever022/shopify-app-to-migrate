@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       get 'products/variants/:id' => 'products#load_variant'
       resources :templates
       resources :attributes
+      get 'attributes/list/options' => 'attributes#search_options'
     end
 
     namespace :frontend do

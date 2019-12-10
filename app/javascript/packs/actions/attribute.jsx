@@ -1,5 +1,6 @@
 import {
     LOAD_ATTRIBUTES,
+    SEARCH_ATTRIBUTES,
     LOAD_ATTRIBUTE,
     CREATE_ATTRIBUTE,
     UPDATE_ATTRIBUTE,
@@ -8,6 +9,11 @@ import {
   
   export const loadAttributes = (data) => ({
     type: LOAD_ATTRIBUTES,
+    data: data
+  })
+
+  export const searchAttributes = (data) => ({
+    type: SEARCH_ATTRIBUTES,
     data: data
   })
   

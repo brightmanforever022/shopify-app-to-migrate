@@ -6,6 +6,7 @@ import getMsgText from '../helper/toastMessage'
 
 import {
   LOAD_ATTRIBUTES,
+  SEARCH_ATTRIBUTES,
   LOAD_ATTRIBUTE,
   CREATE_ATTRIBUTE,
   ATTRIBUTES_TOGGLE,
@@ -32,6 +33,29 @@ function* loadAttributes({data}) {
     res = yield call(
       request.get,
       `/attributes`,
+      {params: data}
+    )
+  } catch (error) {
+    yield put(errorHandler(error))
+  } finally {
+    if (res) {
+      yield put({
+        type: ATTRIBUTES_TOGGLE,
+        payload: {
+          ...res.data
+        }
+      })
+      data.cb && data.cb(res.data)
+    }
+  }
+}
+
+function* searchAttributes({data}) {
+  let res
+  try {
+    res = yield call(
+      request.get,
+      `/attributes/list/options`,
       {params: data}
     )
   } catch (error) {
@@ -147,6 +171,7 @@ function* deleteAttribute({data}) {
 
 export function* attribute() {
   yield takeLatest(LOAD_ATTRIBUTES, loadAttributes)
+  yield takeLatest(SEARCH_ATTRIBUTES, searchAttributes)
   yield takeLatest(LOAD_ATTRIBUTE, loadAttribute)
   yield takeLatest(CREATE_ATTRIBUTE, createAttribute)
   yield takeLatest(UPDATE_ATTRIBUTE, updateAttribute)
