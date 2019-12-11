@@ -78,6 +78,8 @@ class Api::V1::AttributesController < AuthenticatedController
     attributes = Dattribute
       .filtered_attributes(attribute_index_params)
       .limit(10)
+
+    http_success_response({attributes: attributes})
   end
   private
     def attribute_params

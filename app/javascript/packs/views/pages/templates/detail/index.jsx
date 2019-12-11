@@ -20,6 +20,10 @@ import {
   updateTemplate
 } from '../../../../actions/template'
 
+import {
+  searchAttributes
+} from '../../../../actions/attribute'
+
 class NewTemplate extends Component {
   constructor(props) {
     super(props)
@@ -262,25 +266,44 @@ class NewTemplate extends Component {
   }
 
   updateAttributeText = index => value => {
-    console.log('index: ', index)
-    console.log('value: ', value)
+    // console.log('index: ', index)
+    // console.log('value: ', value)
     this.setState({inputAttributeValue: value})
     
     if (value === '') {
       this.setState({attributeOptions: this.state.deselectedAttributeOptions})
       return
     }
-    
-    const filterRegex = new RegExp(value, 'i')
-    const resultOptions = this.state.deselectedAttributeOptions.filter((option) => {
-      return option.label.match(filterRegex)
+    this.props.searchAttributes({
+      searchText: value,
+      cb: data => {
+        // console.log('data: ', data)
+        var attributeList = data.attributes.map(att => {
+          return {
+            value: att.id,
+            label: att.label,
+            price: att.price,
+            price_type: att.price_type,
+            weight: att.weight,
+            width: att.width,
+            length: att.length,
+            girth: att.girth,
+            attribute_code: att.attibute_code ? att.attribute_code : ''
+          }
+        })
+        this.setState({deselectedAttributeOptions: attributeList, attributeOptions: attributeList})
+      }
     })
-    this.setState({attributeOptions: resultOptions})
+    // const filterRegex = new RegExp(value, 'i')
+    // const resultOptions = this.state.deselectedAttributeOptions.filter((option) => {
+    //   return option.label.match(filterRegex)
+    // })
+    // this.setState({attributeOptions: resultOptions})
   }
 
   updateAttributeSelection = index => selected => {
-    console.log('index: ', index)
-    console.log('selected: ', selected)
+    // console.log('index: ', index)
+    // console.log('selected: ', selected)
     const selectedValue = selected.map((selectedItem) => {
       const matchedOption = this.state.attributeOptions.find((option) => option.value.toString().match(selectedItem))
       return matchedOption
@@ -288,7 +311,7 @@ class NewTemplate extends Component {
 
     this.setState({selectedAttributeOptions: selected})
     this.setState({inputAttributeValue: selectedValue[0].label})
-    console.log('result: ', selectedValue)
+    // console.log('result: ', selectedValue)
 
     let newOption = {
       id: selectedValue[0].value,
@@ -307,7 +330,7 @@ class NewTemplate extends Component {
     var newOptionShow = this.state.newOptionShow
     newOptionShow[index] = false
     this.setState({groups: groups, newOptionShow: newOptionShow})
-    console.log('groups: ', this.state.groups)
+    // console.log('groups: ', this.state.groups)
   }
 
   render () {
@@ -587,7 +610,8 @@ const mapDispatchToProps = {
   createTemplate,
   deleteTemplate,
   updateTemplate,
-  loadVariants
+  loadVariants,
+  searchAttributes
 }
 
 export default connect(
