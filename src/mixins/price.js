@@ -9,11 +9,11 @@ export default {
       template: 'template/template_by_variant',
     }),
     calculated_item_price () {
-      let add_on_prices = this.options.length > 0 ? this.options.map(opt => opt.price).reduce((prev, next) => prev + next) : 0
+      let add_on_prices = this.options.length > 0 ? this.options.map(opt => opt.price ? (opt.price_type ? Number(this.variant.price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
       return Number(this.variant.price) + add_on_prices
     },
     calculated_price () {
-      let add_on_prices = this.options.length > 0 ? this.options.map(opt => opt.price).reduce((prev, next) => prev + next) : 0
+      let add_on_prices = this.options.length > 0 ? this.options.map(opt => opt.price ? (opt.price_type ? Number(this.variant.price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
       return (Number(this.variant.price) + add_on_prices) * this.quantity
     },
     fully_customized () {

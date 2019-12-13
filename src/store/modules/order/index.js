@@ -50,7 +50,8 @@ const order = {
     UPSERT_OPTION: (state, option) => {
       let options = state.custom_options
       if (option) {
-        options = options.filter(opt => opt.group_id !== option.group_id)
+        // options = options.filter(opt => opt.group_id !== option.group_id)
+        options = options.filter(opt => opt.group !== option.group)
         options = [...options, option]
         state.custom_options = options
       }

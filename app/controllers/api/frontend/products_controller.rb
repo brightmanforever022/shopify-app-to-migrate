@@ -14,7 +14,7 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
       variants: {},
       groups: {
         include: {
-          items: {
+          dattributes: {
             except: [:created_at, :updated_at]
           }
         }

@@ -48,7 +48,7 @@
             >
               <option selected disabled></option>
               <option
-                v-for="(item, key) in group.items"
+                v-for="(item, key) in group.dattributes"
                 :key="key"
                 :value="item.id"
               >
@@ -58,7 +58,7 @@
           </div>
           <div
             class="form__errors"
-            v-if="!customized(group.id)"
+            v-if="!customized(group.label)"
           >
             This option requires changes. Click to review.
           </div>
@@ -256,7 +256,7 @@ export default {
       let group_id = evt.target.dataset.group
       let item_id = evt.target.value
       let group = this.group(evt.target.dataset.group)
-      let item = group.items.find(i => i.id === +item_id)
+      let item = group.dattributes.find(i => i.id === +item_id)
       item['group'] = group.label
       try {
         const customOptions = await this.$store.dispatch('order/upsert_customization', item)
@@ -268,8 +268,11 @@ export default {
       this.is_opened = false
       $('.product__details').css('z-index', 'initial')
     },
-    customized (group_id) {
-      return this.options.map(opt => opt.group_id).includes(group_id)
+    // customized (group_id) {
+    //   return this.options.map(opt => opt.group_id).includes(group_id)
+    // },
+    customized (group_label) {
+      return this.options.map(opt => opt.group).includes(group_label)
     },
     async addToCart () {
       if (!this.fully_customized && this.customizable) {

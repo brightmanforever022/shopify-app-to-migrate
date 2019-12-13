@@ -72,8 +72,7 @@ const cart = {
             }
           })
         }
-        console.log('price rule: ', discount)
-
+        
         commit('SET_DISCOUNT', discount)
       } catch (error) {
         console.log(error)
@@ -87,10 +86,9 @@ const cart = {
         const orderDiscount = getters.get_discount.toFixed(2)
         const orderFreightShipping = getFreightShippingPrice(state.freight_shipping).toFixed(2)
         const orderTax = (getters.get_sub_total * 0.08625).toFixed(2)
-        console.log('order discount amount: ', orderDiscount)
         const draftOrder = await createOrder({lineItems: state.line_items, discountRule: state.discount_data, orderFreightShipping: orderFreightShipping, orderTax: orderTax})
-
-        console.log('invoice: ', draftOrder.data.draft_order)
+        // Make cart empty
+        commit('SET_CART', [])
         return draftOrder.data.draft_order.invoice_url
       } catch (err) {
         console.log(err)

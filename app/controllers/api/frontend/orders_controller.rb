@@ -99,26 +99,26 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
           if discountValid && !discountTarget
             customItem = {
               variant_id: option[:shopify_variant_id],
-              quantity: item[:quantity] * option[:quantity],
+              quantity: item[:quantity],
               applied_discount: {
                 description: 'custom item',
                 title: 'custom item',
                 value_type: discountType,
                 value: discountValue,
-                amount: discountType=='percentage' ? option[:price] * item[:quantity] * option[:quantity] * discountValue / 100 : 0
+                amount: discountType=='percentage' ? option[:price] * item[:quantity] * discountValue / 100 : 0
               }
             }
           else
             customItem = {
               variant_id: option[:shopify_variant_id],
-              quantity: item[:quantity] * option[:quantity]
+              quantity: item[:quantity]
             }
           end
         else
           if discountValid && !discountTarget
             customItem = {
               title: option[:label],
-              quantity: item[:quantity] * option[:quantity],
+              quantity: item[:quantity],
               price: option[:price],
               requires_shipping: true,
               applied_discount: {
@@ -126,16 +126,25 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
                 title: 'custom item',
                 value_type: discountType,
                 value: discountValue,
-                amount: discountType=='percentage' ? option[:price] * item[:quantity] * option[:quantity] * discountValue / 100 : 0
+                amount: discountType=='percentage' ? option[:price] * item[:quantity] * discountValue / 100 : 0
               }
             }
           else
-            customItem = {
-              title: option[:label],
-              quantity: item[:quantity] * option[:quantity],
-              price: option[:price],
-              requires_shipping: true
-            }
+            if option[:price_type]
+              customItem = {
+                title: option[:label],
+                quantity: item[:quantity],
+                price: item[:original_price].to_f * option[:price].to_f / 100,
+                requires_shipping: false
+              }
+            else
+              customItem = {
+                title: option[:label],
+                quantity: item[:quantity],
+                price: option[:price],
+                requires_shipping: true
+              }
+            end
           end
         end
         line_items << customItem
@@ -188,11 +197,10 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       if endsAt.present?
         discountEndsAt = Time.new(endsAt).to_i
       end
-      return (currentDate >= discountStartsAt) && (endsAt ? (currentDate <= discountEndsAt) : true)
+      return (currentDate >= discountStartsAt) && (endsAt.present? ? (currentDate <= discountEndsAt) : true)
     else
       return false
     end
   end
-
 
 end

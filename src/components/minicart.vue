@@ -81,7 +81,7 @@
               <span>$0.00</span>
             </li>
             <li @click.prevent="freightShipping(2)" id="freight-shipping-option-2">
-              <span>Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service</span>
+              <span>Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)</span>
               <span>$125.00</span>
             </li>
             <li @click.prevent="freightShipping(3)" id="freight-shipping-option-3">
