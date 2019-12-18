@@ -11,3 +11,13 @@
   margin-top: 4px;
   font-size: 14px;
 }
+
+.Polaris-ResourceList-Item--persistActions {
+  .Polaris-ResourceList-Item__Actions {
+    height: 6rem;
+  }
+}
+
+.Polaris-ResourceList-Item {
+  cursor: default;
+}
