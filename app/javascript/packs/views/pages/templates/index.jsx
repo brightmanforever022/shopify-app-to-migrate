@@ -4,7 +4,7 @@ import { SearchMinor, DeleteMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 
 import ConfirmModal from '../../components/confirm-modal'
-import './template.scss'
+// import './template.scss'
 import {
   loadTemplates,
   deleteTemplate
@@ -106,7 +106,7 @@ class Template extends Component {
       size="medium"
       source={thumbnail ? thumbnail : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'}
     />
-    const shortcutActions = [{content: 'Edit', icon: '', onAction: () => this.editTemplate(id) }, {content: '', icon: DeleteMinor, onAction: () => this.handleDelete(id)}]
+    const shortcutActions = [{content: 'Edit', icon: '', onAction: () => this.editTemplate(id)}, {content: '', icon: DeleteMinor, onAction: () => this.handleDelete(id)}]
     return (
       <ResourceList.Item
         id={id}
