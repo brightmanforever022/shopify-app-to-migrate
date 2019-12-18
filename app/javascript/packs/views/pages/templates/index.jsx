@@ -4,7 +4,6 @@ import { SearchMinor, DeleteMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 
 import ConfirmModal from '../../components/confirm-modal'
-// import './template.scss'
 import {
   loadTemplates,
   deleteTemplate
