@@ -424,11 +424,17 @@ class NewTemplate extends Component {
                     <Stack.Item fill>
                     </Stack.Item>
                     <Stack.Item>
-                      <Button
-                        onClick={() => {this.openModal('product')}}
-                      >
-                        Assign variants
-                      </Button>
+                      {/* <div className="mt-25"> */}
+                        <ButtonGroup>
+                          <Button primary onClick={() => {this.addGroup}}>New add-on</Button>
+                          <Button primary external={true} url="/attributes/new">New Attribute</Button>
+                          <Button
+                            onClick={() => {this.openModal('product')}}
+                          >
+                            Assign variants
+                          </Button>
+                        </ButtonGroup>
+                      {/* </div> */}
                     </Stack.Item>
                   </Stack>
                 </Card>
@@ -468,7 +474,6 @@ class NewTemplate extends Component {
                             <div className="mt-25">
                               <ButtonGroup>
                                 <Button onClick={() => {this.removeGroup(index)}}>Remove</Button>
-                                <Button onClick={() => {this.addOption(index)}}>Add option</Button>
                               </ButtonGroup>
                             </div>
                           </Stack.Item>
@@ -536,6 +541,8 @@ class NewTemplate extends Component {
                                   />
                                   <div className="action-btn mt-25">
                                     <ButtonGroup segmented>
+                                      <Button primary>Add exclusions</Button>
+                                      <Button external url={"/attributes/" + item.id + "/edit"}>Edit Attribute</Button>
                                       <Button onClick={() => {this.removeItem(index, key)}}>Remove</Button>
                                     </ButtonGroup>
                                   </div>
@@ -560,7 +567,13 @@ class NewTemplate extends Component {
                             </Card.Subsection>
                             : null
                         }
-                        
+
+                        <Card.Subsection>
+                          <div className="align-right">
+                            <Button primary onClick={() => {this.addOption(index)}}>Add option</Button>
+                          </div>
+                        </Card.Subsection>
+
                       </Card.Section>
                     )
                   })}
