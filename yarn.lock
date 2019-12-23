@@ -1000,6 +1000,11 @@
   resolved "https://registry.yarnpkg.com/@shopify/polaris-icons/-/polaris-icons-3.8.0.tgz#b430c6633855876c792996a569f1e84e86133573"
   integrity sha512-zqHI0P5W7HKY+vO/YYMqPfyBB7MMyvpDGYJ55wqMiVmTdnCcij3lf+Arnh0z49dH/8i0UEEdvdEpIdQ4IL3s5Q==
 
+"@shopify/polaris-icons@^3.8.0":
+  version "3.8.0"
+  resolved "https://registry.npm.taobao.org/@shopify/polaris-icons/download/@shopify/polaris-icons-3.8.0.tgz#b430c6633855876c792996a569f1e84e86133573"
+  integrity sha1-tDDGYzhVh2x5KZalafHoToYTNXM=
+
 "@shopify/polaris-tokens@^2.6.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@shopify/polaris-tokens/-/polaris-tokens-2.7.0.tgz#6e36249d3c7bcbedbd079f4c5e6e35e4f12c45af"

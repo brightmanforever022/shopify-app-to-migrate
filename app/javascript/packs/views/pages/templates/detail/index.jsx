@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon } from '@shopify/polaris'
-import { SearchMinor } from '@shopify/polaris-icons'
+import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, ResourceList, ResourceItem } from '@shopify/polaris'
+import { SearchMinor, DeleteMajorMonotone } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 import ProductPicker from '../shared/product-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
@@ -107,6 +107,10 @@ class NewTemplate extends Component {
 
   togglePicker = modal => {
     this.setState({modal})
+  }
+
+  testAction = id => {
+    console.log('option id: ', id)
   }
 
   setPicker = params => {
@@ -222,9 +226,9 @@ class NewTemplate extends Component {
     this.setState({[property]: value})
   }
 
-  removeItem = (index, key) => {
+  removeItem = (index, itemId) => {
     let {groups} = this.state
-    let dattributes = groups[index].dattributes.filter((item, i) => i !== +key)
+    let dattributes = groups[index].dattributes.filter((item, i) => item.id !== +itemId)
     groups[index].dattributes = dattributes
     this.setState({groups: groups})
   }
@@ -333,6 +337,44 @@ class NewTemplate extends Component {
     // console.log('groups: ', this.state.groups)
   }
 
+  renderItem = index => item => {
+    const { id, label, price, price_type, length, width, girth, attribute_code, weight } = item
+    const shortcutActions = [
+      {
+        content: <Button primary>Add exclusions</Button>,
+        onAction: () => this.testAction(id)
+      },
+      {
+        content: <Button external url={"/attributes/" + id + "/edit"}>Edit option</Button>
+      },
+      {
+        content: <Button icon={DeleteMajorMonotone}></Button>,
+        onAction: () => this.removeItem(index, item.id)
+      }
+    ]
+    return (
+      <ResourceList.Item
+        id={id}
+        accessibilityLabel={`View details for ${label}`}
+        // shortcutActions={shortcutActions}
+        persistActions
+      >
+        <div className="attribute-item" key={item.id}>
+          <div className="option-item">{ label }</div>
+          <div className="option-item">{ (price_type ? '' : '$') + price + (price_type ? ' %' : '') }</div>
+          <div className="option-item">{ weight + 'kg' }</div>
+          <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }</div>
+          <div className="option-item">{ attribute_code }</div>
+        </div>
+        <div className="attribute-action-list mt-25" key={item.id}>
+          <div className="attribute-action"><Button primary>Add exclusions</Button></div>
+          <div className="attribute-action"><Button external url={"/attributes/" + id + "/edit"}>Edit option</Button></div>
+          <div className="attribute-action"><Button icon={DeleteMajorMonotone}></Button></div>
+        </div>
+      </ResourceList.Item>
+    )
+  }
+
   render () {
     const { label, loading, modal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions } = this.state
     const primaryAction = {
@@ -340,6 +382,8 @@ class NewTemplate extends Component {
       loading: saving,
       onAction: this.handleSave
     }
+
+    
 
     const secondaryActions = null
 
@@ -458,6 +502,14 @@ class NewTemplate extends Component {
                         placeholder="Search"
                       />
                     )
+
+                    // group.dattributes.map((item, key) => {
+                    //   var row = [item.label, (item.price_type ? '' : '$') + item.price + (item.price_type ? ' %' : ''), item.weight + 'kg',
+                    //               item.length + '" x ' + item.width + '" x ' + item.girth + '"', item.attribute_code]
+                    //   rows.push(row)
+                    // })
+
+
                     return (
                       <Card.Section
                         key={index}
@@ -479,6 +531,18 @@ class NewTemplate extends Component {
                           </Stack.Item>
                         </Stack>
                         <Card.Subsection>
+                          <div className="attribute-item mt-25" key={index}>
+                            <div className="option-item">Options</div>
+                            <div className="option-item">Price</div>
+                            <div className="option-item">Weight</div>
+                            <div className="option-item">Size (LxWxG)</div>
+                            <div className="option-item">Option SKU</div>
+                          </div>
+                          <ResourceList
+                            resourceName={{singular: 'attribute', plural: 'attributes'}}
+                            items={group.dattributes}
+                            renderItem={this.renderItem(index)}
+                          />
                         {
                           group.dattributes.length > 0 && group.dattributes.filter(attribute => attribute.label != '').map((item, key) => {
                             return (
@@ -543,7 +607,7 @@ class NewTemplate extends Component {
                                     <ButtonGroup segmented>
                                       <Button primary>Add exclusions</Button>
                                       <Button external url={"/attributes/" + item.id + "/edit"}>Edit Attribute</Button>
-                                      <Button onClick={() => {this.removeItem(index, key)}}>Remove</Button>
+                                      <Button onClick={() => {this.removeItem(index, item.id)}}>Remove</Button>
                                     </ButtonGroup>
                                   </div>
                                 </FormLayout.Group>

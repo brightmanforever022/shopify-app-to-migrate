@@ -25,3 +25,37 @@
 .align-right {
   text-align: right;
 }
+
+.icon-border {
+  border: 1px solid red;
+  padding: 10px;
+}
+
+.attribute-item {
+  display: flex;
+  flex-wrap: wrap;
+}
+.option-item {
+  flex: 1 1 22rem;
+  flex-basis: 11rem;
+  min-width: 11rem;
+
+  &:first-child {
+    flex: 1 1 35rem;
+  }
+}
+.attribute-action-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+
+  .attribute-action {
+    padding: 1rem;
+  }
+}
+
+@media all and (max-width: 800px) {
+  .attribute-action-list {
+    justify-content: space-around;
+  }
+}
