@@ -354,22 +354,22 @@ class NewTemplate extends Component {
     ]
     return (
       <ResourceList.Item
-        id={id}
+        id={"" + index + "-" + id}
         accessibilityLabel={`View details for ${label}`}
         // shortcutActions={shortcutActions}
         persistActions
       >
-        <div className="attribute-item" key={item.id}>
+        <div className="attribute-item" key={"attribute-item" + index + "-" + id}>
           <div className="option-item">{ label }</div>
           <div className="option-item">{ (price_type ? '' : '$') + price + (price_type ? ' %' : '') }</div>
           <div className="option-item">{ weight + 'kg' }</div>
           <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }</div>
           <div className="option-item">{ attribute_code }</div>
         </div>
-        <div className="attribute-action-list mt-25" key={item.id}>
+        <div className="attribute-action-list mt-25" key={"attribute-action" + index + "-" + id}>
           <div className="attribute-action"><Button primary>Add exclusions</Button></div>
           <div className="attribute-action"><Button external url={"/attributes/" + id + "/edit"}>Edit option</Button></div>
-          <div className="attribute-action"><Button icon={DeleteMajorMonotone}></Button></div>
+          <div className="attribute-action"><Button icon={DeleteMajorMonotone} onClick={() => this.removeItem(index, id)}></Button></div>
         </div>
       </ResourceList.Item>
     )
@@ -382,9 +382,6 @@ class NewTemplate extends Component {
       loading: saving,
       onAction: this.handleSave
     }
-
-    
-
     const secondaryActions = null
 
     return (
@@ -503,13 +500,6 @@ class NewTemplate extends Component {
                       />
                     )
 
-                    // group.dattributes.map((item, key) => {
-                    //   var row = [item.label, (item.price_type ? '' : '$') + item.price + (item.price_type ? ' %' : ''), item.weight + 'kg',
-                    //               item.length + '" x ' + item.width + '" x ' + item.girth + '"', item.attribute_code]
-                    //   rows.push(row)
-                    // })
-
-
                     return (
                       <Card.Section
                         key={index}
@@ -543,79 +533,6 @@ class NewTemplate extends Component {
                             items={group.dattributes}
                             renderItem={this.renderItem(index)}
                           />
-                        {
-                          group.dattributes.length > 0 && group.dattributes.filter(attribute => attribute.label != '').map((item, key) => {
-                            return (
-                              <Fragment
-                                key={key}
-                              >
-                                <FormLayout.Group condensed>
-                                  <TextField
-                                    value={item.label}
-                                    onChange={this.handleItem('label', index, key)}
-                                    label="Option label"
-                                  />
-                                  <TextField
-                                    value={item.price}
-                                    onChange={this.handleItem('price', index, key)}
-                                    label="Price"
-                                    prefix="$"
-                                    type="number"
-                                    min="0"
-                                  />
-                                  <label>
-                                    Upcharge Type<br/>
-                                    <select value={item.price_type} onChange={this.handlePriceType(index, key)} className="select-type">
-                                      <option value="false">Add On</option>
-                                      <option value="true">Percent</option>
-                                    </select>
-                                  </label>
-                                  <TextField
-                                    value={item.weight}
-                                    onChange={this.handleItem('weight', index, key)}
-                                    label="Weight"
-                                    type="number"
-                                    min="0"
-                                  />
-                                  <TextField
-                                    value={item.width}
-                                    onChange={this.handleItem('width', index, key)}
-                                    label="Width"
-                                    type="number"
-                                    min="0"
-                                  />
-                                  <TextField
-                                    value={item.length}
-                                    onChange={this.handleItem('length', index, key)}
-                                    label="Length"
-                                    type="number"
-                                    min="0"
-                                  />
-                                  <TextField
-                                    value={item.girth}
-                                    onChange={this.handleItem('girth', index, key)}
-                                    label="Girth"
-                                    type="number"
-                                    min="0"
-                                  />
-                                  <TextField
-                                    value={item.attribute_code}
-                                    onChange={this.handleItem('attribute_code', index, key)}
-                                    label="Attribute Code"
-                                  />
-                                  <div className="action-btn mt-25">
-                                    <ButtonGroup segmented>
-                                      <Button primary>Add exclusions</Button>
-                                      <Button external url={"/attributes/" + item.id + "/edit"}>Edit Attribute</Button>
-                                      <Button onClick={() => {this.removeItem(index, item.id)}}>Remove</Button>
-                                    </ButtonGroup>
-                                  </div>
-                                </FormLayout.Group>
-                                
-                              </Fragment>
-                            )
-                          })
-                        }
                         </Card.Subsection>
                         
                         {
