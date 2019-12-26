@@ -521,7 +521,7 @@ class NewTemplate extends Component {
                           </Stack.Item>
                         </Stack>
                         <Card.Subsection>
-                          <div className="attribute-item mt-25" key={index}>
+                          <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
                             <div className="option-item">Options</div>
                             <div className="option-item">Price</div>
                             <div className="option-item">Weight</div>
