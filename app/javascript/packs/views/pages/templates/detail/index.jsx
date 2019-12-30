@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, ResourceList, ResourceItem } from '@shopify/polaris'
-import { SearchMinor, DeleteMajorMonotone } from '@shopify/polaris-icons'
+import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, Collapsible, ResourceList, ResourceItem } from '@shopify/polaris'
+import { SearchMinor, DeleteMajorMonotone, ChevronRightMinor, ChevronUpMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 import ProductPicker from '../shared/product-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
@@ -46,7 +46,8 @@ class NewTemplate extends Component {
       attributeOptions: [],
       selectedAttributeOptions: [],
       inputAttributeValue: '',
-      newOptionShow: []
+      newOptionShow: [],
+      openGroup: [],
     }
 
     this.handlePriceType = this.handlePriceType.bind(this)
@@ -79,8 +80,10 @@ class NewTemplate extends Component {
             }
           })
           var newOptionShow = []
+          var openGroup = []
           for (let i = 0; i < data.template.groups.length; i++) {
-            newOptionShow[i] = false            
+            newOptionShow[i] = false
+            openGroup[i] = true
           }
           this.setState({
             variants: data.variants.data.nodes,
@@ -88,7 +91,8 @@ class NewTemplate extends Component {
             label: data.template.label,
             loading: false,
             deselectedAttributeOptions: attributeList,
-            newOptionShow: newOptionShow
+            newOptionShow: newOptionShow,
+            openGroup: openGroup
           })
         }
       })
@@ -109,8 +113,8 @@ class NewTemplate extends Component {
     this.setState({modal})
   }
 
-  testAction = id => {
-    console.log('option id: ', id)
+  testAction = (index, id) => {
+    console.log('option index and id: ', index, id)
   }
 
   setPicker = params => {
@@ -178,6 +182,14 @@ class NewTemplate extends Component {
     let { groups } = this.state
     this.setState({
       groups: groups.filter((group,i) => i !== +index)
+    })
+  }
+
+  toggleGroup = index => {
+    let { openGroup } = this.state
+    openGroup[index] = !openGroup[index]
+    this.setState({
+      openGroup: openGroup
     })
   }
 
@@ -367,7 +379,7 @@ class NewTemplate extends Component {
           <div className="option-item">{ attribute_code }</div>
         </div>
         <div className="attribute-action-list mt-25" key={"attribute-action" + index + "-" + id}>
-          <div className="attribute-action"><Button primary>Add exclusions</Button></div>
+          <div className="attribute-action"><Button primary onClick={() => this.testAction(index, id)}>Add exclusions</Button></div>
           <div className="attribute-action"><Button external url={"/attributes/" + id + "/edit"}>Edit option</Button></div>
           <div className="attribute-action"><Button icon={DeleteMajorMonotone} onClick={() => this.removeItem(index, id)}></Button></div>
         </div>
@@ -467,7 +479,7 @@ class NewTemplate extends Component {
                     <Stack.Item>
                       {/* <div className="mt-25"> */}
                         <ButtonGroup>
-                          <Button primary onClick={() => {this.addGroup}}>New add-on</Button>
+                          <Button primary onClick={() => {this.addGroup()}}>New add-on</Button>
                           <Button primary external={true} url="/attributes/new">New Attribute</Button>
                           <Button
                             onClick={() => {this.openModal('product')}}
@@ -490,6 +502,10 @@ class NewTemplate extends Component {
                   sectioned
                 >
                   {groups.map((group, index) => {
+                    var groupCollapse = ChevronRightMinor
+                    if (!this.state.openGroup[index]) {
+                      groupCollapse = ChevronUpMinor
+                    }
                     const attributeTextField = (
                       <Autocomplete.TextField
                         onChange={this.updateAttributeText(index)}
@@ -499,11 +515,11 @@ class NewTemplate extends Component {
                         placeholder="Search"
                       />
                     )
-
                     return (
                       <Card.Section
                         key={index}
                       >
+                        
                         <Stack>
                           <Stack.Item fill>
                             <TextField
@@ -516,45 +532,47 @@ class NewTemplate extends Component {
                             <div className="mt-25">
                               <ButtonGroup>
                                 <Button onClick={() => {this.removeGroup(index)}}>Remove</Button>
+                                <Button onClick={() => {this.toggleGroup(index)}} icon={groupCollapse} plain></Button>
                               </ButtonGroup>
                             </div>
                           </Stack.Item>
                         </Stack>
-                        <Card.Subsection>
-                          <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
-                            <div className="option-item">Options</div>
-                            <div className="option-item">Price</div>
-                            <div className="option-item">Weight</div>
-                            <div className="option-item">Size (LxWxG)</div>
-                            <div className="option-item">Option SKU</div>
-                          </div>
-                          <ResourceList
-                            resourceName={{singular: 'attribute', plural: 'attributes'}}
-                            items={group.dattributes}
-                            renderItem={this.renderItem(index)}
-                          />
-                        </Card.Subsection>
-                        
-                        {
-                          this.state.newOptionShow[index] ?
-                            <Card.Subsection>
-                                <Autocomplete
-                                options={attributeOptions}
-                                selected={selectedAttributeOptions}
-                                onSelect={this.updateAttributeSelection(index)}
-                                textField={attributeTextField}
-                                key={index}
-                              />
-                            </Card.Subsection>
-                            : null
-                        }
+                        <Collapsible open={this.state.openGroup[index]} id={'groupCol-' + index}>
+                          <Card.Subsection>
+                            <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
+                              <div className="option-item">Options</div>
+                              <div className="option-item">Price</div>
+                              <div className="option-item">Weight</div>
+                              <div className="option-item">Size (LxWxG)</div>
+                              <div className="option-item">Option SKU</div>
+                            </div>
+                            <ResourceList
+                              resourceName={{singular: 'attribute', plural: 'attributes'}}
+                              items={group.dattributes}
+                              renderItem={this.renderItem(index)}
+                            />
+                          </Card.Subsection>
+                          
+                          {
+                            this.state.newOptionShow[index] ?
+                              <Card.Subsection>
+                                  <Autocomplete
+                                  options={attributeOptions}
+                                  selected={selectedAttributeOptions}
+                                  onSelect={this.updateAttributeSelection(index)}
+                                  textField={attributeTextField}
+                                  key={index}
+                                />
+                              </Card.Subsection>
+                              : null
+                          }
 
-                        <Card.Subsection>
-                          <div className="align-right">
-                            <Button primary onClick={() => {this.addOption(index)}}>Add option</Button>
-                          </div>
-                        </Card.Subsection>
-
+                          <Card.Subsection>
+                            <div className="align-right">
+                              <Button primary onClick={() => {this.addOption(index)}}>Add option</Button>
+                            </div>
+                          </Card.Subsection>
+                        </Collapsible>
                       </Card.Section>
                     )
                   })}
