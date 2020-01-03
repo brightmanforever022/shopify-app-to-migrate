@@ -85,6 +85,7 @@ class NewTemplate extends Component {
             newOptionShow[i] = false
             openGroup[i] = true
           }
+          console.log('variants: ', data.variants.data.nodes)
           this.setState({
             variants: data.variants.data.nodes,
             groups: data.template.groups,
@@ -285,8 +286,6 @@ class NewTemplate extends Component {
   }
 
   updateAttributeText = index => value => {
-    // console.log('index: ', index)
-    // console.log('value: ', value)
     this.setState({inputAttributeValue: value})
     
     if (value === '') {
@@ -296,7 +295,6 @@ class NewTemplate extends Component {
     this.props.searchAttributes({
       searchText: value,
       cb: data => {
-        // console.log('data: ', data)
         var attributeList = data.attributes.map(att => {
           return {
             value: att.id,

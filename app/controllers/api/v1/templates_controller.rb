@@ -118,36 +118,8 @@ class Api::V1::TemplatesController < AuthenticatedController
       end
     end
 
-    # def set_template_group_items
-    #   template_params[:groups].each do |group|
-    #     @group = Group.new(
-    #       template: @template,
-    #       label: group[:label],
-    #       is_required: group[:is_required],
-    #       display_order: @template.groups.length + 1
-    #     )
-    #     if @group.save
-    #       group[:items].each do |item|
-    #         @item = Item.new(
-    #           label: item[:label],
-    #           shopify_variant_id: item[:shopify_variant_id],
-    #           price: item[:price],
-    #           quantity: item[:quantity],
-    #           shopify_variant_title: item[:shopify_variant_title],
-    #           display_order: @group.items.length + 1,
-    #           group: @group
-    #         )
-    #         unless @item.save
-    #           puts @item.errors.full_messages
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
-
     def set_template_group_items
       template_params[:groups].each do |group|
-        lastGroup = Group.last
         @group = Group.new(
           id: lastGroup.id + 1,
           template: @template,
@@ -157,7 +129,6 @@ class Api::V1::TemplatesController < AuthenticatedController
         )
         if @group.save
           group[:dattributes].each do |datt|
-            lastDrellation = Drellation.last
             @drellation = Drellation.new(
               id: lastDrellation.id + 1,
               dattribute_id: datt[:id].to_i,
