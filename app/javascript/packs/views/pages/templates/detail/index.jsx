@@ -168,13 +168,16 @@ class NewTemplate extends Component {
 
   addGroup = () => {
     let { groups } = this.state
+    let { openGroup } = this.state
+    openGroup[openGroup.length] = true
     let default_group = {
       label: '',
       is_required: false,
       dattributes: []
     }
     this.setState({
-      groups: [...groups, default_group]
+      groups: [...groups, default_group],
+      openGroup: openGroup
     })
   }
 
@@ -493,90 +496,85 @@ class NewTemplate extends Component {
                 </Card>
               </Layout.Section>
               <Layout.Section>
-                <Card
-                  title="Add-ons management"
-                  actions={[{
-                    content: 'Add add-on',
-                    onAction: this.addGroup
-                  }]}
-                  sectioned
-                >
-                  {groups.map((group, index) => {
-                    var groupCollapse = ChevronRightMinor
-                    if (!this.state.openGroup[index]) {
-                      groupCollapse = ChevronUpMinor
-                    }
-                    const attributeTextField = (
-                      <Autocomplete.TextField
-                        onChange={this.updateAttributeText(index)}
-                        label="Items"
-                        value={inputAttributeValue}
-                        prefix={<Icon source={SearchMinor} color="inkLighter" />}
-                        placeholder="Search"
-                      />
-                    )
-                    return (
-                      <Card.Section
-                        key={index}
-                      >
+                {groups.map((group, index) => {
+                  // var groupCollapse = ChevronRightMinor
+                  // if (!this.state.openGroup[index]) {
+                  //   groupCollapse = ChevronUpMinor
+                  // }
+                  var groupCollapse = '>'
+                  if (!this.state.openGroup[index]) {
+                    groupCollapse = '∧'
+                  }
+                  const attributeTextField = (
+                    <Autocomplete.TextField
+                      onChange={this.updateAttributeText(index)}
+                      label="Items"
+                      value={inputAttributeValue}
+                      prefix={<Icon source={SearchMinor} color="inkLighter" />}
+                      placeholder="Search"
+                    />
+                  )
+                  return (
+                    <Card
+                     title="Attribute"
+                     actions={[{
+                      content: groupCollapse,
+                      onAction: () => this.toggleGroup(index)
+                     }]}
+                     sectioned
+                     key={index}
+                    >
+                      <Stack>
+                        <Stack.Item fill>
+                          <TextField
+                            value={group.label}
+                            onChange={this.handleGroupLabel(index)}
+                            placeholder="Attribute label"
+                            connectedRight={
+                              <Button icon={DeleteMajorMonotone} onClick={() => {this.removeGroup(index)}}></Button>
+                            }
+                          />
+                        </Stack.Item>
+                      </Stack>
+                      <Collapsible open={this.state.openGroup[index]} id={'groupCol-' + index}>
+                        <Card.Section>
+                          <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
+                            <div className="option-item">Options</div>
+                            <div className="option-item">Price</div>
+                            <div className="option-item">Weight</div>
+                            <div className="option-item">Size (LxWxG)</div>
+                            <div className="option-item">Option SKU</div>
+                          </div>
+                          <ResourceList
+                            resourceName={{singular: 'attribute', plural: 'attributes'}}
+                            items={group.dattributes}
+                            renderItem={this.renderItem(index)}
+                          />
+                        </Card.Section>
                         
-                        <Stack>
-                          <Stack.Item fill>
-                            <TextField
-                              value={group.label}
-                              onChange={this.handleGroupLabel(index)}
-                              label="Add-on label"
-                            />
-                          </Stack.Item>
-                          <Stack.Item>
-                            <div className="mt-25">
-                              <ButtonGroup>
-                                <Button onClick={() => {this.removeGroup(index)}}>Remove</Button>
-                                <Button onClick={() => {this.toggleGroup(index)}} icon={groupCollapse} plain></Button>
-                              </ButtonGroup>
-                            </div>
-                          </Stack.Item>
-                        </Stack>
-                        <Collapsible open={this.state.openGroup[index]} id={'groupCol-' + index}>
-                          <Card.Subsection>
-                            <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
-                              <div className="option-item">Options</div>
-                              <div className="option-item">Price</div>
-                              <div className="option-item">Weight</div>
-                              <div className="option-item">Size (LxWxG)</div>
-                              <div className="option-item">Option SKU</div>
-                            </div>
-                            <ResourceList
-                              resourceName={{singular: 'attribute', plural: 'attributes'}}
-                              items={group.dattributes}
-                              renderItem={this.renderItem(index)}
-                            />
-                          </Card.Subsection>
-                          
-                          {
-                            this.state.newOptionShow[index] ?
-                              <Card.Subsection>
-                                  <Autocomplete
-                                  options={attributeOptions}
-                                  selected={selectedAttributeOptions}
-                                  onSelect={this.updateAttributeSelection(index)}
-                                  textField={attributeTextField}
-                                  key={index}
-                                />
-                              </Card.Subsection>
-                              : null
-                          }
+                        {
+                          this.state.newOptionShow[index] ?
+                            <Card.Section>
+                                <Autocomplete
+                                options={attributeOptions}
+                                selected={selectedAttributeOptions}
+                                onSelect={this.updateAttributeSelection(index)}
+                                textField={attributeTextField}
+                                key={index}
+                              />
+                            </Card.Section>
+                            : null
+                        }
 
-                          <Card.Subsection>
-                            <div className="align-right">
-                              <Button primary onClick={() => {this.addOption(index)}}>Add option</Button>
-                            </div>
-                          </Card.Subsection>
-                        </Collapsible>
-                      </Card.Section>
-                    )
-                  })}
-                </Card>
+                        <Card.Section>
+                          <div className="align-right">
+                            <Button primary onClick={() => {this.addOption(index)}}>Add option</Button>
+                          </div>
+                        </Card.Section>
+                      </Collapsible>
+                    </Card>
+                  )
+                })}
               </Layout.Section>
               <Layout.Section>
                 <PageActions
