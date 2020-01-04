@@ -25,9 +25,7 @@ class Api::V1::AttributesController < AuthenticatedController
   end
 
   def create
-    lastAttribute = Dattribute.last
     @attribute = Dattribute.new(
-      id: lastAttribute.id + 1,
       label: attribute_params[:label],
       price: attribute_params[:price],
       price_type: false,

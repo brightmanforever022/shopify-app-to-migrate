@@ -121,7 +121,6 @@ class Api::V1::TemplatesController < AuthenticatedController
     def set_template_group_items
       template_params[:groups].each do |group|
         @group = Group.new(
-          id: lastGroup.id + 1,
           template: @template,
           label: group[:label],
           is_required: group[:is_required],
@@ -130,7 +129,6 @@ class Api::V1::TemplatesController < AuthenticatedController
         if @group.save
           group[:dattributes].each do |datt|
             @drellation = Drellation.new(
-              id: lastDrellation.id + 1,
               dattribute_id: datt[:id].to_i,
               group: @group
             )
