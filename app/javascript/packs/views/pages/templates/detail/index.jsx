@@ -85,7 +85,6 @@ class NewTemplate extends Component {
             newOptionShow[i] = false
             openGroup[i] = true
           }
-          console.log('variants: ', data.variants.data.nodes)
           this.setState({
             variants: data.variants.data.nodes,
             groups: data.template.groups,
