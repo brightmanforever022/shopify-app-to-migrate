@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Page, Layout, Card, ResourceList, Thumbnail, Pagination } from '@shopify/polaris'
-import { SearchMinor, DeleteMinor } from '@shopify/polaris-icons'
+import { DeleteMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 
 import ConfirmModal from '../../components/confirm-modal'

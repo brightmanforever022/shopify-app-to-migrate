@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, Collapsible, ResourceList, ResourceItem } from '@shopify/polaris'
+import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, Collapsible, ResourceList } from '@shopify/polaris'
 import { SearchMinor, DeleteMajorMonotone, ChevronRightMinor, ChevronUpMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 import ProductPicker from '../shared/product-picker'
@@ -85,6 +85,7 @@ class NewTemplate extends Component {
             newOptionShow[i] = false
             openGroup[i] = true
           }
+          console.log('groups: ', data.template.groups)
           this.setState({
             variants: data.variants.data.nodes,
             groups: data.template.groups,
