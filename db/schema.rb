@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_225708) do
+ActiveRecord::Schema.define(version: 2020_01_09_224258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -25,6 +25,9 @@ ActiveRecord::Schema.define(version: 2020_01_06_225708) do
     t.float "length"
     t.float "girth"
     t.string "attribute_code"
+    t.string "postal_code", default: ""
+    t.string "store_name", default: "display4sale"
+    t.string "vendor_sku", default: ""
   end
 
   create_table "drellations", force: :cascade do |t|

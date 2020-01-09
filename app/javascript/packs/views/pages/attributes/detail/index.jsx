@@ -27,6 +27,9 @@ class NewAttribute extends Component {
       length: 0,
       girth: 0,
       attribute_code: '',
+      postal_code: '',
+      store_name: 0,
+      vendor_sku: '',
       key: 0,
       saving: false,
       confirming: false,
@@ -34,6 +37,7 @@ class NewAttribute extends Component {
     }
 
     this.handleTypeChange = this.handleTypeChange.bind(this)
+    this.handleStoreChange = this.handleStoreChange.bind(this)
   }
 
   componentWillMount () {
@@ -58,6 +62,9 @@ class NewAttribute extends Component {
             length: data.attribute.length,
             girth: data.attribute.girth,
             attribute_code: data.attribute.attribute_code,
+            postal_code: data.attribute.postal_code,
+            store_name: data.attribute.store_name,
+            vendor_sku: data.attribute.vendor_sku,
             loading: false
           })
         }
@@ -74,6 +81,10 @@ class NewAttribute extends Component {
     this.setState({price_type: event.target.value})
   }
 
+  handleStoreChange = event => {
+    this.setState({store_name: event.target.value})
+  }
+
   handleSave = () => {
     const { id, label, price, price_type, weight, width, length, girth, attribute_code } = this.state
     this.setState({saving: true})
@@ -88,6 +99,9 @@ class NewAttribute extends Component {
         length,
         girth,
         attribute_code,
+        postal_code,
+        store_name,
+        vendor_sku,
         cb: data => {
           this.setState({saving: false})
         }
@@ -102,6 +116,9 @@ class NewAttribute extends Component {
         length,
         girth,
         attribute_code,
+        postal_code,
+        store_name,
+        vendor_sku,
         cb: data => {
           this.setState({saving: false})
           this.props.history.push({
@@ -113,7 +130,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, attribute_code, loading, saving, confirmModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, attribute_code, postal_code, store_name, vendor_sku, loading, saving, confirmModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -127,31 +144,24 @@ class NewAttribute extends Component {
         {
           !loading &&
           <Page
-            title={id ? 'Edit Attribute' : 'New Attribute'}
+            title={id ? 'Edit Option' : 'New Option'}
             primaryAction={primaryAction}
-            breadcrumbs={[{content: 'Attributes', url: '/attributes'}]}
+            breadcrumbs={[{content: 'Options', url: '/attributes'}]}
           >
             <Layout>
               <Layout.Section>
                 <Card
                   sectioned
-                  title="Attribute name"
                 >
-                  <TextField
-                    value={label}
-                    label="attribute name"
-                    labelHidden
-                    onChange={this.handleChange('label')}
-                  />
-                </Card>
-              </Layout.Section>
-              <Layout.Section>
-                <Card
-                  title="Property management"
-                  sectioned
-                >
-                  <Card.Section>
                     <Fragment>
+                      <FormLayout.Group>
+                        <TextField
+                          value={label}
+                          label="Option name"
+                          minLength={100}
+                          onChange={this.handleChange('label')}
+                        />
+                      </FormLayout.Group>
                       <FormLayout.Group>
                         <TextField
                           value={price}
@@ -168,9 +178,25 @@ class NewAttribute extends Component {
                         <TextField
                           value={attribute_code}
                           onChange={this.handleChange('attribute_code')}
-                          label="SKU"
+                          label="Attribute SKU"
                         />
-
+                        <TextField
+                          value={postal_code}
+                          onChange={this.handleChange('postal_code')}
+                          label="Postal Code"
+                        />
+                        <label>
+                          Store Name<br/>
+                          <select value={store_name} onChange={this.handleStoreChange} className="select-type">
+                            <option value="display4sale">Display4Sale</option>
+                            <option value="swingpanels">Swingpanels</option>
+                          </select>
+                        </label>
+                        <TextField
+                          value={vendor_sku}
+                          onChange={this.handleChange('vendor_sku')}
+                          label="Vendor SKU"
+                        />
                         <TextField
                           value={weight}
                           onChange={this.handleChange('weight')}
@@ -186,14 +212,13 @@ class NewAttribute extends Component {
                           onChange={this.handleChange('length')}
                           label="Length"
                         />
-                        <TextField
+                        {/* <TextField
                           value={girth}
                           onChange={this.handleChange('girth')}
                           label="Girth"
-                        />
+                        /> */}
                       </FormLayout.Group>
                     </Fragment>
-                  </Card.Section>
                 </Card>
               </Layout.Section>
               <Layout.Section>

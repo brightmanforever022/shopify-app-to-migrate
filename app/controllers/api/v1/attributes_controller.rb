@@ -33,7 +33,10 @@ class Api::V1::AttributesController < AuthenticatedController
       width: attribute_params[:width],
       length: attribute_params[:length],
       girth: attribute_params[:girth],
-      attribute_code: attribute_params[:attribute_code]
+      attribute_code: attribute_params[:attribute_code],
+      postal_code: attribute_params[:postal_code],
+      store_name: attribute_params[:store_name],
+      vendor_sku: attribute_params[:vendor_sku]
     )
     if @attribute.save
       http_success_response({attribute: @attribute})
@@ -58,7 +61,10 @@ class Api::V1::AttributesController < AuthenticatedController
       width: attribute_params[:width],
       length: attribute_params[:length],
       girth: attribute_params[:girth],
-      attribute_code: attribute_params[:attribute_code]
+      attribute_code: attribute_params[:attribute_code],
+      postal_code: attribute_params[:postal_code],
+      store_name: attribute_params[:store_name],
+      vendor_sku: attribute_params[:vendor_sku]
     })
 
     render json: {attribute: @attribute }
