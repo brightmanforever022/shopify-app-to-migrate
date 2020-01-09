@@ -423,7 +423,7 @@ class NewTemplate extends Component {
               <Layout.Section>
                 <Card
                   sectioned
-                  title="Product"
+                  title="Variants"
                 >
                   {(() => {
                     if (variants.length > 0) {
