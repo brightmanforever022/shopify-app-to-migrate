@@ -40,7 +40,7 @@ class NewAttribute extends Component {
     this.handleStoreChange = this.handleStoreChange.bind(this)
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       id: this.props.match.params.id
     })

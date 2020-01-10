@@ -53,7 +53,7 @@ class NewTemplate extends Component {
     this.handlePriceType = this.handlePriceType.bind(this)
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       id: this.props.match.params.id
     })
