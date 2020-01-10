@@ -86,7 +86,7 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, attribute_code } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, attribute_code, postal_code, store_name, vendor_sku } = this.state
     this.setState({saving: true})
     if (id) {
       this.props.updateAttribute({

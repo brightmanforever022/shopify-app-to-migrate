@@ -75,6 +75,7 @@ class Api::V1::TemplatesController < AuthenticatedController
     render json: {template: @template, variants: variants }, include: {
       groups: {
         include: {
+          drellations: {},
           dattributes: {}
         }
       },
