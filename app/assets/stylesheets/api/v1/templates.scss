@@ -35,13 +35,16 @@
   display: flex;
   flex-wrap: wrap;
 }
+.attribute-item-header {
+  font-weight: 700;
+}
 .option-item {
   flex: 1 1 22rem;
   flex-basis: 11rem;
   min-width: 11rem;
 
   &:first-child {
-    flex: 1 1 35rem;
+    flex: 1 1 25rem;
   }
 }
 .attribute-action-list {

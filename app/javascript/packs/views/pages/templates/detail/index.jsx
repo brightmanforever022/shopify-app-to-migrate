@@ -76,7 +76,10 @@ class NewTemplate extends Component {
               width: att.width,
               length: att.length,
               girth: att.girth,
-              attribute_code: att.attibute_code ? att.attribute_code : ''
+              attribute_code: att.attibute_code ? att.attribute_code : '',
+              store_name: att.store_name,
+              vendor_sku: att.vendor_sku,
+              postal_code: att.postal_code
             }
           })
           var newOptionShow = []
@@ -204,19 +207,6 @@ class NewTemplate extends Component {
   }
 
   addOption = index => {
-    // let default_option = {
-    //   label: '',
-    //   price: 0,
-    //   price_type: false,
-    //   weight: 0,
-    //   width: 0,
-    //   length: 0,
-    //   girth: 0,
-    //   attribute_code: ''
-    // }
-    // let { groups } = this.state
-    // groups[index].dattributes = [...groups[index].dattributes, default_option]
-    // this.setState({groups: groups})
     var newOptionShow = this.state.newOptionShow
     newOptionShow[index] = true
     this.setState({newOptionShow: newOptionShow})
@@ -305,7 +295,10 @@ class NewTemplate extends Component {
             width: att.width,
             length: att.length,
             girth: att.girth,
-            attribute_code: att.attibute_code ? att.attribute_code : ''
+            attribute_code: att.attibute_code ? att.attribute_code : '',
+            store_name: att.store_name,
+            vendor_sku: att.vendor_sku,
+            postal_code: att.postal_code
           }
         })
         this.setState({deselectedAttributeOptions: attributeList, attributeOptions: attributeList})
@@ -319,8 +312,6 @@ class NewTemplate extends Component {
   }
 
   updateAttributeSelection = index => selected => {
-    // console.log('index: ', index)
-    // console.log('selected: ', selected)
     const selectedValue = selected.map((selectedItem) => {
       const matchedOption = this.state.attributeOptions.find((option) => option.value.toString().match(selectedItem))
       return matchedOption
@@ -328,8 +319,7 @@ class NewTemplate extends Component {
 
     this.setState({selectedAttributeOptions: selected})
     this.setState({inputAttributeValue: selectedValue[0].label})
-    // console.log('result: ', selectedValue)
-
+    
     let newOption = {
       id: selectedValue[0].value,
       label: selectedValue[0].label,
@@ -339,7 +329,10 @@ class NewTemplate extends Component {
       width: selectedValue[0].width,
       length: selectedValue[0].length,
       girth: selectedValue[0].girth,
-      attribute_code: selectedValue[0].attribute_code
+      attribute_code: selectedValue[0].attribute_code,
+      store_name: selectedValue[0].store_name,
+      vendor_sku: selectedValue[0].vendor_sku,
+      postal_code: selectedValue[0].postal_code
     }
     let { groups } = this.state
     groups[index].dattributes = [...groups[index].dattributes, newOption]
@@ -347,11 +340,10 @@ class NewTemplate extends Component {
     var newOptionShow = this.state.newOptionShow
     newOptionShow[index] = false
     this.setState({groups: groups, newOptionShow: newOptionShow})
-    // console.log('groups: ', this.state.groups)
   }
 
   renderItem = index => item => {
-    const { id, label, price, price_type, length, width, girth, attribute_code, weight } = item
+    const { id, label, price, price_type, length, width, girth, attribute_code, weight, store_name, vendor_sku, postal_code } = item
     const shortcutActions = [
       {
         content: <Button primary>Add exclusions</Button>,
@@ -373,11 +365,12 @@ class NewTemplate extends Component {
         persistActions
       >
         <div className="attribute-item" key={"attribute-item" + index + "-" + id}>
-          <div className="option-item">{ label }</div>
+          <div className="option-item">{ label } <br/>{ store_name }</div>
           <div className="option-item">{ (price_type ? '' : '$') + price + (price_type ? ' %' : '') }</div>
           <div className="option-item">{ weight + 'kg' }</div>
           <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }</div>
-          <div className="option-item">{ attribute_code }</div>
+          <div className="option-item">{ attribute_code }<br/>{ vendor_sku }</div>
+          <div className="option-item">{ postal_code }</div>
         </div>
         <div className="attribute-action-list mt-25" key={"attribute-action" + index + "-" + id}>
           <div className="attribute-action"><Button primary onClick={() => this.testAction(index, id)}>Add exclusions</Button></div>
@@ -536,12 +529,13 @@ class NewTemplate extends Component {
                       </Stack>
                       <Collapsible open={this.state.openGroup[index]} id={'groupCol-' + index}>
                         <Card.Section>
-                          <div className="attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
-                            <div className="option-item">Options</div>
+                          <div className="attribute-item-header attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
+                            <div className="option-item">Option Title<br />Stores</div>
                             <div className="option-item">Price</div>
                             <div className="option-item">Weight</div>
-                            <div className="option-item">Size (LxWxG)</div>
-                            <div className="option-item">Option SKU</div>
+                            <div className="option-item">Size (LxWxH)</div>
+                            <div className="option-item">Option SKU<br/>Vendor SKU</div>
+                            <div className="option-item">Postal Code</div>
                           </div>
                           <ResourceList
                             resourceName={{singular: 'attribute', plural: 'attributes'}}
@@ -553,7 +547,7 @@ class NewTemplate extends Component {
                         {
                           this.state.newOptionShow[index] ?
                             <Card.Section>
-                                <Autocomplete
+                              <Autocomplete
                                 options={attributeOptions}
                                 selected={selectedAttributeOptions}
                                 onSelect={this.updateAttributeSelection(index)}

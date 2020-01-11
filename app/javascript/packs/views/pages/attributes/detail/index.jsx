@@ -28,7 +28,7 @@ class NewAttribute extends Component {
       girth: 0,
       attribute_code: '',
       postal_code: '',
-      store_name: 0,
+      store_name: 'display4sale',
       vendor_sku: '',
       key: 0,
       saving: false,
@@ -212,11 +212,11 @@ class NewAttribute extends Component {
                           onChange={this.handleChange('length')}
                           label="Length"
                         />
-                        {/* <TextField
+                        <TextField
                           value={girth}
                           onChange={this.handleChange('girth')}
-                          label="Girth"
-                        /> */}
+                          label="Height"
+                        />
                       </FormLayout.Group>
                     </Fragment>
                 </Card>
