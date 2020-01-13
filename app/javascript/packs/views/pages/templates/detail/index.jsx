@@ -3,6 +3,7 @@ import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, T
 import { SearchMinor, DeleteMajorMonotone, ChevronRightMinor, ChevronUpMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
 import ProductPicker from '../shared/product-picker'
+import ExclusionPicker from '../shared/exclusion-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
 
 import ConfirmModal from '../../../components/confirm-modal'
@@ -29,8 +30,9 @@ class NewTemplate extends Component {
     super(props)
     this.state = {
       loading: false,
-      modal: false,
+      productModal: false,
       modalType: 'variant',
+      exclusionModal: false,
       product: null,
       label: '',
       id: null,
@@ -107,22 +109,18 @@ class NewTemplate extends Component {
     const { variants } = this.state
     const selecteds = variants.map(v => ({variant_id: this.convertId(v.id)}))
     this.setState({
-      modal: true,
+      productModal: true,
       modalType: modalType,
       selecteds: selecteds
     })
   }
 
-  togglePicker = modal => {
-    this.setState({modal})
+  toggleProductPicker = productModal => {
+    this.setState({productModal})
   }
 
-  testAction = (index, id) => {
-    console.log('option index and id: ', index, id)
-  }
-
-  setPicker = params => {
-    this.setState({modal: false})
+  setProductPicker = params => {
+    this.setState({productModal: false})
     if (params.selecteds.length < 1) {
       return false
     }
@@ -132,6 +130,19 @@ class NewTemplate extends Component {
       this.loadVariant(params.selecteds[0].variant_id)
     }
   }
+
+  openExclusionModal = (index, id) => {
+    console.log('option index and id: ', index, id)
+  }
+
+  toggleExclusionPicker = exclusionModal => {
+    this.setState({exclusionModal})
+  }
+
+  setExclusionPicker = params => {
+
+  }
+
 
   loadProduct  = id => {
     this.props.loadProduct({
@@ -224,7 +235,7 @@ class NewTemplate extends Component {
     this.setState({groups: groups})
   }
 
-  handleChoice = selecteds => {
+  handleProductChoice = selecteds => {
     this.setState({selecteds})
   }
 
@@ -347,7 +358,7 @@ class NewTemplate extends Component {
     const shortcutActions = [
       {
         content: <Button primary>Add exclusions</Button>,
-        onAction: () => this.testAction(id)
+        onAction: () => this.openExclusionModal(id)
       },
       {
         content: <Button external url={"/attributes/" + id + "/edit"}>Edit option</Button>
@@ -373,7 +384,7 @@ class NewTemplate extends Component {
           <div className="option-item">{ postal_code }</div>
         </div>
         <div className="attribute-action-list mt-25" key={"attribute-action" + index + "-" + id}>
-          <div className="attribute-action"><Button primary onClick={() => this.testAction(index, id)}>Add exclusions</Button></div>
+          <div className="attribute-action"><Button primary onClick={() => this.openExclusionModal(index, id)}>Add exclusions</Button></div>
           <div className="attribute-action"><Button external url={"/attributes/" + id + "/edit"}>Edit option</Button></div>
           <div className="attribute-action"><Button icon={DeleteMajorMonotone} onClick={() => this.removeItem(index, id)}></Button></div>
         </div>
@@ -382,7 +393,7 @@ class NewTemplate extends Component {
   }
 
   render () {
-    const { label, loading, modal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions } = this.state
+    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -575,12 +586,12 @@ class NewTemplate extends Component {
                 />
               </Layout.Section>
               <ProductPicker
-                active={modal}
+                active={productModal}
                 modalType={modalType}
                 selecteds={selecteds}
-                togglePicker={this.togglePicker}
-                handleChoice={this.handleChoice}
-                onConfirm={this.setPicker}
+                togglePicker={this.toggleProductPicker}
+                handleChoice={this.handleProductChoice}
+                onConfirm={this.setProductPicker}
               />
               <ConfirmModal
                 active={confirmModal}
