@@ -132,7 +132,9 @@ class NewTemplate extends Component {
   }
 
   openExclusionModal = (index, id) => {
+    const { variants } = this.state
     console.log('option index and id: ', index, id)
+    console.log('variants: ', variants)
   }
 
   toggleExclusionPicker = exclusionModal => {

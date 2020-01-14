@@ -44,18 +44,15 @@ class ExclusionPicker extends Component {
   handleSelect = vid => {
 
     let variantId = vid.split('/')[vid.split('/').length - 1]
-    let { selecteds, queryType } = this.state
+    let { selecteds } = this.state
 
-    if (queryType === 'product') {
-      let index = selecteds.findIndex(select => +select.variant_id === +variantId)
-      if (index >= 0) {
-        selecteds = selecteds.filter(select => +select.variant_id !== +variantId)
-      } else {
-        selecteds = [...selecteds, {variant_id: +variantId}]
-      }
+    let index = selecteds.findIndex(select => +select.variant_id === +variantId)
+    if (index >= 0) {
+      selecteds = selecteds.filter(select => +select.variant_id !== +variantId)
     } else {
-      selecteds = [{variant_id: +variantId}]
+      selecteds = [...selecteds, {variant_id: +variantId}]
     }
+    
     this.props.handleChoice(selecteds)
   }
 
