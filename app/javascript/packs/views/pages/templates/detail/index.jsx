@@ -33,6 +33,9 @@ class NewTemplate extends Component {
       productModal: false,
       modalType: 'variant',
       exclusionModal: false,
+      selectedGroupIndex: 0,
+      selectedExclusions: '',
+      selectedAttributeIndex: 0,
       product: null,
       label: '',
       id: null,
@@ -132,9 +135,15 @@ class NewTemplate extends Component {
   }
 
   openExclusionModal = (index, id) => {
-    const { variants } = this.state
-    console.log('option index and id: ', index, id)
-    console.log('variants: ', variants)
+    const { groups } = this.state
+    const group = groups[index]
+    const drellation = group.drellations.find(dr => dr.dattribute_id == id)
+    this.setState({
+      exclusionModal: true,
+      selectedGroupIndex: index,
+      selectedAttributeIndex: id,
+      selectedExclusions: drellation.excepts
+    })
   }
 
   toggleExclusionPicker = exclusionModal => {
@@ -142,7 +151,7 @@ class NewTemplate extends Component {
   }
 
   setExclusionPicker = params => {
-
+    this.setState({exclusionModal: false})
   }
 
 
@@ -395,7 +404,7 @@ class NewTemplate extends Component {
   }
 
   render () {
-    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions } = this.state
+    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions, exclusionModal, selectedExclusions } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -594,6 +603,13 @@ class NewTemplate extends Component {
                 togglePicker={this.toggleProductPicker}
                 handleChoice={this.handleProductChoice}
                 onConfirm={this.setProductPicker}
+              />
+              <ExclusionPicker
+                active={exclusionModal}
+                selecteds={selectedExclusions.split(',')}
+                variants={variants}
+                togglePicker={this.toggleExclusionPicker}
+                onConfirm={this.setExclusionPicker}
               />
               <ConfirmModal
                 active={confirmModal}

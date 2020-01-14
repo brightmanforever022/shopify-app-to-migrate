@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Modal, Checkbox, TextContainer, TextStyle, SkeletonBodyText } from '@shopify/polaris'
+import { Modal, Checkbox, List } from '@shopify/polaris'
 import { connect } from 'react-redux'
 
 class ExclusionPicker extends Component {
@@ -8,17 +8,21 @@ class ExclusionPicker extends Component {
     this.state = {
       loading: true,
       active: false,
-      reloading: false,
       selecteds: [],
-      records: []
+      variants: []
     }
   }
 
   static getDerivedStateFromProps(props, state) {
-    return {
-      active: props.active,
-      selecteds: props.selecteds,
-      variants: props.variants
+    if (props.active !== state.active) {
+      const exclusions = props.selecteds.filter(sel => sel != "")
+      
+      return {
+        loading: false,
+        active: props.active,
+        selecteds: exclusions,
+        variants: props.variants
+      }
     }
   }
 
@@ -35,96 +39,70 @@ class ExclusionPicker extends Component {
   onConfirm = () => {
     const {selecteds} = this.state
     this.setState({
-      loading: true,
-      reloading: true
+      loading: true
     })
     this.props.onConfirm({selecteds: selecteds})
   }
 
   handleSelect = vid => {
 
-    let variantId = vid.split('/')[vid.split('/').length - 1]
     let { selecteds } = this.state
 
-    let index = selecteds.findIndex(select => +select.variant_id === +variantId)
+    let index = selecteds.findIndex(sel => sel == vid)
     if (index >= 0) {
-      selecteds = selecteds.filter(select => +select.variant_id !== +variantId)
+      selecteds = selecteds.filter(sel => sel != vid)
     } else {
-      selecteds = [...selecteds, {variant_id: +variantId}]
+      selecteds = [...selecteds, vid]
     }
-    
-    this.props.handleChoice(selecteds)
+    this.setState({
+      selecteds: selecteds
+    })
   }
 
   render () {
-    const { loading, active, records, reloading, selecteds } = this.state
-    const rows = records.map(record => {
-      const source = record.node.image ? record.node.image.src : record.node.product && record.node.product.featuredImage ? record.node.product.featuredImage.src : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'
-      const selectedVariants = selecteds.map(selected => `gid://shopify/ProductVariant/${selected.variant_id}`)
-      return [
-        <Checkbox
-          checked={selectedVariants.includes(record.node.id)}
-          label="Select"
-          labelHidden={true}
-          onChange={() => {
-            this.handleSelect(record.node.id)
-          }}
-        />,
-        <Thumbnail
-          size="medium"
-          source={source}
-        />,
-        <TextContainer spacing="tight">
-          <p>{record.node.product && record.node.product.title}</p>
-          <p>{record.node.title}</p>
-          <p>{record.node.sku}</p>
-        </TextContainer>,
-        <p>${record.node.price}</p>,
-        <TextStyle variation={record.node.inventoryQuantity >= 0 ? 'positive' : 'negative'}>
-          {record.node.inventoryQuantity}
-        </TextStyle>
-      ]
+    const { loading, active, variants, selecteds } = this.state
+    const rows = variants.map(variant => {
+      return (
+        <List.Item key={variant.id}>
+          <Checkbox
+            checked={selecteds.includes(variant.id)}
+            label={variant.title}
+            labelHidden={false}
+            onChange={() => {
+              this.handleSelect(variant.id)
+            }}
+          />
+        </List.Item>
+      )
     })
     return (
       <Modal
         open={active}
+        title='Add exclusions'
         onClose={this.togglePicker}
         loading={loading}
         primaryAction={{
-          content: 'Ok',
+          content: 'Save',
           onAction: this.onConfirm,
           disabled: selecteds.length === 0
         }}
-        secondaryActions={[
-          {
-            content: 'Cancel',
-            onAction: this.togglePicker
-          }
-        ]}
         large
       >
         <Modal.Section>
-          {reloading && <div className="mt-25"><SkeletonBodyText/></div>}
-          {
-            !reloading &&
-            <DataTable
-              columnContentTypes={[
-                'text',
-                'text',
-                'text',
-                'numeric',
-                'numeric',
-              ]}
-              headings={[
-                '#',
-                'Thumbnail',
-                'Product',
-                'Price',
-                'Stock',
-              ]}
-              rows={rows}
-            />
-          }
+          <List type="bullet" className="exclusion-list">
+            {rows}
+          </List>
+          {/* <DataTable
+            columnContentTypes={[
+              'text',
+              'text'
+            ]}
+            headings={[
+              '#',
+              'Title'
+            ]}
+            rows={rows}
+          /> */}
         </Modal.Section>
       </Modal>
     )
