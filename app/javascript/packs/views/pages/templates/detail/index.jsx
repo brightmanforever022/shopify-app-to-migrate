@@ -152,6 +152,7 @@ class NewTemplate extends Component {
 
   setExclusionPicker = params => {
     this.setState({exclusionModal: false})
+    console.log('params: ', params)
   }
 
 

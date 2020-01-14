@@ -23,6 +23,8 @@ class ExclusionPicker extends Component {
         selecteds: exclusions,
         variants: props.variants
       }
+    } else {
+      return null
     }
   }
 
@@ -41,7 +43,7 @@ class ExclusionPicker extends Component {
     this.setState({
       loading: true
     })
-    this.props.onConfirm({selecteds: selecteds})
+    this.props.onConfirm({exclusionList: selecteds})
   }
 
   handleSelect = vid => {
@@ -89,20 +91,11 @@ class ExclusionPicker extends Component {
         large
       >
         <Modal.Section>
-          <List type="bullet" className="exclusion-list">
-            {rows}
-          </List>
-          {/* <DataTable
-            columnContentTypes={[
-              'text',
-              'text'
-            ]}
-            headings={[
-              '#',
-              'Title'
-            ]}
-            rows={rows}
-          /> */}
+          <div className="exclusion-list">
+            <List type="bullet">
+              {rows}
+            </List>
+          </div>
         </Modal.Section>
       </Modal>
     )

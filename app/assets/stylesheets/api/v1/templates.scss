@@ -57,6 +57,15 @@
   }
 }
 
+.exclusion-list {
+  .Polaris-List {
+    padding-left: 0;
+    .Polaris-List__Item {
+      list-style: none;
+    }
+  }
+}
+
 @media all and (max-width: 800px) {
   .attribute-action-list {
     justify-content: space-around;
