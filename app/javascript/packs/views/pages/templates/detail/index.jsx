@@ -267,8 +267,10 @@ class NewTemplate extends Component {
 
   removeItem = (index, itemId) => {
     let {groups} = this.state
-    let dattributes = groups[index].dattributes.filter((item, i) => item.id !== +itemId)
+    let dattributes = groups[index].dattributes.filter((da, i) => da.id !== +itemId)
+    let drellations = groups[index].drellations.filter((dr, i) => dr.dattribute_id !== +itemId)
     groups[index].dattributes = dattributes
+    groups[index].drellations = drellations
     this.setState({groups: groups})
   }
 
@@ -286,7 +288,6 @@ class NewTemplate extends Component {
         groups,
         label,
         cb: data => {
-          // window.location.reload(false)
           this.setState({saving: false})
         }
       })
@@ -341,10 +342,25 @@ class NewTemplate extends Component {
   }
 
   updateAttributeSelection = index => selected => {
+    let { groups } = this.state
+    
     const selectedValue = selected.map((selectedItem) => {
       const matchedOption = this.state.attributeOptions.find((option) => option.value.toString().match(selectedItem))
       return matchedOption
     })
+    // Check if this selected option exists in option list of current group
+    if (groups[index].dattributes) {
+      const currentDattributeIDList = groups[index].dattributes.map(da => da.id)
+      if (currentDattributeIDList.includes(selectedValue[0].value)) {
+        return false
+      }
+    } else {
+      groups[index].dattributes = []
+    }
+
+    if (!groups[index].drellations) {
+      groups[index].drellations = []
+    }
 
     this.setState({selectedAttributeOptions: selected})
     this.setState({inputAttributeValue: selectedValue[0].label})
@@ -363,8 +379,12 @@ class NewTemplate extends Component {
       vendor_sku: selectedValue[0].vendor_sku,
       postal_code: selectedValue[0].postal_code
     }
-    let { groups } = this.state
+    let newRellation = {
+      dattribute_id: selectedValue[0].value,
+      excepts: ''
+    }
     groups[index].dattributes = [...groups[index].dattributes, newOption]
+    groups[index].drellations = [...groups[index].drellations, newRellation]
 
     var newOptionShow = this.state.newOptionShow
     newOptionShow[index] = false
