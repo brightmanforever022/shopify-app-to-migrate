@@ -49,12 +49,13 @@ class ExclusionPicker extends Component {
   handleSelect = vid => {
 
     let { selecteds } = this.state
+    const variantIndex = vid.split('/')[vid.split('/').length - 1]
 
-    let index = selecteds.findIndex(sel => sel == vid)
+    let index = selecteds.findIndex(sel => sel == variantIndex)
     if (index >= 0) {
-      selecteds = selecteds.filter(sel => sel != vid)
+      selecteds = selecteds.filter(sel => sel != variantIndex)
     } else {
-      selecteds = [...selecteds, vid]
+      selecteds = [...selecteds, variantIndex]
     }
     this.setState({
       selecteds: selecteds
@@ -64,10 +65,12 @@ class ExclusionPicker extends Component {
   render () {
     const { loading, active, variants, selecteds } = this.state
     const rows = variants.map(variant => {
+      const variantId = variant.id.split('/')[variant.id.split('/').length - 1]
       return (
-        <List.Item key={variant.id}>
+        <List.Item key={variantId}>
+          
           <Checkbox
-            checked={selecteds.includes(variant.id)}
+            checked={selecteds.includes(variantId)}
             label={variant.title}
             labelHidden={false}
             onChange={() => {
@@ -85,8 +88,7 @@ class ExclusionPicker extends Component {
         loading={loading}
         primaryAction={{
           content: 'Save',
-          onAction: this.onConfirm,
-          disabled: selecteds.length === 0
+          onAction: this.onConfirm
         }}
         large
       >

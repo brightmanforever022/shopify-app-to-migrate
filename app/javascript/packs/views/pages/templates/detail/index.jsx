@@ -151,10 +151,20 @@ class NewTemplate extends Component {
   }
 
   setExclusionPicker = params => {
-    this.setState({exclusionModal: false})
-    console.log('params: ', params)
+    const { groups, selectedGroupIndex, selectedAttributeIndex } = this.state
+    groups[selectedGroupIndex].drellations = groups[selectedGroupIndex].drellations.map(dr => {
+      if (dr.dattribute_id == selectedAttributeIndex) {
+        dr.excepts = params.exclusionList.join(',')
+        return dr
+      } else {
+        return dr
+      }
+    })
+    this.setState({
+      groups: groups,
+      exclusionModal: false
+    })
   }
-
 
   loadProduct  = id => {
     this.props.loadProduct({
@@ -276,6 +286,7 @@ class NewTemplate extends Component {
         groups,
         label,
         cb: data => {
+          // window.location.reload(false)
           this.setState({saving: false})
         }
       })
@@ -327,11 +338,6 @@ class NewTemplate extends Component {
         this.setState({deselectedAttributeOptions: attributeList, attributeOptions: attributeList})
       }
     })
-    // const filterRegex = new RegExp(value, 'i')
-    // const resultOptions = this.state.deselectedAttributeOptions.filter((option) => {
-    //   return option.label.match(filterRegex)
-    // })
-    // this.setState({attributeOptions: resultOptions})
   }
 
   updateAttributeSelection = index => selected => {

@@ -71,15 +71,14 @@ class Api::V1::TemplatesController < AuthenticatedController
 
     ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
     variants = get_variants_by_ids(ids)
-
-    render json: {template: @template, variants: variants }, include: {
+    attributeList = Dattribute.order('id ASC').limit(10)
+    render json: {template: @template, variants: variants, attributeList: attributeList }, include: {
       groups: {
         include: {
           drellations: {},
           dattributes: {}
         }
-      },
-      variants: {}
+      }
     }
   end
 
@@ -130,8 +129,10 @@ class Api::V1::TemplatesController < AuthenticatedController
         )
         if @group.save
           group[:dattributes].each do |datt|
+            originalDrellation = group[:drellations].find{|dr| dr[:dattribute_id] == datt[:id] }
             @drellation = Drellation.new(
               dattribute_id: datt[:id].to_i,
+              excepts: originalDrellation ? originalDrellation[:excepts] : '',
               group: @group
             )
             unless @drellation.save
