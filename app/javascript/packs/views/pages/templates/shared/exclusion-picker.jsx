@@ -9,7 +9,7 @@ class ExclusionPicker extends Component {
       loading: true,
       active: false,
       selecteds: [],
-      variants: []
+      dattributes: []
     }
   }
 
@@ -21,7 +21,7 @@ class ExclusionPicker extends Component {
         loading: false,
         active: props.active,
         selecteds: exclusions,
-        variants: props.variants
+        dattributes: props.attributeList
       }
     } else {
       return null
@@ -46,16 +46,15 @@ class ExclusionPicker extends Component {
     this.props.onConfirm({exclusionList: selecteds})
   }
 
-  handleSelect = vid => {
-
+  handleSelect = daid => {
+    const id = daid.toString()
     let { selecteds } = this.state
-    const variantIndex = vid.split('/')[vid.split('/').length - 1]
-
-    let index = selecteds.findIndex(sel => sel == variantIndex)
+    console.log('selecteds: ', selecteds)
+    let index = selecteds.findIndex(sel => sel == id)
     if (index >= 0) {
-      selecteds = selecteds.filter(sel => sel != variantIndex)
+      selecteds = selecteds.filter(sel => sel != id)
     } else {
-      selecteds = [...selecteds, variantIndex]
+      selecteds = [...selecteds, id]
     }
     this.setState({
       selecteds: selecteds
@@ -63,18 +62,17 @@ class ExclusionPicker extends Component {
   }
 
   render () {
-    const { loading, active, variants, selecteds } = this.state
-    const rows = variants.map(variant => {
-      const variantId = variant.id.split('/')[variant.id.split('/').length - 1]
+    const { loading, active, dattributes, selecteds } = this.state
+    const rows = dattributes.map(dattribute => {
       return (
-        <List.Item key={variantId}>
+        <List.Item key={dattribute.id}>
           
           <Checkbox
-            checked={selecteds.includes(variantId)}
-            label={variant.title}
+            checked={selecteds.includes(dattribute.id.toString())}
+            label={dattribute.label}
             labelHidden={false}
             onChange={() => {
-              this.handleSelect(variant.id)
+              this.handleSelect(dattribute.id)
             }}
           />
         </List.Item>

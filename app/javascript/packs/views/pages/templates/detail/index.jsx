@@ -36,6 +36,7 @@ class NewTemplate extends Component {
       selectedGroupIndex: 0,
       selectedExclusions: '',
       selectedAttributeIndex: 0,
+      exclusionAttributeList: [],
       product: null,
       label: '',
       id: null,
@@ -136,13 +137,22 @@ class NewTemplate extends Component {
 
   openExclusionModal = (index, id) => {
     const { groups } = this.state
+    let exclusionAttributeList = []
+    groups.map((gr, grIndex) => {
+      if (index != grIndex) {
+        gr.dattributes.map(gda => {
+          exclusionAttributeList.push(gda)
+        })
+      }
+    })
     const group = groups[index]
     const drellation = group.drellations.find(dr => dr.dattribute_id == id)
     this.setState({
       exclusionModal: true,
       selectedGroupIndex: index,
       selectedAttributeIndex: id,
-      selectedExclusions: drellation.excepts
+      selectedExclusions: drellation.excepts,
+      exclusionAttributeList: exclusionAttributeList
     })
   }
 
@@ -431,7 +441,7 @@ class NewTemplate extends Component {
   }
 
   render () {
-    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions, exclusionModal, selectedExclusions } = this.state
+    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions, exclusionModal, selectedExclusions, exclusionAttributeList } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -551,7 +561,7 @@ class NewTemplate extends Component {
                     />
                   )
                   return (
-                    <div className="group-card">
+                    <div className="group-card" key={`card` + index}>
                       <Card
                       title="Attribute"
                       sectioned
@@ -631,7 +641,7 @@ class NewTemplate extends Component {
               <ExclusionPicker
                 active={exclusionModal}
                 selecteds={selectedExclusions.split(',')}
-                variants={variants}
+                attributeList={exclusionAttributeList}
                 togglePicker={this.toggleExclusionPicker}
                 onConfirm={this.setExclusionPicker}
               />
