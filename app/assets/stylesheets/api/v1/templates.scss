@@ -66,6 +66,14 @@
   }
 }
 
+.group-card {
+  position: relative;
+  .group-tobble-button {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+  }
+}
 @media all and (max-width: 800px) {
   .attribute-action-list {
     justify-content: space-around;
