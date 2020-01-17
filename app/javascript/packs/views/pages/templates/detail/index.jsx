@@ -94,7 +94,6 @@ class NewTemplate extends Component {
             newOptionShow[i] = false
             openGroup[i] = true
           }
-          console.log('groups: ', data.template.groups)
           this.setState({
             variants: data.variants.data.nodes,
             groups: data.template.groups,
@@ -276,7 +275,7 @@ class NewTemplate extends Component {
   }
 
   removeItem = (index, itemId) => {
-    let {groups} = this.state
+    let { groups } = this.state
     let dattributes = groups[index].dattributes.filter((da, i) => da.id !== +itemId)
     let drellations = groups[index].drellations.filter((dr, i) => dr.dattribute_id !== +itemId)
     groups[index].dattributes = dattributes
@@ -403,24 +402,10 @@ class NewTemplate extends Component {
 
   renderItem = index => item => {
     const { id, label, price, price_type, length, width, girth, attribute_code, weight, store_name, vendor_sku, postal_code } = item
-    const shortcutActions = [
-      {
-        content: <Button primary>Add exclusions</Button>,
-        onAction: () => this.openExclusionModal(id)
-      },
-      {
-        content: <Button external url={"/attributes/" + id + "/edit"}>Edit option</Button>
-      },
-      {
-        content: <Button icon={DeleteMajorMonotone}></Button>,
-        onAction: () => this.removeItem(index, item.id)
-      }
-    ]
     return (
       <ResourceList.Item
         id={"" + index + "-" + id}
         accessibilityLabel={`View details for ${label}`}
-        // shortcutActions={shortcutActions}
         persistActions
       >
         <div className="attribute-item" key={"attribute-item" + index + "-" + id}>
@@ -530,17 +515,15 @@ class NewTemplate extends Component {
                     <Stack.Item fill>
                     </Stack.Item>
                     <Stack.Item>
-                      {/* <div className="mt-25"> */}
-                        <ButtonGroup>
-                          <Button primary onClick={() => {this.addGroup()}}>New add-on</Button>
-                          <Button primary external={true} url="/attributes/new">New Attribute</Button>
-                          <Button
-                            onClick={() => {this.openModal('product')}}
-                          >
-                            Assign variants
-                          </Button>
-                        </ButtonGroup>
-                      {/* </div> */}
+                      <ButtonGroup>
+                        <Button primary onClick={() => {this.addGroup()}}>New add-on</Button>
+                        <Button primary external={true} url="/attributes/new">New Attribute</Button>
+                        <Button
+                          onClick={() => {this.openModal('product')}}
+                        >
+                          Assign variants
+                        </Button>
+                      </ButtonGroup>
                     </Stack.Item>
                   </Stack>
                 </Card>

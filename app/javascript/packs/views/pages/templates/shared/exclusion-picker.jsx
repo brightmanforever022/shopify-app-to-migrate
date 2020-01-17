@@ -49,7 +49,6 @@ class ExclusionPicker extends Component {
   handleSelect = daid => {
     const id = daid.toString()
     let { selecteds } = this.state
-    console.log('selecteds: ', selecteds)
     let index = selecteds.findIndex(sel => sel == id)
     if (index >= 0) {
       selecteds = selecteds.filter(sel => sel != id)
