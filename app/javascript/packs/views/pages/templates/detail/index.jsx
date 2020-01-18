@@ -568,7 +568,7 @@ class NewTemplate extends Component {
                         <Collapsible open={this.state.openGroup[index]} id={'groupCol-' + index}>
                           <Card.Section>
                             <div className="attribute-item-header attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
-                              <div className="option-item">Option Title<br />Stores</div>
+                              <div className="option-item">Option Title<br/>Stores</div>
                               <div className="option-item">Price</div>
                               <div className="option-item">Weight</div>
                               <div className="option-item">Size (LxWxH)</div>

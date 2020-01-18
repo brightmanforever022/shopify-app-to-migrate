@@ -65,7 +65,6 @@ class ExclusionPicker extends Component {
     const rows = dattributes.map(dattribute => {
       return (
         <List.Item key={dattribute.id}>
-          
           <Checkbox
             checked={selecteds.includes(dattribute.id.toString())}
             label={dattribute.label}
