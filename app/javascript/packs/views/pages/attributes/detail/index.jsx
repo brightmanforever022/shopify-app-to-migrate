@@ -26,6 +26,12 @@ class NewAttribute extends Component {
       width: 0,
       length: 0,
       girth: 0,
+      width2: 0,
+      length2: 0,
+      girth2: 0,
+      width3: 0,
+      length3: 0,
+      girth3: 0,
       attribute_code: '',
       postal_code: '',
       store_name: 'display4sale',
@@ -61,6 +67,12 @@ class NewAttribute extends Component {
             width: data.attribute.width,
             length: data.attribute.length,
             girth: data.attribute.girth,
+            width2: data.attribute.width2,
+            length2: data.attribute.length2,
+            girth2: data.attribute.girth2,
+            width3: data.attribute.width3,
+            length3: data.attribute.length3,
+            girth3: data.attribute.girth3,
             attribute_code: data.attribute.attribute_code,
             postal_code: data.attribute.postal_code,
             store_name: data.attribute.store_name,
@@ -86,7 +98,7 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, attribute_code, postal_code, store_name, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_name, vendor_sku } = this.state
     this.setState({saving: true})
     if (id) {
       this.props.updateAttribute({
@@ -98,6 +110,12 @@ class NewAttribute extends Component {
         width,
         length,
         girth,
+        width2,
+        length2,
+        girth2,
+        width3,
+        length3,
+        girth3,
         attribute_code,
         postal_code,
         store_name,
@@ -115,6 +133,12 @@ class NewAttribute extends Component {
         width,
         length,
         girth,
+        width2,
+        length2,
+        girth2,
+        width3,
+        length3,
+        girth3,
         attribute_code,
         postal_code,
         store_name,
@@ -130,7 +154,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, attribute_code, postal_code, store_name, vendor_sku, loading, saving, confirmModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_name, vendor_sku, loading, saving, confirmModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -216,6 +240,36 @@ class NewAttribute extends Component {
                           value={girth}
                           onChange={this.handleChange('girth')}
                           label="Height"
+                        />
+                        <TextField
+                          value={width}
+                          onChange={this.handleChange('width2')}
+                          label="Second Width"
+                        />
+                        <TextField
+                          value={length2}
+                          onChange={this.handleChange('length2')}
+                          label="Second Length"
+                        />
+                        <TextField
+                          value={girth2}
+                          onChange={this.handleChange('girth2')}
+                          label="Second Height"
+                        />
+                        <TextField
+                          value={width3}
+                          onChange={this.handleChange('width3')}
+                          label="Third Width"
+                        />
+                        <TextField
+                          value={length3}
+                          onChange={this.handleChange('length3')}
+                          label="Third Length"
+                        />
+                        <TextField
+                          value={girth3}
+                          onChange={this.handleChange('girth3')}
+                          label="Third Height"
                         />
                       </FormLayout.Group>
                     </Fragment>
