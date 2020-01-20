@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Page, Layout, PageActions, Card, Button, FormLayout, TextField, ButtonGroup } from '@shopify/polaris'
 import { connect } from 'react-redux'
-import StorePicker from '../shared/store-picker'
+import StorePicker from '../../templates/shared/store-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
 
 import ConfirmModal from '../../../components/confirm-modal'
@@ -35,7 +35,8 @@ class NewAttribute extends Component {
       girth3: 0,
       attribute_code: '',
       postal_code: '',
-      store_list: ['display4sale'],
+      store_list: [],
+      selectedStoreList: '',
       vendor_sku: '',
       key: 0,
       saving: false,
@@ -76,8 +77,9 @@ class NewAttribute extends Component {
             girth3: data.attribute.girth3,
             attribute_code: data.attribute.attribute_code,
             postal_code: data.attribute.postal_code,
-            store_list: data.attribute.store_list.split(','),
+            selectedStoreList: data.attribute.store_list,
             vendor_sku: data.attribute.vendor_sku,
+            store_list: data.storeList,
             loading: false
           })
         }
@@ -101,12 +103,21 @@ class NewAttribute extends Component {
   }
 
   setStorePicker = params => {
-    console.log('params: ', params)
+    let selectedStores = params.selectedStores.join(',')
+    this.setState({
+      selectedStoreList: selectedStores,
+      storeSelectModal: false
+    })
+  }
+
+  toggleStorePicker = storeSelectModal => {
+    this.setState({storeSelectModal})
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, selectedStoreList, vendor_sku } = this.state
     this.setState({saving: true})
+    let store_list = selectedStoreList
     if (id) {
       this.props.updateAttribute({
         id,
@@ -161,7 +172,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, vendor_sku, loading, saving, confirmModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -286,7 +297,11 @@ class NewAttribute extends Component {
                 />
               </Layout.Section>
               <StorePicker
+                active = {storeSelectModal}
                 storeList = {store_list}
+                selecteds = {selectedStoreList.split(',')}
+                togglePicker = {this.toggleStorePicker}
+                onConfirm={this.setStorePicker}
               >
               </StorePicker>
               <ConfirmModal

@@ -41,7 +41,7 @@ class Api::V1::AttributesController < AuthenticatedController
       girth3: attribute_params[:girth3],
       attribute_code: attribute_params[:attribute_code],
       postal_code: attribute_params[:postal_code],
-      store_list: attribute_params[:store_list].join(','),
+      store_list: attribute_params[:store_list],
       vendor_sku: attribute_params[:vendor_sku]
     )
     if @attribute.save
@@ -52,8 +52,8 @@ class Api::V1::AttributesController < AuthenticatedController
   end
 
   def show
-    # storeList = Dattribute.order('id ASC').limit(10)
-    render json: {attribute: @attribute}
+    storeList = Shop.order('id ASC')
+    render json: {attribute: @attribute, storeList: storeList}
   end
 
   def edit
@@ -76,7 +76,7 @@ class Api::V1::AttributesController < AuthenticatedController
       girth3: attribute_params[:girth3],
       attribute_code: attribute_params[:attribute_code],
       postal_code: attribute_params[:postal_code],
-      store_list: attribute_params[:store_list].join(','),
+      store_list: attribute_params[:store_list],
       vendor_sku: attribute_params[:vendor_sku]
     })
 

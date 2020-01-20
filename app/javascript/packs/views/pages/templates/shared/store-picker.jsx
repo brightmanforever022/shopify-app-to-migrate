@@ -9,19 +9,19 @@ class StorePicker extends Component {
       loading: true,
       active: false,
       selecteds: [],
-      dattributes: []
+      store_list: []
     }
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.active !== state.active) {
-      const exclusions = props.selecteds.filter(sel => sel != "")
+      const stores = props.selecteds.filter(sel => sel != "")
       
       return {
         loading: false,
         active: props.active,
-        selecteds: exclusions,
-        dattributes: props.attributeList
+        selecteds: stores,
+        store_list: props.storeList
       }
     } else {
       return null
@@ -43,17 +43,16 @@ class StorePicker extends Component {
     this.setState({
       loading: true
     })
-    this.props.onConfirm({exclusionList: selecteds})
+    this.props.onConfirm({selectedStores: selecteds})
   }
 
-  handleSelect = daid => {
-    const id = daid.toString()
+  handleSelect = storeName => {
     let { selecteds } = this.state
-    let index = selecteds.findIndex(sel => sel == id)
+    let index = selecteds.findIndex(sel => sel == storeName)
     if (index >= 0) {
-      selecteds = selecteds.filter(sel => sel != id)
+      selecteds = selecteds.filter(sel => sel != storeName)
     } else {
-      selecteds = [...selecteds, id]
+      selecteds = [...selecteds, storeName]
     }
     this.setState({
       selecteds: selecteds
@@ -61,16 +60,16 @@ class StorePicker extends Component {
   }
 
   render () {
-    const { loading, active, dattributes, selecteds } = this.state
-    const rows = dattributes.map(dattribute => {
+    const { loading, active, store_list, selecteds } = this.state
+    const rows = store_list.map(st => {
       return (
-        <List.Item key={dattribute.id}>
+        <List.Item key={st.id}>
           <Checkbox
-            checked={selecteds.includes(dattribute.id.toString())}
-            label={dattribute.label}
+            checked={selecteds.includes(st.shopify_domain)}
+            label={st.shopify_domain}
             labelHidden={false}
             onChange={() => {
-              this.handleSelect(dattribute.id)
+              this.handleSelect(st.shopify_domain)
             }}
           />
         </List.Item>
@@ -79,7 +78,7 @@ class StorePicker extends Component {
     return (
       <Modal
         open={active}
-        title='Add exclusions'
+        title='Add Store names'
         onClose={this.togglePicker}
         loading={loading}
         primaryAction={{
