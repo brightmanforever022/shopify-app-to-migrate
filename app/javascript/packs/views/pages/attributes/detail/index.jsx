@@ -237,11 +237,6 @@ class NewAttribute extends Component {
                           label="Vendor SKU"
                         />
                         <TextField
-                          value={weight}
-                          onChange={this.handleChange('weight')}
-                          label="Weight"
-                        />
-                        <TextField
                           value={width}
                           onChange={this.handleChange('width')}
                           label="Width"
@@ -285,6 +280,11 @@ class NewAttribute extends Component {
                           value={girth3}
                           onChange={this.handleChange('girth3')}
                           label="Third Height"
+                        />
+                        <TextField
+                          value={weight}
+                          onChange={this.handleChange('weight')}
+                          label="Weight"
                         />
                       </FormLayout.Group>
                     </Fragment>
