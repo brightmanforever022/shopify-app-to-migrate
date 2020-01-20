@@ -74,6 +74,11 @@
     top: 30px;
   }
 }
+.store-list {
+  .Polaris-Button {
+    margin-top: 3px;
+  }
+}
 @media all and (max-width: 800px) {
   .attribute-action-list {
     justify-content: space-around;

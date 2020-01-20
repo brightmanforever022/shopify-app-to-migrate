@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_19_194057) do
+ActiveRecord::Schema.define(version: 2020_01_20_184448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2020_01_19_194057) do
     t.float "girth"
     t.string "attribute_code"
     t.string "postal_code", default: ""
-    t.string "store_name", default: "display4sale"
+    t.string "store_list", default: "display4sale"
     t.string "vendor_sku", default: ""
     t.float "width2", default: 0.0
     t.float "length2", default: 0.0

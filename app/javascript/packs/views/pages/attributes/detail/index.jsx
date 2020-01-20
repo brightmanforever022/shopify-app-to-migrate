@@ -1,6 +1,7 @@
-import React, { Component, Fragment, useState, useCallback } from 'react'
-import { Page, Layout, PageActions, Card, Select, TextStyle, Button, TextContainer, FormLayout, TextField, ButtonGroup } from '@shopify/polaris'
+import React, { Component, Fragment } from 'react'
+import { Page, Layout, PageActions, Card, Button, FormLayout, TextField, ButtonGroup } from '@shopify/polaris'
 import { connect } from 'react-redux'
+import StorePicker from '../shared/store-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
 
 import ConfirmModal from '../../../components/confirm-modal'
@@ -34,16 +35,16 @@ class NewAttribute extends Component {
       girth3: 0,
       attribute_code: '',
       postal_code: '',
-      store_name: 'display4sale',
+      store_list: ['display4sale'],
       vendor_sku: '',
       key: 0,
       saving: false,
       confirming: false,
-      confirmModal: false
+      confirmModal: false,
+      storeSelectModal: false,
     }
 
     this.handleTypeChange = this.handleTypeChange.bind(this)
-    this.handleStoreChange = this.handleStoreChange.bind(this)
   }
 
   UNSAFE_componentWillMount () {
@@ -75,7 +76,7 @@ class NewAttribute extends Component {
             girth3: data.attribute.girth3,
             attribute_code: data.attribute.attribute_code,
             postal_code: data.attribute.postal_code,
-            store_name: data.attribute.store_name,
+            store_list: data.attribute.store_list.split(','),
             vendor_sku: data.attribute.vendor_sku,
             loading: false
           })
@@ -93,12 +94,18 @@ class NewAttribute extends Component {
     this.setState({price_type: event.target.value})
   }
 
-  handleStoreChange = event => {
-    this.setState({store_name: event.target.value})
+  selectStoreModalOpen = () => {
+    this.setState({
+      storeSelectModal: true
+    })
+  }
+
+  setStorePicker = params => {
+    console.log('params: ', params)
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_name, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, vendor_sku } = this.state
     this.setState({saving: true})
     if (id) {
       this.props.updateAttribute({
@@ -118,7 +125,7 @@ class NewAttribute extends Component {
         girth3,
         attribute_code,
         postal_code,
-        store_name,
+        store_list,
         vendor_sku,
         cb: data => {
           this.setState({saving: false})
@@ -141,7 +148,7 @@ class NewAttribute extends Component {
         girth3,
         attribute_code,
         postal_code,
-        store_name,
+        store_list,
         vendor_sku,
         cb: data => {
           this.setState({saving: false})
@@ -154,7 +161,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_name, vendor_sku, loading, saving, confirmModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, vendor_sku, loading, saving, confirmModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -209,12 +216,9 @@ class NewAttribute extends Component {
                           onChange={this.handleChange('postal_code')}
                           label="Postal Code"
                         />
-                        <label>
+                        <label className="store-list">
                           Store Name<br/>
-                          <select value={store_name} onChange={this.handleStoreChange} className="select-type">
-                            <option value="display4sale">Display4Sale</option>
-                            <option value="swingpanels">Swingpanels</option>
-                          </select>
+                          <Button outline onClick={() => {this.selectStoreModalOpen()}}>Select Stores</Button>
                         </label>
                         <TextField
                           value={vendor_sku}
@@ -242,7 +246,7 @@ class NewAttribute extends Component {
                           label="Height"
                         />
                         <TextField
-                          value={width}
+                          value={width2}
                           onChange={this.handleChange('width2')}
                           label="Second Width"
                         />
@@ -281,6 +285,10 @@ class NewAttribute extends Component {
                   secondaryActions={secondaryActions}
                 />
               </Layout.Section>
+              <StorePicker
+                storeList = {store_list}
+              >
+              </StorePicker>
               <ConfirmModal
                 active={confirmModal}
                 confirming={confirming}
