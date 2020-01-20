@@ -60,8 +60,12 @@
 .exclusion-list {
   .Polaris-List {
     padding-left: 0;
+    display: flex;
+    flex-flow: row wrap;
     .Polaris-List__Item {
       list-style: none;
+      width: 33%;
+      justify-content: space-around;
     }
   }
 }
