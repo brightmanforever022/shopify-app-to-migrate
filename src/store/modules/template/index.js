@@ -5,6 +5,7 @@ const template = {
   },
   actions: {
     set_templates ({commit}, data) {
+      console.log('template data: ', data)
       commit('SET_TEMPLATES', data)
     }
   },

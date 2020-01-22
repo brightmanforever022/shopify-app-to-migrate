@@ -16,7 +16,8 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
         include: {
           dattributes: {
             except: [:created_at, :updated_at]
-          }
+          },
+          drellations: {}
         }
       }
     }
