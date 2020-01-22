@@ -5,7 +5,9 @@ const order = {
   state: {
     quantity: 1,
     variant_id: null,
-    custom_options: []
+    custom_options: [],
+    current_excepts: [],
+    except_list: [],
   },
   actions: {
     setQuantity ({commit}, quantity) {
@@ -19,6 +21,9 @@ const order = {
     },
     upsert_customization ({commit}, option) {
       commit('UPSERT_OPTION', option)
+    },
+    setExcepts ({commit}, excepts) {
+      commit('SET_EXCEPTS', excepts)
     },
     create_order({commit}, data) {
       return new Promise((resolve, reject) => {
@@ -46,6 +51,7 @@ const order = {
     },
     SET_INIT: (state) => {
       state.custom_options = []
+      state.except_list = []
     },
     UPSERT_OPTION: (state, option) => {
       let options = state.custom_options
@@ -55,6 +61,22 @@ const order = {
         options = [...options, option]
         state.custom_options = options
       }
+    },
+    SET_EXCEPTS: (state, excepts) => {
+      let previousExcepts = state.current_excepts
+      let exceptList = state.except_list
+      // replace current excepts with new excepts
+      state.current_excepts = excepts
+      // remove previous excepts from exceptList
+      previousExcepts.map(ex => {
+        if (exceptList.indexOf(ex) >= 0) {
+          exceptList.splice(exceptList.indexOf(ex), 1)
+        }
+      })
+      // add new excepts into exceptList
+      exceptList = exceptList.concat(excepts)
+      console.log('except list: ', exceptList)
+      state.except_list = exceptList
     }
   },
   getters: {
@@ -66,6 +88,9 @@ const order = {
     },
     custom_options (state) {
       return state.custom_options
+    },
+    except_list (state) {
+      return state.except_list
     }
   }
 }

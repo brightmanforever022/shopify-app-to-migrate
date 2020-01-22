@@ -51,6 +51,7 @@
                 v-for="(item, key) in group.dattributes"
                 :key="key"
                 :value="item.id"
+                :disabled="isActiveOption(item)"
               >
                 {{item.label}}
               </option>
@@ -192,6 +193,7 @@ export default {
       group: 'template/group_by_id',
       productData: 'product/get',
       custom_options: 'order/custom_options',
+      except_list: 'order/except_list',
     })
   },
   mixins: [ priceMixin ],
@@ -252,14 +254,25 @@ export default {
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
     },
+    isActiveOption (item) {
+      if (this.except_list.includes(item.id)) {
+        return 'disabled'
+      }
+    },
     async setAddOn (evt) {
       let group_id = evt.target.dataset.group
       let item_id = evt.target.value
       let group = this.group(evt.target.dataset.group)
       let item = group.dattributes.find(i => i.id === +item_id)
       item['group'] = group.label
+
+      // get excepts for selected item
+      const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
+      const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => parseInt(ex))
+      console.log('new excepts: ', newExcepts)
       try {
         const customOptions = await this.$store.dispatch('order/upsert_customization', item)
+        await this.$store.dispatch('order/setExcepts', newExcepts)
       } catch (error) {
         console.log('Error in upsert customization: ', error)
       }
