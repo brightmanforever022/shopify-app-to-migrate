@@ -268,7 +268,12 @@ export default {
 
       // get excepts for selected item
       const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
-      const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => parseInt(ex))
+      const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
+        return {
+          groupId: drellation.group_id,
+          exceptId: parseInt(ex)
+        }
+      })
       console.log('new excepts: ', newExcepts)
       try {
         const customOptions = await this.$store.dispatch('order/upsert_customization', item)
