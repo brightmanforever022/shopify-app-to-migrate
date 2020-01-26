@@ -24,3 +24,17 @@ export function getFreightShippingPrice(id) {
 	}
 	return shippingPrice
 }
+
+export function getFedexShippingPrice(id) {
+	var shippingPrice = 0
+	if (id == 1) {
+		shippingPrice = 36.7
+	} else if (id == 2) {
+		shippingPrice = 58.39
+	} else if (id == 3) {
+		shippingPrice = 73.93
+	} else if (id == 4) {
+		shippingPrice = 102.59
+	}
+	return shippingPrice
+}

@@ -4,7 +4,8 @@
       <a @click.prevent="continue_shopping"><span>&lt;</span>Continue Shopping</a>
       <h2>Your Cart</h2>
       <span @click.prevent="close">
-        <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/11/assets/cart-close-button_18x.png?32245" alt="close button" />
+        <!-- <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/11/assets/cart-close-button_18x.png?32245" alt="close button" /> -->
+        <icon-close/>
       </span>
     </div>
     <div class="display_cart-wrapper">
@@ -58,16 +59,55 @@
           </div>
         </div>
       </div>
-      <!-- <div class="show-shipping-options">
+      <div class="show-shipping-options">
         <h2>Shipping Options</h2>
         <p>
-          <span>Shipping to Canada?</span>
-          <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/11/assets/flag-canada_92x34.png?32199" alt="canada-flag">
+          <IconFlag />
+          <span>
+            Shipping to Canada? <a @click.prevent="showQuoteExplain">?</a>
+            <div class="explain-quote-block" v-show="explainQuoteFlag">
+              <div class="explain-block-header">
+                <a @click.prevent="hideQuoteExplain"><icon-close/></a>
+              </div>
+              Click to Request a Quote
+            </div>
+          </span>
         </p>
         <label for="zipcode" class="form__label">ZIP Code</label>
         <input type="text" class="zipcode" id="zipcode" />
         <button>SHOW SHIPPING OPTIONS</button>
-      </div> -->
+      </div>
+      <div class="fedex-shipping">
+        <h4>FedEx/UPS Shipping Options</h4>
+        <div class="fedex-shipping-header">
+          <span>Service</span>
+          <span>Cost</span>
+          <span>Lead Time to Ship</span>
+        </div>
+        <div class="fedex-shipping-body">
+          <ul>
+            <li @click.prevent="fedexShipping(1)" id="fedex-shipping-option-1" class="active">
+              <span>Ground</span>
+              <span>$36.70</span>
+              <span>Get it by October 26</span>
+            </li>
+            <li @click.prevent="fedexShipping(2)" id="fedex-shipping-option-2">
+              <span>3 day select</span>
+              <span>$58.39</span>
+              <span>Get it by October 29</span>
+            </li>
+            <li @click.prevent="fedexShipping(3)" id="fedex-shipping-option-3">
+              <span>2nd day air</span>
+              <span>$73.93</span>
+              <span>Get it by November 9</span>
+            </li>
+            <li @click.prevent="fedexShipping(4)" id="fedex-shipping-option-4">
+              <span>Next day air</span>
+              <span>$102.59</span>
+              <span>Get it by November 16</span>
+            </li>
+          </ul>
+      </div>
       <div class="freight-shipping-options">
         <h4>Freight Shipping Options</h4>
         <div class="freight-shipping-header">
@@ -139,6 +179,10 @@
               <li>
                 <span class="summary-title">Discount:</span>
                 <span class="summary-price">{{discount_total | money}}</span>
+              </li>
+              <li>
+                <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
+                <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
               </li>
               <li>
                 <span class="summary-title">Optional Commercial Lift-Gate Service:</span>
@@ -233,6 +277,7 @@ export default {
       cal_total: 'cart/get_total',
       discount_total: 'cart/get_discount',
       freight_shipping: 'cart/get_freight_shipping_price',
+      fedex_shipping: 'cart/get_fedex_shipping_price',
     }),
     
     // stock () {
@@ -254,6 +299,7 @@ export default {
       isPromoCode: false,
       promoCode: '',
       explainFlag: false,
+      explainQuoteFlag: false,
       discountLoading: false,
       checkoutLoading: false,
     }
@@ -274,6 +320,12 @@ export default {
       } else {
         $('.promo-code-check label').removeClass('checked')
       }
+    },
+    showQuoteExplain () {
+      this.explainQuoteFlag = true
+    },
+    hideQuoteExplain () {
+      this.explainQuoteFlag = false
     },
     showExplain () {
       this.explainFlag = true
@@ -298,6 +350,11 @@ export default {
       this.$store.dispatch('cart/setFreightShipping', shippingId)
       $('.freight-shipping-body li').removeClass('active')
       $('#freight-shipping-option-'+shippingId).addClass('active')
+    },
+    fedexShipping (shippingId) {
+      this.$store.dispatch('cart/setFedexShipping', shippingId)
+      $('.fedex-shipping-body li').removeClass('active')
+      $('#fedex-shipping-option-'+shippingId).addClass('active')
     },
     async createOrder () {
       this.checkoutLoading = true
