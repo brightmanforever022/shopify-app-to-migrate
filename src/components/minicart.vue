@@ -73,9 +73,15 @@
             </div>
           </span>
         </p>
-        <label for="zipcode" class="form__label">ZIP Code</label>
-        <input type="text" class="zipcode" id="zipcode" />
-        <button>SHOW SHIPPING OPTIONS</button>
+        <div class="zip-code-form">
+          <label for="zip_code">ZIP Code</label>
+          <input type="text" id="zip_code" v-model="zipCode" placeholder="1001">
+          <button @click.prevent="fetchShipping">SHOW SHIPPING OPTIONS</button>
+        </div>
+        <loading
+          :active.sync="shippingLoading"
+          :is-full-page="false"
+        />
       </div>
       <div class="fedex-shipping">
         <h4>FedEx/UPS Shipping Options</h4>
@@ -298,8 +304,10 @@ export default {
     return {
       isPromoCode: false,
       promoCode: '',
+      zipCode: '',
       explainFlag: false,
       explainQuoteFlag: false,
+      shippingLoading: false,
       discountLoading: false,
       checkoutLoading: false,
     }
@@ -332,6 +340,15 @@ export default {
     },
     hideExplain () {
       this.explainFlag = false
+    },
+    async fetchShipping () {
+      try {
+        this.shippingLoading = true
+        await this.$store.dispatch('cart/fetchShippingList', this.zipCode)
+        this.shippingLoading = false
+      } catch (error) {
+        console.log(error)
+      }
     },
     async calculateByDiscount () {
       try {
