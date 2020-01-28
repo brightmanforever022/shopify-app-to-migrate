@@ -73,9 +73,15 @@
             </div>
           </span>
         </p>
-        <label for="zipcode" class="form__label">ZIP Code</label>
-        <input type="text" class="zipcode" id="zipcode" />
-        <button>SHOW SHIPPING OPTIONS</button>
+        <div class="zip-code-form">
+          <label for="zip_code">ZIP Code</label>
+          <input type="text" id="zip_code" v-model="zipCode" placeholder="1001">
+          <button @click.prevent="fetchShipping">SHOW SHIPPING OPTIONS</button>
+        </div>
+        <loading
+          :active.sync="shippingLoading"
+          :is-full-page="false"
+        />
       </div>
       <div class="fedex-shipping">
         <h4>FedEx/UPS Shipping Options</h4>
@@ -107,6 +113,18 @@
               <span>Get it by November 16</span>
             </li>
           </ul>
+        </div>
+        <div class="fedex-shipping-date">
+          <span>Lead time to ship</span>: September 26, 2018<br /><br />
+          <span>Delivery estimate</span>: September 27, 2018 - October 02, 2018
+        </div>
+        <div class="need-quote">
+          <h4>Need a Quote?</h4>
+          <p>
+            When requesting an estimate, we review all aspects of the order including product, size and weight, quantity, boxing, shipping method and any special request or custom option to provide you the best possible quote.
+          </p>
+          <h6><a @click.prevent="showRequestQuote"><icon-quote />&nbsp;Request a Quote</a></h6>
+        </div>
       </div>
       <div class="freight-shipping-options">
         <h4>Freight Shipping Options</h4>
@@ -231,6 +249,7 @@ import $ from 'jquery'
 import Loading from 'vue-loading-overlay'
 import priceMixin from '@/mixins/price'
 import CartInputQuantity from '@/components/cart-quantity'
+import IconQuote from '@/components/icons/icon-quote'
 import IconHeart from '@/components/icons/icon-heart'
 import IconHeartFill from '@/components/icons/icon-heart-fill'
 import IconVisa from '@/components/icons/icon-visa'
@@ -247,6 +266,7 @@ export default {
   components: {
     MinicartFormSelection,
     CartInputQuantity,
+    IconQuote,
     IconHeart,
     IconHeartFill,
     IconVisa,
@@ -298,8 +318,10 @@ export default {
     return {
       isPromoCode: false,
       promoCode: '',
+      zipCode: '',
       explainFlag: false,
       explainQuoteFlag: false,
+      shippingLoading: false,
       discountLoading: false,
       checkoutLoading: false,
     }
@@ -332,6 +354,21 @@ export default {
     },
     hideExplain () {
       this.explainFlag = false
+    },
+    showRequestQuote () {
+      console.log('request quote will come soon')
+    },
+    hideRequestQuote () {
+      console.log('request quote has been hidden')
+    },
+    async fetchShipping () {
+      try {
+        this.shippingLoading = true
+        await this.$store.dispatch('cart/fetchShippingList', this.zipCode)
+        this.shippingLoading = false
+      } catch (error) {
+        console.log(error)
+      }
     },
     async calculateByDiscount () {
       try {
