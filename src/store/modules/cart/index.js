@@ -9,6 +9,7 @@ const cart = {
   state: {
     line_items: [],
     discount_data: {},
+    shipping_list: {},
     freight_shipping: 1,
     fedex_shipping: 1,
   },
@@ -62,6 +63,15 @@ const cart = {
       commit('SET_CART', newLineItems)
       return newLineItems
     },
+    async fetchShippingList ({commit}, zipCode) {
+      try {
+        console.log('shipping list by zip code')
+        var shippingList = {}
+        commit('SET_SHIPPING_LIST', shippingList)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async getDiscountAmount ({commit}, discountCode) {
       try {
         const priceRules = await getDiscount(discountCode)
@@ -106,6 +116,9 @@ const cart = {
     },
     SET_DISCOUNT: (state, data) => {
       state.discount_data = data
+    },
+    SET_SHIPPING_LIST: (state, data) => {
+      state.shipping_list = data
     },
     SET_FREIGHT_SHIPPING: (state, id) => {
       state.freight_shipping = id
@@ -207,6 +220,9 @@ const cart = {
         }
       }
       return discountAmount
+    },
+    get_shippingn_list (state) {
+      return state.shipping_list
     },
     get_total (state) {
       var totalPrice = 0
