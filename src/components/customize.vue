@@ -22,7 +22,7 @@
 
       <div class="form__body">
         <input-quantity></input-quantity>
-        <variant-selection></variant-selection>
+        <!-- <variant-selection></variant-selection> -->
         <form-description></form-description>
         <form-selection
           v-if="customizable && fully_customized"
