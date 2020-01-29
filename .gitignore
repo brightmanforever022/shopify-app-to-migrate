@@ -36,4 +36,6 @@ yarn-debug.log*
 
 /public/frontend/packs
 public/frontend/*.html
+public/frontend/app.js
+public/frontend/app.js.map
 public/.DS_Store
