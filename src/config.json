@@ -1,4 +1,4 @@
 {
-  "API_HOST": "https://7bb3bc99.ngrok.io/",
+  "API_HOST": "https://display4sale-order-app.herokuapp.com/",
   "API_NAMESPACE": "api/frontend"
 }

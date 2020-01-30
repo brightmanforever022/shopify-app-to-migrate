@@ -11,6 +11,7 @@ import {
   CREATE_ATTRIBUTE,
   ATTRIBUTES_TOGGLE,
   ATTRIBUTE_TOGGLE,
+  LIST_STORE,
   UPDATE_ATTRIBUTE,
   DELETE_ATTRIBUTE,
   TOAST_TOGGLE,
@@ -114,6 +115,22 @@ function* loadAttribute({data}) {
   }
 }
 
+function* listStores({data}) {
+  let res
+  try {
+    res = yield call(
+      request.get,
+      `/attributes/list/stores`
+    )
+  } catch (error) {
+    yield put(errorHandler(error))
+  } finally {
+    if (res) {
+      data.cb && data.cb(res.data)
+    }
+  }
+}
+
 function* updateAttribute({data}) {
   let res
   try {
@@ -173,6 +190,7 @@ export function* attribute() {
   yield takeLatest(LOAD_ATTRIBUTES, loadAttributes)
   yield takeLatest(SEARCH_ATTRIBUTES, searchAttributes)
   yield takeLatest(LOAD_ATTRIBUTE, loadAttribute)
+  yield takeLatest(LIST_STORE, listStores)
   yield takeLatest(CREATE_ATTRIBUTE, createAttribute)
   yield takeLatest(UPDATE_ATTRIBUTE, updateAttribute)
   yield takeLatest(DELETE_ATTRIBUTE, deleteAttribute)
