@@ -4,14 +4,15 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
     id = params[:id]
     @shop.connect
     product = get_product(id)
-    template_ids = Variant.where(shopify_product_id: id).pluck(:template_id).uniq
-    templates = @shop.templates.where(id: template_ids)
+    # template_ids = Variant.where(shopify_product_id: id).pluck(:template_id).uniq
+    # templates = @shop.templates.where(id: template_ids)
+    template = @shop.templates.where(shopify_product_id: id).limit(1)
     render json: {
       product: product,
-      templates: templates
+      template: template
     },
     include: {
-      variants: {},
+      # variants: {},
       groups: {
         include: {
           dattributes: {

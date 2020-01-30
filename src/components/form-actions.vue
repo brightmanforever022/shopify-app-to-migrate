@@ -30,7 +30,7 @@
         <input-quantity></input-quantity>
         <variant-selection></variant-selection>
         <div
-          v-for="(group, index) in template(variant_id).groups"
+          v-for="(group, index) in template.groups"
           :key="index"
           class="form__row selector-wrapper js product-form__item"
         >
@@ -189,7 +189,7 @@ export default {
     ...mapGetters({
       variant_id: 'order/variant_id',
       variant: 'product/variant',
-      template: 'template/template_by_variant',
+      template: 'template/get_template',
       group: 'template/group_by_id',
       productData: 'product/get',
       custom_options: 'order/custom_options',
