@@ -42,9 +42,8 @@ export default {
         get(id).then(res => {
           let product = res.data.product.data
           this.$store.dispatch('product/set', product)
-          console.log('variant data: ', product.variants.edges[0].node)
           this.$store.dispatch('order/setVariant', product.variants.edges[0].node)
-          this.$store.dispatch('template/set_templates', res.data.templates)
+          this.$store.dispatch('template/set_template', res.data.template[0])
         }).catch(err => {
           console.log(err)
         }).then(() => {

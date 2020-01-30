@@ -38,4 +38,4 @@ yarn-debug.log*
 #/public/frontend/app.js.map
 #/public/frontend/packs
 #public/frontend/*.html
-public/frontend
+public/frontend/*
