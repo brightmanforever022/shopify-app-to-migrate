@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       resources :templates
       resources :attributes
       get 'attributes/list/options' => 'attributes#search_options'
+      get 'attributes/list/stores' => 'attributes#list_stores'
     end
 
     namespace :frontend do

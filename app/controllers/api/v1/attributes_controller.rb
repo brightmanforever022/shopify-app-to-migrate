@@ -98,6 +98,12 @@ class Api::V1::AttributesController < AuthenticatedController
 
     http_success_response({attributes: attributes})
   end
+
+  def list_stores
+    storeList = Shop.order('id ASC')
+    http_success_response({storeList: storeList})
+  end
+
   private
     def attribute_params
       params.except(:id, :controller, :action, :attribute)

@@ -4,7 +4,6 @@
       <a @click.prevent="continue_shopping"><span>&lt;</span>Continue Shopping</a>
       <h2>Your Cart</h2>
       <span @click.prevent="close">
-        <!-- <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/11/assets/cart-close-button_18x.png?32245" alt="close button" /> -->
         <icon-close/>
       </span>
     </div>
@@ -298,11 +297,7 @@ export default {
       discount_total: 'cart/get_discount',
       freight_shipping: 'cart/get_freight_shipping_price',
       fedex_shipping: 'cart/get_fedex_shipping_price',
-    }),
-    
-    // stock () {
-    //   return this.variant.inventoryQuantity > 0 ? 'In stock' : 'Out of stock'
-    // }
+    })
   },
   created () {
     this.$store.dispatch('cart/get')

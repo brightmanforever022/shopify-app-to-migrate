@@ -291,10 +291,10 @@ class NewTemplate extends Component {
 
   handleSave = () => {
     const { variants, groups, id, label } = this.state
-    if (variants.length < 1) {
-      alert('No product assigned')
-      return false
-    }
+    // if (variants.length < 1) {
+    //   alert('No product assigned')
+    //   return false
+    // }
     this.setState({saving: true})
     if (id) {
       this.props.updateTemplate({

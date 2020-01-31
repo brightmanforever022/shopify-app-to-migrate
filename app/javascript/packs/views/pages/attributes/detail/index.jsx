@@ -8,6 +8,7 @@ import ConfirmModal from '../../../components/confirm-modal'
 
 import {
   loadAttribute,
+  listStores,
   createAttribute,
   deleteAttribute,
   updateAttribute
@@ -79,6 +80,16 @@ class NewAttribute extends Component {
             postal_code: data.attribute.postal_code,
             selectedStoreList: data.attribute.store_list,
             vendor_sku: data.attribute.vendor_sku,
+            store_list: data.storeList,
+            loading: false
+          })
+        }
+      })
+    } else {
+      this.setState({loading: true})
+      this.props.listStores({
+        cb: data => {
+          this.setState({
             store_list: data.storeList,
             loading: false
           })
@@ -329,6 +340,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   loadAttribute,
+  listStores,
   createAttribute,
   deleteAttribute,
   updateAttribute
