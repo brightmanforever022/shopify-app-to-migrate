@@ -1,6 +1,7 @@
 import {
     LOAD_ATTRIBUTES,
     SEARCH_ATTRIBUTES,
+    LIST_STORE,
     LOAD_ATTRIBUTE,
     CREATE_ATTRIBUTE,
     UPDATE_ATTRIBUTE,
@@ -9,6 +10,11 @@ import {
   
   export const loadAttributes = (data) => ({
     type: LOAD_ATTRIBUTES,
+    data: data
+  })
+
+  export const listStores = (data) => ({
+    type: LIST_STORE,
     data: data
   })
 

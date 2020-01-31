@@ -34,7 +34,7 @@
 </template>
 <script>
 import InputQuantity from '@/components/quantity'
-import VariantSelection from '@/components/variant-selection'
+// import VariantSelection from '@/components/variant-selection'
 import FormDescription from '@/components/form-description'
 import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
@@ -45,7 +45,7 @@ export default {
   name: 'Customize',
   components: {
     InputQuantity,
-    VariantSelection,
+    // VariantSelection,
     FormDescription,
     FormSelection,
     FormActions

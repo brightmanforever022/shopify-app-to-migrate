@@ -30,6 +30,7 @@ const product = {
         state.product = data
         state.variant = data.variants.edges[0].node
       }
+      console.log('product data: ', data)
     },
     SET_VARIANT: (state, option) => {
       if (option) {

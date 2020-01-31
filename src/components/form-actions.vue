@@ -28,7 +28,7 @@
           />
         </div>
         <input-quantity></input-quantity>
-        <variant-selection></variant-selection>
+        <!-- <variant-selection></variant-selection> -->
         <div
           v-for="(group, index) in template.groups"
           :key="index"
@@ -51,7 +51,7 @@
                 v-for="(item, key) in group.dattributes"
                 :key="key"
                 :value="item.id"
-                :disabled="isActiveOption(item)"
+                :disabled="!isActiveOption(item)"
               >
                 {{item.label}}
               </option>
@@ -178,7 +178,7 @@ import $ from 'jquery'
 import Loading from 'vue-loading-overlay'
 import priceMixin from '@/mixins/price'
 import InputQuantity from '@/components/quantity'
-import VariantSelection from '@/components/variant-selection'
+// import VariantSelection from '@/components/variant-selection'
 import IconHeart from '@/components/icons/icon-heart'
 import Minicart from '@/components/minicart'
 import 'vue-loading-overlay/dist/vue-loading.css'
@@ -199,7 +199,7 @@ export default {
   mixins: [ priceMixin ],
   components: {
     InputQuantity,
-    VariantSelection,
+    // VariantSelection,
     IconHeart,
     Loading,
     Minicart
@@ -255,7 +255,7 @@ export default {
       $('#shopify-section-header .header').css('z-index', '101')
     },
     isActiveOption (item) {
-      if (this.except_list.includes(item.id)) {
+      if (!this.except_list.includes(item.id)) {
         return 'disabled'
       }
     },
@@ -286,11 +286,8 @@ export default {
       this.is_opened = false
       $('.product__details').css('z-index', 'initial')
     },
-    // customized (group_id) {
-    //   return this.options.map(opt => opt.group_id).includes(group_id)
-    // },
     customized (group_label) {
-      return this.options.map(opt => opt.group).includes(group_label)
+      return this.custom_options.map(opt => opt.group).includes(group_label)
     },
     async addToCart () {
       if (!this.fully_customized && this.customizable) {
