@@ -63,23 +63,13 @@ const order = {
       }
     },
     SET_EXCEPTS: (state, excepts) => {
-      let exceptList = state.except_list
-      let newExceptList = []
-      // remove excepts related new exceptGroupId from exceptList
-      if (excepts.length > 0) {
-        const newExceptGroupId = excepts[0].groupId
-        exceptList.map(ex => {
-          if (ex.groupId != newExceptGroupId) {
-            newExceptList.push(ex)
-          }
-        })
-      } else {
-        newExceptList = exceptList
-      }
-      // add new excepts into exceptList
-      exceptList = newExceptList.concat(excepts)
-      console.log('except list: ', exceptList)
-      state.except_list = exceptList
+      let removedExceptList = state.except_list.filter(ex => ex.groupId != excepts.groupId)
+      let newExceptList = removedExceptList.concat(excepts.exceptData)
+      // check if options includes except list
+      let options = state.custom_options
+      options = options.filter(opt => !excepts.groupLabelList.includes(opt.group))
+      state.custom_options = options
+      state.except_list = newExceptList
     }
   },
   getters: {

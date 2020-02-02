@@ -46,12 +46,11 @@
               @change="setAddOn"
               :placeholder="`Select ${group.label}`"
             >
-              <option selected disabled></option>
+              <option :selected="!customized(group.label)" :key=0 :value="noselected"></option>
               <option
-                v-for="(item, key) in group.dattributes"
+                v-for="(item, key) in activeOptions(group.dattributes)"
                 :key="key"
                 :value="item.id"
-                :disabled="!isActiveOption(item)"
               >
                 {{item.label}}
               </option>
@@ -191,6 +190,7 @@ export default {
       variant: 'product/variant',
       template: 'template/get_template',
       group: 'template/group_by_id',
+      exceptGroupList: 'template/group_label_list',
       productData: 'product/get',
       custom_options: 'order/custom_options',
       except_list: 'order/except_list',
@@ -206,6 +206,7 @@ export default {
   },
   data () {
     return {
+      noselected: 'noselected',
       loading: false,
       is_opened: false,
       addtocart_confirm_opened: false,
@@ -259,27 +260,35 @@ export default {
         return 'disabled'
       }
     },
+    activeOptions (options) {
+      return options.filter(op => !this.except_list.includes(op.id))
+    },
     async setAddOn (evt) {
       let group_id = evt.target.dataset.group
       let item_id = evt.target.value
       let group = this.group(evt.target.dataset.group)
       let item = group.dattributes.find(i => i.id === +item_id)
-      item['group'] = group.label
-
-      // get excepts for selected item
-      const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
-      const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
-        return {
-          groupId: drellation.group_id,
-          exceptId: parseInt(ex)
+      if (item) {
+        item['group'] = group.label
+  
+        // get excepts for selected item
+        const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
+        const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
+          return {
+            groupId: drellation.group_id,
+            groupLabel: group.label,
+            exceptId: parseInt(ex)
+          }
+        })
+        // console.log('new excepts: ', {groupId: drellation.group_id, exceptData: newExcepts})
+        try {
+          const customOptions = await this.$store.dispatch('order/upsert_customization', item)
+          const exceptGroupLabelList = this.exceptGroupList(drellation.excepts)
+          // console.log('group label list: ', exceptGroupLabelList)
+          await this.$store.dispatch('order/setExcepts', {groupId: drellation.group_id, groupLabelList: exceptGroupLabelList, exceptData: newExcepts})
+        } catch (error) {
+          console.log('Error in upsert customization: ', error)
         }
-      })
-      console.log('new excepts: ', newExcepts)
-      try {
-        const customOptions = await this.$store.dispatch('order/upsert_customization', item)
-        await this.$store.dispatch('order/setExcepts', newExcepts)
-      } catch (error) {
-        console.log('Error in upsert customization: ', error)
       }
     },
     saveSelection () {
@@ -287,6 +296,7 @@ export default {
       $('.product__details').css('z-index', 'initial')
     },
     customized (group_label) {
+      // console.log('custom options: ', this.custom_options)
       return this.custom_options.map(opt => opt.group).includes(group_label)
     },
     async addToCart () {

@@ -17,17 +17,7 @@ const template = {
   },
   getters: {
     get_template: (state) => {
-      // let template = {
-      //   groups: []
-      // }
-      // state.templates.forEach(t => {
-      //   let variant = t.variants.find(v => v.shopify_variant_id === +variant_id)
-      //   if (variant) {
-      //     template = t
-      //   }
-      // })
-      // return template
-      console.log('template data: ', state.template)
+      // console.log('template data: ', state.template)
       return state.template
     },
     group_by_id: (state) => id => {
@@ -37,7 +27,24 @@ const template = {
         group = grp
       }
       return group
-    }
+    },
+    group_label_list: (state) => excepts => {
+      if(excepts == '') {
+        return []
+      } else {
+        let exceptAttributeList = excepts.split(',')
+        let currentGroups = state.template.groups
+        let exceptsGroupList = []
+        currentGroups.map(gr => {
+          gr.dattributes.map(da => {
+            if (exceptAttributeList.includes(da.id.toString())) {
+              exceptsGroupList.push(gr.label)
+            }
+          })
+        })
+        return exceptsGroupList.filter((v, i, a) => a.indexOf(v) === i)
+      }
+    },
   }
 }
 
