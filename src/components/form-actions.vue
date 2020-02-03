@@ -280,12 +280,15 @@ export default {
             exceptId: parseInt(ex)
           }
         })
-        // console.log('new excepts: ', {groupId: drellation.group_id, exceptData: newExcepts})
         try {
           const customOptions = await this.$store.dispatch('order/upsert_customization', item)
-          const exceptGroupLabelList = this.exceptGroupList(drellation.excepts)
-          // console.log('group label list: ', exceptGroupLabelList)
-          await this.$store.dispatch('order/setExcepts', {groupId: drellation.group_id, groupLabelList: exceptGroupLabelList, exceptData: newExcepts})
+          await this.$store.dispatch('order/setExcepts',
+           {
+              groupId: drellation.group_id,
+              groupLabelList: this.exceptGroupList(drellation.excepts),
+              exceptData: newExcepts
+            }
+          )
         } catch (error) {
           console.log('Error in upsert customization: ', error)
         }
@@ -296,7 +299,6 @@ export default {
       $('.product__details').css('z-index', 'initial')
     },
     customized (group_label) {
-      // console.log('custom options: ', this.custom_options)
       return this.custom_options.map(opt => opt.group).includes(group_label)
     },
     async addToCart () {
@@ -315,7 +317,7 @@ export default {
         selected_options: this.variant.selectedOptions,
         custom_options: this.custom_options,
         quantity: this.quantity,
-        original_price: this.variant.price,
+        original_price: this.original_price,
         calculated_item_price: this.calculated_item_price,
         calculated_price: this.calculated_price,
         wishlisted: false,
