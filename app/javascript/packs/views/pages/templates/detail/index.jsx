@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Page, Layout, PageActions, Card, Stack, TextStyle, Button, Thumbnail, TextContainer, FormLayout, TextField, ButtonGroup, Autocomplete, Icon, Collapsible, ResourceList } from '@shopify/polaris'
 import { SearchMinor, DeleteMajorMonotone, ChevronDownMinor, ChevronUpMinor } from '@shopify/polaris-icons'
 import { connect } from 'react-redux'
+import VariantsPicker from '../shared/variants-picker'
 import ProductPicker from '../shared/product-picker'
 import ExclusionPicker from '../shared/exclusion-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
@@ -31,6 +32,7 @@ class NewTemplate extends Component {
     this.state = {
       loading: false,
       productModal: false,
+      variantsModal: false,
       modalType: 'variant',
       exclusionModal: false,
       selectedGroupIndex: 0,
@@ -72,6 +74,9 @@ class NewTemplate extends Component {
       this.props.loadTemplate({
         id,
         cb: data => {
+          if (data.template.shopify_product_id) {
+            this.loadProduct(data.template.shopify_product_id)
+          }
           var attributeList = data.attributeList.map(att => {
             return {
               value: att.id,
@@ -118,10 +123,30 @@ class NewTemplate extends Component {
     const { variants } = this.state
     const selecteds = variants.map(v => ({variant_id: this.convertId(v.id)}))
     this.setState({
-      productModal: true,
+      variantsModal: true,
       modalType: modalType,
       selecteds: selecteds
     })
+  }
+
+  toggleVariantsPicker = variantsModal => {
+    this.setState({variantsModal})
+  }
+
+  setVariantsPicker = params => {
+    this.setState({variantsModal: false})
+    if (params.selecteds.length < 1) {
+      return false
+    }
+    if (this.state.modalType == 'product') {
+      this.loadVariants(params.selecteds.map(selected => selected.variant_id))
+    } else {
+      this.loadVariant(params.selecteds[0].variant_id)
+    }
+  }
+
+  openProductModal = () => {
+    this.setState({productModal: true})
   }
 
   toggleProductPicker = productModal => {
@@ -130,13 +155,8 @@ class NewTemplate extends Component {
 
   setProductPicker = params => {
     this.setState({productModal: false})
-    if (params.selecteds.length < 1) {
+    if (!params.productData) {
       return false
-    }
-    if (this.state.modalType == 'product') {
-      this.loadVariants(params.selecteds.map(selected => selected.variant_id))
-    } else {
-      this.loadVariant(params.selecteds[0].variant_id)
     }
   }
 
@@ -218,6 +238,10 @@ class NewTemplate extends Component {
     })
   }
 
+  reorderAttributes = () => {
+    console.log('reorder attributes')
+  }
+
   addGroup = () => {
     let { groups } = this.state
     let { openGroup } = this.state
@@ -272,8 +296,12 @@ class NewTemplate extends Component {
     this.setState({groups: groups})
   }
 
-  handleProductChoice = selecteds => {
+  handleVariantsChoice = selecteds => {
     this.setState({selecteds})
+  }
+
+  handleProductChoice = product => {
+    this.setState({product})
   }
 
   handleChange = property => value => {
@@ -290,11 +318,12 @@ class NewTemplate extends Component {
   }
 
   handleSave = () => {
-    const { variants, groups, id, label } = this.state
+    const { variants, groups, id, label, product } = this.state
     // if (variants.length < 1) {
     //   alert('No product assigned')
     //   return false
     // }
+    const product_id = product.id.split('/')[product.id.split('/').length - 1]
     this.setState({saving: true})
     if (id) {
       this.props.updateTemplate({
@@ -302,6 +331,7 @@ class NewTemplate extends Component {
         variants,
         groups,
         label,
+        product_id,
         cb: data => {
           this.setState({saving: false})
         }
@@ -311,6 +341,7 @@ class NewTemplate extends Component {
         label,
         variants,
         groups,
+        product_id,
         cb: data => {
           this.setState({saving: false})
           this.props.history.push({
@@ -444,7 +475,7 @@ class NewTemplate extends Component {
   }
 
   render () {
-    const { label, loading, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, inputAttributeValue, attributeOptions, selectedAttributeOptions, exclusionModal, selectedExclusions, exclusionAttributeList } = this.state
+    const { label, loading, variantsModal, productModal, modalType, variants, groups, saving, id, confirmModal, confirming, selecteds, product, inputAttributeValue, attributeOptions, selectedAttributeOptions, exclusionModal, selectedExclusions, exclusionAttributeList } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -478,41 +509,33 @@ class NewTemplate extends Component {
               <Layout.Section>
                 <Card
                   sectioned
-                  title="Variants"
+                  title="Product"
                 >
                   {(() => {
-                    if (variants.length > 0) {
-                      return (variants.map(node => {
-                        return (
-                          <FormLayout
-                            key={node.id}
-                          >
-                            <Stack
-                              key={node.id}
-                            >
-                              <Stack.Item>
-                                <Thumbnail
-                                  size="medium"
-                                  source={node.image ? node.image.src : node.product.featuredImage ? node.product.featuredImage.transformedSrc : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'}
-                                />
-                              </Stack.Item>
-                              <Stack.Item fill>
-                                <TextContainer spacing="tight">
-                                  <p>{node.product.title}</p>
-                                  <p>{node.title}</p>
-                                  <p>{node.sku}</p>
-                                </TextContainer>
-                              </Stack.Item>
-                              <Stack>
-                                <p>
-                                  ${node.price}
-                                </p>
-                              </Stack>
+                    if (product) {
+                      return (
+                        <FormLayout>
+                          <Stack>
+                            <Stack.Item>
+                              <Thumbnail
+                                size="medium"
+                                source={product.featuredImage ? product.featuredImage.transformedSrc : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'}
+                              />
+                            </Stack.Item>
+                            <Stack.Item fill>
+                              <TextContainer spacing="tight">
+                                <p>{product.title}</p>
+                              </TextContainer>
+                            </Stack.Item>
+                            <Stack>
+                            <TextStyle variation={product.totalInventory >= 0 ? 'positive' : 'negative'}>
+                              {product.totalInventory}
+                            </TextStyle>
                             </Stack>
-                            <hr/>
-                          </FormLayout>
-                          )
-                      }))
+                          </Stack>
+                          <hr/>
+                        </FormLayout>
+                      )
                     } else {
                       return (
                         <FormLayout>
@@ -534,12 +557,12 @@ class NewTemplate extends Component {
                     </Stack.Item>
                     <Stack.Item>
                       <ButtonGroup>
-                        <Button primary onClick={() => {this.addGroup()}}>New add-on</Button>
-                        <Button primary external={true} url="/attributes/new">New Attribute</Button>
+                        <Button primary onClick={() => this.reorderAttributes()}>Reorder Attributes</Button>
+                        <Button primary onClick={() => {this.addGroup()}}>New Attribute</Button>
                         <Button
-                          onClick={() => {this.openModal('product')}}
+                          onClick={() => {this.openProductModal()}}
                         >
-                          Assign variants
+                          Assign Product
                         </Button>
                       </ButtonGroup>
                     </Stack.Item>
@@ -631,10 +654,17 @@ class NewTemplate extends Component {
                   secondaryActions={secondaryActions}
                 />
               </Layout.Section>
-              <ProductPicker
-                active={productModal}
+              <VariantsPicker
+                active={variantsModal}
                 modalType={modalType}
                 selecteds={selecteds}
+                togglePicker={this.toggleVariantsPicker}
+                handleChoice={this.handleVariantsChoice}
+                onConfirm={this.setVariantsPicker}
+              />
+              <ProductPicker
+                active={productModal}
+                productData={product}
                 togglePicker={this.toggleProductPicker}
                 handleChoice={this.handleProductChoice}
                 onConfirm={this.setProductPicker}

@@ -111,6 +111,7 @@ module Api
                       }
                       id
                       title
+                      handle
                       totalInventory
                       priceRange {
                         minVariantPrice {

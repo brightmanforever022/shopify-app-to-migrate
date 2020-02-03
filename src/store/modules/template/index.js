@@ -17,7 +17,6 @@ const template = {
   },
   getters: {
     get_template: (state) => {
-      // console.log('template data: ', state.template)
       return state.template
     },
     group_by_id: (state) => id => {

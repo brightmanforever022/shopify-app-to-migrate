@@ -1,14 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Modal, DataTable, Filters, Pagination, Thumbnail, Checkbox, RadioButton, TextContainer, TextStyle, SkeletonBodyText } from '@shopify/polaris'
-import { SearchMinor } from '@shopify/polaris-icons'
-import CurrencyFormat from 'react-currency-format'
+import { Modal, DataTable, Filters, Pagination, Thumbnail, Checkbox, TextContainer, TextStyle, SkeletonBodyText } from '@shopify/polaris'
 import { connect } from 'react-redux'
 
 import {
   loadProducts
 } from '../../../../api/product'
 
-class ProductPicker extends Component {
+class VariantsPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -21,7 +19,8 @@ class ProductPicker extends Component {
       hasPrevious: false,
       hasPrevious: false,
       reloading: false,
-      product: {},
+      selecteds: [],
+      queryType: 'product',
       records: []
     }
   }
@@ -29,7 +28,8 @@ class ProductPicker extends Component {
   static getDerivedStateFromProps(props, state) {
     return {
       active: props.active,
-      product: props.productData
+      queryType: props.modalType,
+      selecteds: props.selecteds
     }
   }
 
@@ -50,14 +50,15 @@ class ProductPicker extends Component {
   }
 
   loadProducts = () => {
-    const { queryValue, cursor, direction } = this.state
+    const { queryValue, cursor, direction, queryType } = this.state
     this.setState({
       reloading: true
     })
     loadProducts({
       queryValue,
       cursor,
-      direction
+      direction,
+      queryType
     }).then(res => {
       this.setState({
         records: res.data.data.edges,
@@ -79,17 +80,30 @@ class ProductPicker extends Component {
   }
 
   onConfirm = () => {
-    const {product} = this.state
+    const {selecteds} = this.state
     this.setState({
       loading: true,
       reloading: true
     })
-    this.props.onConfirm({product: product})
+    this.props.onConfirm({selecteds: selecteds})
   }
 
-  handleSelect = product => {
-    console.log('selected product data: ', product)
-    this.props.handleChoice(product)
+  handleSelect = vid => {
+
+    let variantId = vid.split('/')[vid.split('/').length - 1]
+    let { selecteds, queryType } = this.state
+
+    if (queryType === 'product') {
+      let index = selecteds.findIndex(select => +select.variant_id === +variantId)
+      if (index >= 0) {
+        selecteds = selecteds.filter(select => +select.variant_id !== +variantId)
+      } else {
+        selecteds = [...selecteds, {variant_id: +variantId}]
+      }
+    } else {
+      selecteds = [{variant_id: +variantId}]
+    }
+    this.props.handleChoice(selecteds)
   }
 
   handleChange = property => value => {
@@ -115,16 +129,17 @@ class ProductPicker extends Component {
   }
 
   render () {
-    const { loading, active, queryValue, hasNext, hasPrevious, records, reloading, product } = this.state
+    const { loading, active, queryValue, hasNext, hasPrevious, records, reloading, selectedProduct, selectedVariant, queryType, selecteds } = this.state
     const rows = records.map(record => {
-      const source = record.node.featuredImage ? record.node.featuredImage.transformedSrc : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'
+      const source = record.node.image ? record.node.image.src : record.node.product && record.node.product.featuredImage ? record.node.product.featuredImage.src : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'
+      const selectedVariants = selecteds.map(selected => `gid://shopify/ProductVariant/${selected.variant_id}`)
       return [
-        <RadioButton
-          checked={product.id == record.node.id}
-          label="Select Product"
+        <Checkbox
+          checked={selectedVariants.includes(record.node.id)}
+          label="Select"
           labelHidden={true}
           onChange={() => {
-            this.handleSelect(record.node)
+            this.handleSelect(record.node.id)
           }}
         />,
         <Thumbnail
@@ -132,23 +147,26 @@ class ProductPicker extends Component {
           source={source}
         />,
         <TextContainer spacing="tight">
+          <p>{record.node.product && record.node.product.title}</p>
           <p>{record.node.title}</p>
+          <p>{record.node.sku}</p>
         </TextContainer>,
-        <TextStyle variation={record.node.totalInventory >= 0 ? 'positive' : 'negative'}>
-          {record.node.totalInventory}
+        <p>${record.node.price}</p>,
+        <TextStyle variation={record.node.inventoryQuantity >= 0 ? 'positive' : 'negative'}>
+          {record.node.inventoryQuantity}
         </TextStyle>
       ]
     })
     return (
       <Modal
         open={active}
-        title={`Select Product`}
+        title={`Select ${queryType == 'product' ? 'variants' : 'variant'}`}
         onClose={this.togglePicker}
         loading={loading}
         primaryAction={{
           content: 'Ok',
           onAction: this.onConfirm,
-          disabled: !product
+          disabled: selecteds.length === 0
         }}
         secondaryActions={[
           {
@@ -182,13 +200,15 @@ class ProductPicker extends Component {
                 'text',
                 'text',
                 'text',
-                'numeric'
+                'numeric',
+                'numeric',
               ]}
               headings={[
                 '#',
                 'Thumbnail',
                 'Product',
-                'Inventory'
+                'Price',
+                'Stock',
               ]}
               rows={rows}
             />
@@ -209,4 +229,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductPicker)
+)(VariantsPicker)

@@ -9,12 +9,17 @@ export default {
       template: 'template/get_template',
     }),
     original_price () {
-      const firstGroupLabel = this.template.groups[0].label
-      const optionOfFirstGroup = this.options.find(op => op.group == firstGroupLabel)
-      return optionOfFirstGroup ? optionOfFirstGroup.price : 0
+      if (this.template.groups.length > 0) {
+        const firstGroupLabel = this.template.groups[0].label
+        const optionOfFirstGroup = this.options.find(op => op.group == firstGroupLabel)
+        return optionOfFirstGroup ? optionOfFirstGroup.price : 0
+      } else {
+        return 0
+      }
     },
     calculated_item_price () {
-      let add_on_prices = this.options.length > 0 ? this.options.map(opt => opt.price ? (opt.price_type ? Number(this.variant.price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
+      const firstGroupLabel = this.template.groups[0].label
+      let add_on_prices = this.options.length > 0 ? this.options.filter(opp => opp.group != firstGroupLabel).map(opt => opt.price ? (opt.price_type ? Number(this.original_price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
       return Number(this.original_price) + add_on_prices
     },
     calculated_price () {
@@ -25,7 +30,7 @@ export default {
       return this.options.length === this.template.groups.length
     },
     customizable () {
-      return this.template.groups.length > 0
+      return this.template.groups ? this.template.groups.length > 0 : false
     }
   }
 }

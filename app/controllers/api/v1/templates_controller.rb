@@ -28,6 +28,7 @@ class Api::V1::TemplatesController < AuthenticatedController
   def create
     @template = Template.new(
       label: template_params[:label],
+      shopify_product_id: template_params[:product_id],
       shop: @shop
     )
     if @template.save
@@ -58,15 +59,16 @@ class Api::V1::TemplatesController < AuthenticatedController
 
   def update
     @template.update({
-      label: template_params[:label]
+      label: template_params[:label],
+      shopify_product_id: template_params[:product_id]
     })
 
     @template.groups.each do |gr|
       Drellation.where(group_id: gr.id).delete_all
     end
     @template.groups.destroy_all
-    @template.variants.destroy_all
-    set_template_variants
+    # @template.variants.destroy_all
+    # set_template_variants
     set_template_group_items
 
     ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
