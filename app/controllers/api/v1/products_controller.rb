@@ -2,7 +2,7 @@ class Api::V1::ProductsController < AuthenticatedController
   include Api::V1::ProductsHelper
 
   def index
-    resps = get_product_variants
+    resps = get_products
     http_success_response(resps)
   end
 
@@ -19,6 +19,11 @@ class Api::V1::ProductsController < AuthenticatedController
   end
 
   def destroy
+  end
+
+  def list_variants
+    resps = get_product_variants
+    http_success_response(resps)
   end
 
   def load_variant

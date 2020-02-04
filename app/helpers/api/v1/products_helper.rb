@@ -16,6 +16,7 @@ module Api::V1::ProductsHelper
         }
         title
         handle
+        totalInventory
       }
     }"
   end

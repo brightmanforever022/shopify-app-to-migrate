@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :products
+      get 'products/listvariants' => 'products#list_variants'
       get 'products/variants/load' => 'products#load_variants'
       get 'products/variants/:id' => 'products#load_variant'
       resources :templates
