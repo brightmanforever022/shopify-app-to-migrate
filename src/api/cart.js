@@ -98,3 +98,11 @@ export function minusCartItem (id) {
 	localStorage.setItem('line_items', JSON.stringify({line_items: minusedLineItems}))
 	return minusedLineItems
 }
+
+export function getFedexList (data) {
+  return request({
+    url: `carts/fedex/options/list`,
+    method: 'post',
+    data: data
+  })
+}

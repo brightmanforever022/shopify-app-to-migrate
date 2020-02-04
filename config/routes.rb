@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       resources :products
       resources :orders
       resources :discounts
+      resources :carts
+      post 'carts/fedex/options/list' => 'carts#fedex_options_list'
     end
   end
 
