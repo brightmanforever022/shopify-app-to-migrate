@@ -82,159 +82,161 @@
           :is-full-page="false"
         />
       </div>
-      <div class="fedex-shipping">
-        <h4>FedEx/UPS Shipping Options</h4>
-        <div class="fedex-shipping-header">
-          <span>Service</span>
-          <span>Cost</span>
-          <span>Lead Time to Ship</span>
-        </div>
-        <div class="fedex-shipping-body">
-          <ul>
-            <li @click.prevent="fedexShipping(1)" id="fedex-shipping-option-1" class="active">
-              <span>Ground</span>
-              <span>$36.70</span>
-              <span>Get it by October 26</span>
-            </li>
-            <li @click.prevent="fedexShipping(2)" id="fedex-shipping-option-2">
-              <span>3 day select</span>
-              <span>$58.39</span>
-              <span>Get it by October 29</span>
-            </li>
-            <li @click.prevent="fedexShipping(3)" id="fedex-shipping-option-3">
-              <span>2nd day air</span>
-              <span>$73.93</span>
-              <span>Get it by November 9</span>
-            </li>
-            <li @click.prevent="fedexShipping(4)" id="fedex-shipping-option-4">
-              <span>Next day air</span>
-              <span>$102.59</span>
-              <span>Get it by November 16</span>
-            </li>
-          </ul>
-        </div>
-        <div class="fedex-shipping-date">
-          <span>Lead time to ship</span>: September 26, 2018<br /><br />
-          <span>Delivery estimate</span>: September 27, 2018 - October 02, 2018
-        </div>
-        <div class="need-quote">
-          <h4>Need a Quote?</h4>
-          <p>
-            When requesting an estimate, we review all aspects of the order including product, size and weight, quantity, boxing, shipping method and any special request or custom option to provide you the best possible quote.
-          </p>
-          <h6><a @click.prevent="showRequestQuote"><icon-quote />&nbsp;Request a Quote</a></h6>
-        </div>
-      </div>
-      <div class="freight-shipping-options">
-        <h4>Freight Shipping Options</h4>
-        <div class="freight-shipping-header">
-          <span>Service</span>
-          <span>Cost</span>
-        </div>
-        <div class="freight-shipping-body">
-          <ul>
-            <li @click.prevent="freightShipping(1)" id="freight-shipping-option-1" class="active">
-              <span>Commercial Basic Free Freight Delivery (Standard Dock to Dock Service)</span>
-              <span>$0.00</span>
-            </li>
-            <li @click.prevent="freightShipping(2)" id="freight-shipping-option-2">
-              <span>Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)</span>
-              <span>$125.00</span>
-            </li>
-            <li @click.prevent="freightShipping(3)" id="freight-shipping-option-3">
-              <span>Commercial Special Freight Delivery (Commercial Lift-Gate & Inside Service)</span>
-              <span>$300.00</span>
-            </li>
-            <li @click.prevent="freightShipping(4)" id="freight-shipping-option-4">
-              <span>Commercial Freight Delivery (Inside Service to Exact Location)</span>
-              <span>$450.00</span>
-            </li>
-            <li @click.prevent="freightShipping(5)" id="freight-shipping-option-5">
-              <span>RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)</span>
-              <span>$130.00</span>
-            </li>
-            <li @click.prevent="freightShipping(6)" id="freight-shipping-option-6">
-              <span>RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)</span>
-              <span>$325.00</span>
-            </li>
-          </ul>
-          <p>* Delivery Estimate refers to the Shipping Time or transit time of your order once the items have been shipped. The delivery estimates above refer to standard ground delivery.</p>
-          <p>Depending on actual ship date, the shipping service selected, and the shipping location, your order may arrive sooner than the scheduled ship date.</p>
-          <p>** All shipping services offered above are NOT VALID outside the contiguous United States. Please contact us if your shipping location is outside the contiguous United States for a quote.</p>
-          <p><span>Business days:</span> Monday - Friday (excluding major holidays)</p>
-          <a>READ MORE ABOUT SHIPPING</a>
-        </div>
-      </div>
-      <loading
-        :active.sync="checkoutLoading"
-        :is-full-page="false"
-      />
-      <div class="order-summary">
-        <div class="promo-code">
-          <div class="promo-code-check">
-            <input type="checkbox" name="isPromoCode" id="isPromoCode" @click.prevent="togglePromo">
-            <label for="isPromoCode">Promo Code</label>
+      <div class="shipping-details" v-show="shippingDetailShow">
+        <div class="fedex-shipping">
+          <h4>FedEx/UPS Shipping Options</h4>
+          <div class="fedex-shipping-header">
+            <span>Service</span>
+            <span>Cost</span>
+            <span>Lead Time to Ship</span>
           </div>
-          <div class="promo-code-form" v-show="isPromoCode">
-            <label for="promo_code">Enter A Promo Code</label>
-            <input type="text" id="promo_code" v-model="promoCode" placeholder="29470604">
-            <button @click.prevent="calculateByDiscount">APPLY TO ORDER</button>
-          </div>
-          <loading
-            :active.sync="discountLoading"
-            :is-full-page="false"
-          />
-        </div>
-        <div class="order-summary">
-          <h2>Order Summary</h2>
-          <div class="order-details">
+          <div class="fedex-shipping-body">
             <ul>
-              <li>
-                <span class="summary-title">Product Subtotal:</span>
-                <span class="summary-price">{{sub_total | money}}</span>
+              <li @click.prevent="fedexShipping(1)" id="fedex-shipping-option-1" class="active">
+                <span>Ground</span>
+                <span>$36.70</span>
+                <span>Get it by October 26</span>
               </li>
-              <li>
-                <span class="summary-title">Discount:</span>
-                <span class="summary-price">{{discount_total | money}}</span>
+              <li @click.prevent="fedexShipping(2)" id="fedex-shipping-option-2">
+                <span>3 day select</span>
+                <span>$58.39</span>
+                <span>Get it by October 29</span>
               </li>
-              <li>
-                <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
-                <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
+              <li @click.prevent="fedexShipping(3)" id="fedex-shipping-option-3">
+                <span>2nd day air</span>
+                <span>$73.93</span>
+                <span>Get it by November 9</span>
               </li>
-              <li>
-                <span class="summary-title">Optional Commercial Lift-Gate Service:</span>
-                <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
-              </li>
-              <li>
-                <span class="summary-title">
-                  Sales Tax (8.625%): <a @click.prevent="showExplain">?</a>
-                  <div class="explain-block" v-show="explainFlag">
-                    <div class="explain-block-header">
-                      <a @click.prevent="hideExplain"><icon-close/></a>
-                    </div>
-                    Tax Exempt? Once your order is placed, please send us your Resale or Tax Exempt Certificate, and we will refund the Tax collected.
-                  </div>
-                </span>
-                <span class="summary-price">{{sub_total*0.08625 | money}}</span>
+              <li @click.prevent="fedexShipping(4)" id="fedex-shipping-option-4">
+                <span>Next day air</span>
+                <span>$102.59</span>
+                <span>Get it by November 16</span>
               </li>
             </ul>
           </div>
-          <div class="order-total">
-            <span class="total-title">Order Total:</span>
-            <span class="total-price">{{cal_total | money}}</span>
+          <div class="fedex-shipping-date">
+            <span>Lead time to ship</span>: September 26, 2018<br /><br />
+            <span>Delivery estimate</span>: September 27, 2018 - October 02, 2018
+          </div>
+          <div class="need-quote">
+            <h4>Need a Quote?</h4>
+            <p>
+              When requesting an estimate, we review all aspects of the order including product, size and weight, quantity, boxing, shipping method and any special request or custom option to provide you the best possible quote.
+            </p>
+            <h6><a @click.prevent="showRequestQuote"><icon-quote />&nbsp;Request a Quote</a></h6>
           </div>
         </div>
-        <div class="checkout-buttons">
-          <div class="checkout-button">
-            <button @click.prevent="createOrder" :disabled="checkoutLoading"><icon-lock/>SECURE CHECKOUT</button>
-            <p>Please Choose a shipping selection below</p>
+        <div class="freight-shipping-options">
+          <h4>Freight Shipping Options</h4>
+          <div class="freight-shipping-header">
+            <span>Service</span>
+            <span>Cost</span>
           </div>
-          <div class="card-list">
-            <a href=""><icon-visa/></a>
-            <a href=""><icon-master/></a>
-            <a href=""><icon-america/></a>
-            <a href=""><icon-discover/></a>
-            <a href=""><icon-paypal/></a>
+          <div class="freight-shipping-body">
+            <ul>
+              <li @click.prevent="freightShipping(1)" id="freight-shipping-option-1" class="active">
+                <span>Commercial Basic Free Freight Delivery (Standard Dock to Dock Service)</span>
+                <span>$0.00</span>
+              </li>
+              <li @click.prevent="freightShipping(2)" id="freight-shipping-option-2">
+                <span>Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)</span>
+                <span>$125.00</span>
+              </li>
+              <li @click.prevent="freightShipping(3)" id="freight-shipping-option-3">
+                <span>Commercial Special Freight Delivery (Commercial Lift-Gate & Inside Service)</span>
+                <span>$300.00</span>
+              </li>
+              <li @click.prevent="freightShipping(4)" id="freight-shipping-option-4">
+                <span>Commercial Freight Delivery (Inside Service to Exact Location)</span>
+                <span>$450.00</span>
+              </li>
+              <li @click.prevent="freightShipping(5)" id="freight-shipping-option-5">
+                <span>RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)</span>
+                <span>$130.00</span>
+              </li>
+              <li @click.prevent="freightShipping(6)" id="freight-shipping-option-6">
+                <span>RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)</span>
+                <span>$325.00</span>
+              </li>
+            </ul>
+            <p>* Delivery Estimate refers to the Shipping Time or transit time of your order once the items have been shipped. The delivery estimates above refer to standard ground delivery.</p>
+            <p>Depending on actual ship date, the shipping service selected, and the shipping location, your order may arrive sooner than the scheduled ship date.</p>
+            <p>** All shipping services offered above are NOT VALID outside the contiguous United States. Please contact us if your shipping location is outside the contiguous United States for a quote.</p>
+            <p><span>Business days:</span> Monday - Friday (excluding major holidays)</p>
+            <a>READ MORE ABOUT SHIPPING</a>
+          </div>
+        </div>
+        <loading
+          :active.sync="checkoutLoading"
+          :is-full-page="false"
+        />
+        <div class="order-summary">
+          <div class="promo-code">
+            <div class="promo-code-check">
+              <input type="checkbox" name="isPromoCode" id="isPromoCode" @click.prevent="togglePromo">
+              <label for="isPromoCode">Promo Code</label>
+            </div>
+            <div class="promo-code-form" v-show="isPromoCode">
+              <label for="promo_code">Enter A Promo Code</label>
+              <input type="text" id="promo_code" v-model="promoCode" placeholder="29470604">
+              <button @click.prevent="calculateByDiscount">APPLY TO ORDER</button>
+            </div>
+            <loading
+              :active.sync="discountLoading"
+              :is-full-page="false"
+            />
+          </div>
+          <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div class="order-details">
+              <ul>
+                <li>
+                  <span class="summary-title">Product Subtotal:</span>
+                  <span class="summary-price">{{sub_total | money}}</span>
+                </li>
+                <li>
+                  <span class="summary-title">Discount:</span>
+                  <span class="summary-price">{{discount_total | money}}</span>
+                </li>
+                <li>
+                  <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
+                  <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
+                </li>
+                <li>
+                  <span class="summary-title">Optional Commercial Lift-Gate Service:</span>
+                  <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
+                </li>
+                <li>
+                  <span class="summary-title">
+                    Sales Tax (8.625%): <a @click.prevent="showExplain">?</a>
+                    <div class="explain-block" v-show="explainFlag">
+                      <div class="explain-block-header">
+                        <a @click.prevent="hideExplain"><icon-close/></a>
+                      </div>
+                      Tax Exempt? Once your order is placed, please send us your Resale or Tax Exempt Certificate, and we will refund the Tax collected.
+                    </div>
+                  </span>
+                  <span class="summary-price">{{sub_total*0.08625 | money}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="order-total">
+              <span class="total-title">Order Total:</span>
+              <span class="total-price">{{cal_total | money}}</span>
+            </div>
+          </div>
+          <div class="checkout-buttons">
+            <div class="checkout-button">
+              <button @click.prevent="createOrder" :disabled="checkoutLoading"><icon-lock/>SECURE CHECKOUT</button>
+              <p>Please Choose a shipping selection below</p>
+            </div>
+            <div class="card-list">
+              <a href=""><icon-visa/></a>
+              <a href=""><icon-master/></a>
+              <a href=""><icon-america/></a>
+              <a href=""><icon-discover/></a>
+              <a href=""><icon-paypal/></a>
+            </div>
           </div>
         </div>
       </div>
@@ -319,6 +321,14 @@ export default {
       shippingLoading: false,
       discountLoading: false,
       checkoutLoading: false,
+      blockZipcodeList: [
+        [601, 988],
+        [20001, 20599],
+        [56901, 56999],
+        [86701, 96898],
+        [99501, 99950]
+      ],
+      shippingDetailShow: false
     }
   },
   methods: {
@@ -357,12 +367,34 @@ export default {
       console.log('request quote has been hidden')
     },
     async fetchShipping () {
-      try {
-        this.shippingLoading = true
-        await this.$store.dispatch('cart/fetchShippingList', this.zipCode)
-        this.shippingLoading = false
-      } catch (error) {
-        console.log(error)
+      let zipcodeRegex = /^\d{5}$/
+      let zipCodeNumber = parseInt(this.zipCode)
+      let zipValid = true
+      if(zipcodeRegex.test(this.zipCode)) { // check if this zipcode is based on US
+        // check if this zipcode is in supported confidential zipcode list
+        this.blockZipcodeList.map(zipRow => {
+          if (zipCodeNumber >= zipRow[0] && zipCodeNumber <= zipRow[1]) {
+            zipValid = false
+          }
+        })
+
+        if (zipValid) {
+          this.shippingDetailShow = true
+          // get details of shipping options
+          try {
+            this.shippingLoading = true
+            await this.$store.dispatch('cart/fetchShippingList', this.zipCode)
+            this.shippingLoading = false
+          } catch (error) {
+            console.log(error)
+          }
+        } else {
+          alert('Please try to request a quote. Stanard shipping does not support this zipcode.')
+          return false
+        }
+      } else {
+        alert('Sorry, we support only US area.')
+        return false
       }
     },
     async calculateByDiscount () {
