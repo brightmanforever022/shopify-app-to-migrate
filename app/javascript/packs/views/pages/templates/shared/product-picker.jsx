@@ -116,11 +116,12 @@ class ProductPicker extends Component {
 
   render () {
     const { loading, active, queryValue, hasNext, hasPrevious, records, reloading, product } = this.state
+    const productId = product ? product.id : 0
     const rows = records.map(record => {
       const source = record.node.featuredImage ? record.node.featuredImage.transformedSrc : 'https://cdn.shopify.com/s/images/admin/no-image-compact.gif'
       return [
         <RadioButton
-          checked={product.id == record.node.id}
+          checked={productId == record.node.id}
           label="Select Product"
           labelHidden={true}
           onChange={() => {

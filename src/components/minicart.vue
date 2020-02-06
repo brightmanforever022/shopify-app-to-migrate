@@ -74,7 +74,7 @@
         </p>
         <div class="zip-code-form">
           <label for="zip_code">ZIP Code</label>
-          <input type="text" id="zip_code" v-model="zipCode" placeholder="1001">
+          <input type="text" id="zip_code" v-model="zipCode" v-on:keyup="showShippingOptions" placeholder="1001">
           <button @click.prevent="fetchShipping">SHOW SHIPPING OPTIONS</button>
         </div>
         <loading
@@ -362,9 +362,15 @@ export default {
     },
     showRequestQuote () {
       console.log('request quote will come soon')
+      alert('request quote will come soon')
     },
     hideRequestQuote () {
       console.log('request quote has been hidden')
+    },
+    showShippingOptions (e) {
+      if (e.key == "Enter") {
+        this.fetchShipping()
+      }
     },
     async fetchShipping () {
       let zipcodeRegex = /^\d{5}$/
