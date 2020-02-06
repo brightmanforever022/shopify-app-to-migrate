@@ -92,22 +92,22 @@
           </div>
           <div class="fedex-shipping-body">
             <ul>
-              <li @click.prevent="fedexShipping(1)" id="fedex-shipping-option-1" class="active">
+              <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-1" class="active">
                 <span>Ground</span>
                 <span>$36.70</span>
                 <span>Get it by October 26</span>
               </li>
-              <li @click.prevent="fedexShipping(2)" id="fedex-shipping-option-2">
+              <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-2">
                 <span>3 day select</span>
                 <span>$58.39</span>
                 <span>Get it by October 29</span>
               </li>
-              <li @click.prevent="fedexShipping(3)" id="fedex-shipping-option-3">
+              <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-3">
                 <span>2nd day air</span>
                 <span>$73.93</span>
                 <span>Get it by November 9</span>
               </li>
-              <li @click.prevent="fedexShipping(4)" id="fedex-shipping-option-4">
+              <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-4">
                 <span>Next day air</span>
                 <span>$102.59</span>
                 <span>Get it by November 16</span>
