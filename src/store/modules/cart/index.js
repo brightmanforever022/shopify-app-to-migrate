@@ -10,8 +10,14 @@ const cart = {
     line_items: [],
     discount_data: {},
     freight_shipping: 1,
-    fedex_shipping: 1,
-    fedex_shipping_list: [],
+    fedex_shipping: 'ground',
+    fedex_shipping_list: {
+      ground: {},
+      twoday: {},
+      threeday: {},
+      nextday: {},
+      shippingMarkup: 0,
+    },
   },
   actions: {
     initCart ({commit}) {
@@ -65,10 +71,27 @@ const cart = {
     },
     async fetchShippingList ({commit, state}, zipCode) {
       try {
-        console.log('shipping list by zip code: ', zipCode)
-        var shippingList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
-        console.log('fedex shipping list: ', shippingList)
-        commit('SET_SHIPPING_LIST', shippingList)
+        let shippingRateList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
+        if (shippingRateList) {
+          var shippingList = {
+            ground: shippingRateList.data.rateGround[0],
+            twoday: shippingRateList.data.rateTwoDay[0],
+            threeday: shippingRateList.data.rateThreeDay[0],
+            nextday: shippingRateList.data.rateNextDay[0],
+            shippingMarkup: shippingRateList.data.shippingMarkup,
+          }
+  
+          console.log('fedex shipping list: ', shippingList)
+          commit('SET_SHIPPING_LIST', shippingList)
+        } else {
+          commit('SET_SHIPPING_LIST', {
+            ground: {},
+            twoday: {},
+            threeday: {},
+            nextday: {},
+            shippingMarkup: 0,
+          })
+        }
       } catch (error) {
         console.log(error)
       }
