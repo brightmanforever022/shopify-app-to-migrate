@@ -160,6 +160,13 @@ class NewTemplate extends Component {
     }
   }
 
+  getExclusionList = (index, id) => {
+    const { groups } = this.state
+    const group = groups[index]
+    const drellation = group.drellations.find(dr => dr.dattribute_id == id)
+    return drellation.excepts
+  }
+
   openExclusionModal = (index, id) => {
     const { groups } = this.state
     let exclusionAttributeList = []
@@ -451,6 +458,12 @@ class NewTemplate extends Component {
 
   renderItem = index => item => {
     const { id, label, price, price_type, length, width, girth, attribute_code, weight, store_name, vendor_sku, postal_code } = item
+    let exceptList = this.getExclusionList(index, id)
+    exceptList = exceptList.split(',').filter(ex => ex != "")
+    let exclusionButtonString = 'Add exclusions'
+    if (exceptList.length > 0) {
+      exclusionButtonString = 'Edit exclusions'
+    }
     return (
       <ResourceList.Item
         id={"" + index + "-" + id}
@@ -466,7 +479,7 @@ class NewTemplate extends Component {
           <div className="option-item">{ postal_code }</div>
         </div>
         <div className="attribute-action-list mt-25" key={"attribute-action" + index + "-" + id}>
-          <div className="attribute-action"><Button primary onClick={() => this.openExclusionModal(index, id)}>Add exclusions</Button></div>
+          <div className="attribute-action"><Button primary onClick={() => this.openExclusionModal(index, id)}>{ exclusionButtonString }</Button></div>
           <div className="attribute-action"><Button external url={"/attributes/" + id + "/edit"}>Edit option</Button></div>
           <div className="attribute-action"><Button icon={DeleteMajorMonotone} onClick={() => this.removeItem(index, id)}></Button></div>
         </div>
