@@ -11,7 +11,7 @@ import ConfirmModal from '../../../components/confirm-modal'
 
 import {
   loadVariant,
-  loadVariants,
+  // loadVariants,
   loadProduct,
 } from '../../../../actions/product'
 
@@ -106,7 +106,7 @@ class NewTemplate extends Component {
             openGroup[i] = true
           }
           this.setState({
-            variants: data.variants.data.nodes,
+            // variants: data.variants.data.nodes,
             groups: data.template.groups,
             label: data.template.label,
             loading: false,
@@ -325,7 +325,7 @@ class NewTemplate extends Component {
   }
 
   handleSave = () => {
-    const { variants, groups, id, label, product } = this.state
+    const { /*variants, */groups, id, label, product } = this.state
     // if (variants.length < 1) {
     //   alert('No product assigned')
     //   return false
@@ -335,7 +335,7 @@ class NewTemplate extends Component {
     if (id) {
       this.props.updateTemplate({
         id,
-        variants,
+        // variants,
         groups,
         label,
         product_id,
@@ -346,7 +346,7 @@ class NewTemplate extends Component {
     } else {
       this.props.createTemplate({
         label,
-        variants,
+        // variants,
         groups,
         product_id,
         cb: data => {
@@ -667,14 +667,14 @@ class NewTemplate extends Component {
                   secondaryActions={secondaryActions}
                 />
               </Layout.Section>
-              <VariantsPicker
+              {/* <VariantsPicker
                 active={variantsModal}
                 modalType={modalType}
                 selecteds={selecteds}
                 togglePicker={this.toggleVariantsPicker}
                 handleChoice={this.handleVariantsChoice}
                 onConfirm={this.setVariantsPicker}
-              />
+              /> */}
               <ProductPicker
                 active={productModal}
                 productData={product}
@@ -719,7 +719,7 @@ const mapDispatchToProps = {
   createTemplate,
   deleteTemplate,
   updateTemplate,
-  loadVariants,
+  // loadVariants,
   searchAttributes
 }
 
