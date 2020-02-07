@@ -44,27 +44,28 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     packages = []
     shippingMarkup = 0
     lineItemList.each do |lineItem|
-      lineItem.custom_options.each do |co|
-        if co.weight > 0
+      lineItem[:custom_options].each do |co|
+        puts co
+        if co[:weight] > 0
           packages << {
-            :weight => {:units => "LB", :value => co.weight},
-            :dimensions => {:length => co.length, :width => co.width, :height => co.height, :units => "IN"}
+            :weight => {:units => "LB", :value => co[:weight]},
+            :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
           }
           # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
-          shippingMarkup += lineItem.calculated_price * 5 / 100
+          shippingMarkup += lineItem[:calculated_price] * 5 / 100
         end
-        if co.weight2 > 0
-          packages << {
-            :weight => {:units => "LB", :value => co.weight2},
-            :dimensions => {:length => co.length2, :width => co.width2, :height => co.height2, :units => "IN"}
-          }
-        end
-        if co.weight3 > 0
-          packages << {
-            :weight => {:units => "LB", :value => co.weight3},
-            :dimensions => {:length => co.length3, :width => co.width3, :height => co.height3, :units => "IN"}
-          }
-        end
+        # if co[:weight2] > 0
+        #   packages << {
+        #     :weight => {:units => "LB", :value => co[:weight2]},
+        #     :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
+        #   }
+        # end
+        # if co[:weight3] > 0
+        #   packages << {
+        #     :weight => {:units => "LB", :value => co[:weight3]},
+        #     :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
+        #   }
+        # end
       end
     end
     # packages << {
