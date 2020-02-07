@@ -1,7 +1,8 @@
 class Api::V1::TemplatesController < AuthenticatedController
   include Api::V1::ProductsHelper
   before_action :set_template, only: [:show, :edit, :destroy, :update]
-
+  skip_before_action :verify_authenticity_token
+  
   def index
     puts template_index_params.to_json
 
