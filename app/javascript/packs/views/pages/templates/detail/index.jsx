@@ -172,9 +172,7 @@ class NewTemplate extends Component {
     let exclusionAttributeList = []
     groups.map((gr, grIndex) => {
       if (index != grIndex) {
-        gr.dattributes.map(gda => {
-          exclusionAttributeList.push(gda)
-        })
+        exclusionAttributeList.push({groupLabel: gr.label, groupId: gr.id, daList: gr.dattributes})
       }
     })
     const group = groups[index]
@@ -473,8 +471,8 @@ class NewTemplate extends Component {
         <div className="attribute-item" key={"attribute-item" + index + "-" + id}>
           <div className="option-item">{ label } <br/>{ store_name }</div>
           <div className="option-item">{ (price_type ? '' : '$') + price + (price_type ? ' %' : '') }</div>
-          <div className="option-item">{ weight + 'kg' }</div>
-          <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }</div>
+          <div className="option-item">0</div>
+          <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }<br/>{ weight + 'kg' }</div>
           <div className="option-item">{ attribute_code }<br/>{ vendor_sku }</div>
           <div className="option-item">{ postal_code }</div>
         </div>
@@ -624,8 +622,8 @@ class NewTemplate extends Component {
                             <div className="attribute-item-header attribute-item pl-25 pb-15 mt-25 bb-grey" key={index}>
                               <div className="option-item">Option Title<br/>Stores</div>
                               <div className="option-item">Price</div>
-                              <div className="option-item">Weight</div>
-                              <div className="option-item">Size (LxWxH)</div>
+                              <div className="option-item">Table Row</div>
+                              <div className="option-item">Size (LxWxH)<br/>Weight</div>
                               <div className="option-item">Option SKU<br/>Vendor SKU</div>
                               <div className="option-item">Postal Code</div>
                             </div>

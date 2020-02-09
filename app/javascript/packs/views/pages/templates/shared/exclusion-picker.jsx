@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Modal, Checkbox, List } from '@shopify/polaris'
+import { Modal, Checkbox, List, Card } from '@shopify/polaris'
 import { connect } from 'react-redux'
 
 class ExclusionPicker extends Component {
@@ -16,7 +16,7 @@ class ExclusionPicker extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.active !== state.active) {
       const exclusions = props.selecteds.filter(sel => sel != "")
-      
+      // console.log('attribute list: ', props.attributeList)
       return {
         loading: false,
         active: props.active,
@@ -62,20 +62,6 @@ class ExclusionPicker extends Component {
 
   render () {
     const { loading, active, dattributes, selecteds } = this.state
-    const rows = dattributes.map(dattribute => {
-      return (
-        <List.Item key={dattribute.id}>
-          <Checkbox
-            checked={selecteds.includes(dattribute.id.toString())}
-            label={dattribute.label}
-            labelHidden={false}
-            onChange={() => {
-              this.handleSelect(dattribute.id)
-            }}
-          />
-        </List.Item>
-      )
-    })
     return (
       <Modal
         open={active}
@@ -89,11 +75,34 @@ class ExclusionPicker extends Component {
         large
       >
         <Modal.Section>
-          <div className="exclusion-list">
-            <List type="bullet">
-              {rows}
-            </List>
-          </div>
+          {
+            dattributes.map(gr => {
+              return (
+                <Card title={gr.groupLabel} sectioned key={gr.groupId}>
+                  <div className="exclusion-list">
+                    <List type="bullet">
+                      {
+                        gr.daList.map(dattribute => {
+                          return (
+                            <List.Item key={dattribute.id}>
+                              <Checkbox
+                                checked={selecteds.includes(dattribute.id.toString())}
+                                label={dattribute.label}
+                                labelHidden={false}
+                                onChange={() => {
+                                  this.handleSelect(dattribute.id)
+                                }}
+                              />
+                            </List.Item>
+                          )
+                        })
+                      }
+                    </List>
+                  </div>
+                </Card>
+              )
+            })
+          }
         </Modal.Section>
       </Modal>
     )
