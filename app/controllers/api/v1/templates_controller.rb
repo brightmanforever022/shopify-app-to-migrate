@@ -1,7 +1,8 @@
 class Api::V1::TemplatesController < AuthenticatedController
   include Api::V1::ProductsHelper
   before_action :set_template, only: [:show, :edit, :destroy, :update]
-
+  skip_before_action :verify_authenticity_token
+  
   def index
     puts template_index_params.to_json
 
@@ -32,7 +33,7 @@ class Api::V1::TemplatesController < AuthenticatedController
       shop: @shop
     )
     if @template.save
-      set_template_variants
+      # set_template_variants
       set_template_group_items
       http_success_response({template: @template})
     else
@@ -41,10 +42,14 @@ class Api::V1::TemplatesController < AuthenticatedController
   end
 
   def show
-    ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
-    variants = get_variants_by_ids(ids)
+    # ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
+    # variants = get_variants_by_ids(ids)
     attributeList = Dattribute.order('id ASC').limit(10)
-    render json: {template: @template, variants: variants, attributeList: attributeList }, include: {
+    render json: {
+      template: @template,
+      # variants: variants,
+      attributeList: attributeList
+    }, include: {
       groups: {
         include: {
           drellations: {},
@@ -71,11 +76,16 @@ class Api::V1::TemplatesController < AuthenticatedController
     # set_template_variants
     set_template_group_items
 
-    ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
-    variants = get_variants_by_ids(ids)
+    # ids = @template.variants.map { |e| "gid://shopify/ProductVariant/#{e.shopify_variant_id}" }
+    # variants = get_variants_by_ids(ids)
     attributeList = Dattribute.order('id ASC').limit(10)
-    render json: {template: @template, variants: variants, attributeList: attributeList }, include: {
+    render json: {
+      template: @template,
+      # variants: variants,
+      attributeList: attributeList
+    }, include: {
       groups: {
+        orderBy: 'display_order',
         include: {
           drellations: {},
           dattributes: {}
@@ -122,12 +132,14 @@ class Api::V1::TemplatesController < AuthenticatedController
     end
 
     def set_template_group_items
+      groupOrder = 0
       template_params[:groups].each do |group|
+        groupOrder += 1
         @group = Group.new(
           template: @template,
           label: group[:label],
           is_required: group[:is_required],
-          display_order: @template.groups.length + 1
+          display_order: groupOrder
         )
         if @group.save
           group[:dattributes].each do |datt|
