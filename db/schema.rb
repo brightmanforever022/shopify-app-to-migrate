@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_20_184448) do
+ActiveRecord::Schema.define(version: 2020_02_09_192117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 2020_01_20_184448) do
     t.float "width3", default: 0.0
     t.float "length3", default: 0.0
     t.float "girth3", default: 0.0
+    t.float "weight2", default: 0.0
+    t.float "weight3", default: 0.0
   end
 
   create_table "drellations", force: :cascade do |t|

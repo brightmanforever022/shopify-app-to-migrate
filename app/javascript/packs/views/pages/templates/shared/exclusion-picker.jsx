@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Modal, Checkbox, List, Card } from '@shopify/polaris'
 import { connect } from 'react-redux'
 
