@@ -324,10 +324,10 @@ class NewTemplate extends Component {
 
   handleSave = () => {
     const { /*variants, */groups, id, label, product } = this.state
-    // if (variants.length < 1) {
-    //   alert('No product assigned')
-    //   return false
-    // }
+    if (!product) {
+      alert('No product assigned')
+      return false
+    }
     const product_id = product.id.split('/')[product.id.split('/').length - 1]
     this.setState({saving: true})
     if (id) {
@@ -444,6 +444,7 @@ class NewTemplate extends Component {
     }
     let newRellation = {
       dattribute_id: selectedValue[0].value,
+      table_row: '0',
       excepts: ''
     }
     groups[index].dattributes = [...groups[index].dattributes, newOption]
@@ -454,8 +455,31 @@ class NewTemplate extends Component {
     this.setState({groups: groups, newOptionShow: newOptionShow})
   }
 
+  changeTableRow = (index, id, evt) => {
+    const { groups } = this.state
+    const tableRowRegex = /^[0-9,]+$/
+    if (tableRowRegex.test(evt)) {
+      groups[index].drellations.map(dr => {
+        if (dr.dattribute_id == id) {
+          dr.table_row = evt
+          return dr
+        } else {
+          return dr
+        }
+      })
+      this.setState({ groups: groups })
+    }
+  }
+
   renderItem = index => item => {
     const { id, label, price, price_type, length, width, girth, attribute_code, weight, store_name, vendor_sku, postal_code } = item
+    
+    // find drellation related with this item
+    const { groups } = this.state
+    const drellation = groups[index].drellations.find(dr => dr.dattribute_id == id)
+    let table_row = drellation.table_row
+    
+    // define whether button text is 'add exclusions' or 'edit exclusions'
     let exceptList = this.getExclusionList(index, id)
     exceptList = exceptList.split(',').filter(ex => ex != "")
     let exclusionButtonString = 'Add exclusions'
@@ -471,7 +495,14 @@ class NewTemplate extends Component {
         <div className="attribute-item" key={"attribute-item" + index + "-" + id}>
           <div className="option-item">{ label } <br/>{ store_name }</div>
           <div className="option-item">{ (price_type ? '' : '$') + price + (price_type ? ' %' : '') }</div>
-          <div className="option-item">0</div>
+          <div className="option-item">
+            <TextField
+              label="Table Row"
+              labelHidden="TRUE"
+              value={ table_row }>
+              onChange={ (e) => this.changeTableRow(index, id, e) }
+            </TextField>
+          </div>
           <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }<br/>{ weight + 'kg' }</div>
           <div className="option-item">{ attribute_code }<br/>{ vendor_sku }</div>
           <div className="option-item">{ postal_code }</div>
