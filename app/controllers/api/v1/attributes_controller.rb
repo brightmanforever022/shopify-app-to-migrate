@@ -1,5 +1,6 @@
 class Api::V1::AttributesController < AuthenticatedController
   before_action :set_attribute, only: [:show, :edit, :destroy, :update]
+  skip_before_action :verify_authenticity_token
 
   def index
     # puts attribute_index_params.to_json

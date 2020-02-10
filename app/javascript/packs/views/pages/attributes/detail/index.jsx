@@ -28,9 +28,11 @@ class NewAttribute extends Component {
       width: 0,
       length: 0,
       girth: 0,
+      weight2: 0,
       width2: 0,
       length2: 0,
       girth2: 0,
+      weight3: 0,
       width3: 0,
       length3: 0,
       girth3: 0,
@@ -70,9 +72,11 @@ class NewAttribute extends Component {
             width: data.attribute.width,
             length: data.attribute.length,
             girth: data.attribute.girth,
+            weight2: data.attribute.weight2,
             width2: data.attribute.width2,
             length2: data.attribute.length2,
             girth2: data.attribute.girth2,
+            weight3: data.attribute.weight3,
             width3: data.attribute.width3,
             length3: data.attribute.length3,
             girth3: data.attribute.girth3,
@@ -126,7 +130,7 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, selectedStoreList, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, selectedStoreList, vendor_sku } = this.state
     this.setState({saving: true})
     let store_list = selectedStoreList
     if (id) {
@@ -139,9 +143,11 @@ class NewAttribute extends Component {
         width,
         length,
         girth,
+        weight2,
         width2,
         length2,
         girth2,
+        weight3,
         width3,
         length3,
         girth3,
@@ -162,9 +168,11 @@ class NewAttribute extends Component {
         width,
         length,
         girth,
+        weight2,
         width2,
         length2,
         girth2,
+        weight3,
         width3,
         length3,
         girth3,
@@ -183,7 +191,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, width2, length2, girth2, width3, length3, girth3, attribute_code, postal_code, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -296,6 +304,16 @@ class NewAttribute extends Component {
                           value={weight}
                           onChange={this.handleChange('weight')}
                           label="Weight"
+                        />
+                        <TextField
+                          value={weight2}
+                          onChange={this.handleChange('weight2')}
+                          label="Second Weight"
+                        />
+                        <TextField
+                          value={weight3}
+                          onChange={this.handleChange('weight3')}
+                          label="Third Weight"
                         />
                       </FormLayout.Group>
                     </Fragment>
