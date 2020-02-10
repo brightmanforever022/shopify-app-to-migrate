@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Page, Layout, PageActions, Card, Button, FormLayout, TextField, ButtonGroup } from '@shopify/polaris'
+import { Page, Layout, PageActions, Card, Button, FormLayout, TextField, ButtonGroup, Checkbox } from '@shopify/polaris'
 import { connect } from 'react-redux'
 import StorePicker from '../../templates/shared/store-picker'
 import SkeletonLoader from '../../../components/skeleton-loader'
@@ -38,6 +38,7 @@ class NewAttribute extends Component {
       girth3: 0,
       attribute_code: '',
       postal_code: '',
+      freight: false,
       store_list: [],
       selectedStoreList: '',
       vendor_sku: '',
@@ -49,6 +50,7 @@ class NewAttribute extends Component {
     }
 
     this.handleTypeChange = this.handleTypeChange.bind(this)
+    this.handleFreightChange = this.handleFreightChange.bind(this)
   }
 
   UNSAFE_componentWillMount () {
@@ -82,6 +84,7 @@ class NewAttribute extends Component {
             girth3: data.attribute.girth3,
             attribute_code: data.attribute.attribute_code,
             postal_code: data.attribute.postal_code,
+            freight: data.attribute.freight,
             selectedStoreList: data.attribute.store_list,
             vendor_sku: data.attribute.vendor_sku,
             store_list: data.storeList,
@@ -111,6 +114,11 @@ class NewAttribute extends Component {
     this.setState({price_type: event.target.value})
   }
 
+  handleFreightChange = event => {
+    const { freight } = this.state
+    this.setState({ freight: !freight })
+  }
+
   selectStoreModalOpen = () => {
     this.setState({
       storeSelectModal: true
@@ -130,7 +138,7 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, selectedStoreList, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, selectedStoreList, vendor_sku } = this.state
     this.setState({saving: true})
     let store_list = selectedStoreList
     if (id) {
@@ -153,6 +161,7 @@ class NewAttribute extends Component {
         girth3,
         attribute_code,
         postal_code,
+        freight,
         store_list,
         vendor_sku,
         cb: data => {
@@ -178,6 +187,7 @@ class NewAttribute extends Component {
         girth3,
         attribute_code,
         postal_code,
+        freight,
         store_list,
         vendor_sku,
         cb: data => {
@@ -191,7 +201,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -314,6 +324,11 @@ class NewAttribute extends Component {
                           value={weight3}
                           onChange={this.handleChange('weight3')}
                           label="Third Weight"
+                        />
+                        <Checkbox
+                          label="Freight"
+                          checked={freight}
+                          onChange={this.handleFreightChange}
                         />
                       </FormLayout.Group>
                     </Fragment>
