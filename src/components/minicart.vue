@@ -126,7 +126,7 @@
             <h6><a @click.prevent="showRequestQuote"><icon-quote />&nbsp;Request a Quote</a></h6>
           </div>
         </div>
-        <div class="freight-shipping-options">
+        <div v-if="freight_exist" class="freight-shipping-options">
           <h4>Freight Shipping Options</h4>
           <div class="freight-shipping-header">
             <span>Service</span>
@@ -299,6 +299,7 @@ export default {
       discount_total: 'cart/get_discount',
       freight_shipping: 'cart/get_freight_shipping_price',
       fedex_shipping: 'cart/get_fedex_shipping_price',
+      freight_exist: 'cart/freight_exist',
     })
   },
   created () {

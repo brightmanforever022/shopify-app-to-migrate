@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_09_192117) do
+ActiveRecord::Schema.define(version: 2020_02_10_222406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -36,12 +36,14 @@ ActiveRecord::Schema.define(version: 2020_02_09_192117) do
     t.float "girth3", default: 0.0
     t.float "weight2", default: 0.0
     t.float "weight3", default: 0.0
+    t.boolean "freight", default: false
   end
 
   create_table "drellations", force: :cascade do |t|
     t.bigint "group_id"
     t.bigint "dattribute_id"
     t.string "excepts", default: ""
+    t.string "table_row", default: "0"
     t.index ["dattribute_id"], name: "index_drellations_on_dattribute_id"
     t.index ["group_id"], name: "index_drellations_on_group_id"
   end

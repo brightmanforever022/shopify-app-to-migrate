@@ -147,6 +147,7 @@ class Api::V1::TemplatesController < AuthenticatedController
             @drellation = Drellation.new(
               dattribute_id: datt[:id].to_i,
               excepts: originalDrellation ? originalDrellation[:excepts] : '',
+              table_row: originalDrellation[:table_row].to_s,
               group: @group
             )
             unless @drellation.save

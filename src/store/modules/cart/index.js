@@ -183,6 +183,18 @@ const cart = {
       })
       return totalPrice
     },
+    freight_exist (state) {
+      isFreightExist = false
+      const { line_items } = state
+      line_items.map(lineItem => {
+        lineItem.custom_options.map(co => {
+          if (co.freight) {
+            isFreightExist = true
+          }
+        })
+      })
+      return isFreightExist
+    },
     get_freight_shipping_price (state) {
       var price = getFreightShippingPrice(state.freight_shipping)
       return {id: state.freight_shipping, shipping_price: price}

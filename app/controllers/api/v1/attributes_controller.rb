@@ -42,6 +42,7 @@ class Api::V1::AttributesController < AuthenticatedController
       girth3: attribute_params[:girth3],
       attribute_code: attribute_params[:attribute_code],
       postal_code: attribute_params[:postal_code],
+      freight: attribute_params[:freight],
       store_list: attribute_params[:store_list],
       vendor_sku: attribute_params[:vendor_sku]
     )
@@ -77,6 +78,7 @@ class Api::V1::AttributesController < AuthenticatedController
       girth3: attribute_params[:girth3],
       attribute_code: attribute_params[:attribute_code],
       postal_code: attribute_params[:postal_code],
+      freight: attribute_params[:freight],
       store_list: attribute_params[:store_list],
       vendor_sku: attribute_params[:vendor_sku]
     })
