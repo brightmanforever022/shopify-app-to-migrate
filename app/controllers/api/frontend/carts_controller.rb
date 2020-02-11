@@ -44,38 +44,40 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     packages = []
     shippingMarkup = 0
     lineItemList.each do |lineItem|
-      lineItem[:custom_options].each do |co|
-        puts co
-        if co[:weight] > 0
-          packages << {
-            :weight => {:units => "LB", :value => co[:weight]},
-            :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
-          }
-          # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
-          shippingMarkup += lineItem[:calculated_price] * 5 / 100
+      isFreight = false
+      lineItem[:custom_options].each do |cop|
+        if cop[:freight]
+          isFreight = true
         end
-        # if co[:weight2] > 0
-        #   packages << {
-        #     :weight => {:units => "LB", :value => co[:weight2]},
-        #     :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
-        #   }
-        # end
-        # if co[:weight3] > 0
-        #   packages << {
-        #     :weight => {:units => "LB", :value => co[:weight3]},
-        #     :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
-        #   }
-        # end
+      end
+
+      if !isFreight
+        lineItem[:custom_options].each do |co|
+          puts co
+          if co[:weight] > 0
+            packages << {
+              :weight => {:units => "LB", :value => co[:weight]},
+              :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
+            }
+            # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
+            shippingMarkup += lineItem[:calculated_price] * 5 / 100
+          end
+          if co[:weight2] > 0
+            packages << {
+              :weight => {:units => "LB", :value => co[:weight2]},
+              :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
+            }
+          end
+          if co[:weight3] > 0
+            packages << {
+              :weight => {:units => "LB", :value => co[:weight3]},
+              :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
+            }
+          end
+        end
       end
     end
-    # packages << {
-    #   :weight => {:units => "LB", :value => 1},
-    #   :dimensions => {:length => 10, :width => 5, :height => 4, :units => "IN" }
-    # }
-    # packages << {
-    #   :weight => {:units => "LB", :value => 1},
-    #   :dimensions => {:length => 5, :width => 5, :height => 4, :units => "IN" }
-    # }
+    
     shipping_options = {
       :packaging_type => "YOUR_PACKAGING",
       :drop_off_type => "REGULAR_PICKUP"
