@@ -5,7 +5,8 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     # getting data from parameters
     items = params[:lineItems]
     discountRule = params[:discountRule]
-    freightShipping = params[:orderFreightShipping]
+    freightShipping = params[:orderFreightShipping].to_f
+    fedexShipping = params[:orderFedexShipping].to_f
     tax = params[:orderTax]
 
     # Initialize line item list
@@ -151,10 +152,11 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       end
     end
     # Add freight shipping into line item list
+    totalShippingPrice = freightShipping + fedexShipping
     shippingItem = {
-      title: 'Lift-Gate Service',
+      title: 'Total Shipping',
       quantity: 1,
-      price: freightShipping
+      price: totalShippingPrice
     }
 
     if freightShipping.to_i > 0

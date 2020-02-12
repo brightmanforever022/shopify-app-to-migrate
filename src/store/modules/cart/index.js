@@ -74,10 +74,10 @@ const cart = {
         let shippingRateList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
         if (shippingRateList) {
           var shippingList = {
-            ground: shippingRateList.data.rateGround[0],
-            twoday: shippingRateList.data.rateTwoDay[0],
-            threeday: shippingRateList.data.rateThreeDay[0],
-            nextday: shippingRateList.data.rateNextDay[0],
+            ground: shippingRateList.data.rateGround ? shippingRateList.data.rateGround[0] : {},
+            twoday: shippingRateList.data.rateTwoDay ? shippingRateList.data.rateTwoDay[0] : {},
+            threeday: shippingRateList.data.rateThreeDay ? shippingRateList.data.rateThreeDay[0] : {},
+            nextday: shippingRateList.data.rateNextDay ? shippingRateList.data.rateNextDay[0] : {},
             shippingMarkup: shippingRateList.data.shippingMarkup,
           }
   
@@ -116,14 +116,14 @@ const cart = {
     setFreightShipping ({commit}, shippingId) {
       commit('SET_FREIGHT_SHIPPING', shippingId)
     },
-    setFedexShipping ({commit}, shippingId) {
-      commit('SET_FEDEX_SHIPPING', shippingId)
+    setFedexShipping ({commit}, fedexType) {
+      commit('SET_FEDEX_SHIPPING', fedexType)
     },
     async createDraftOrder ({commit, state, getters}) {
       try {
         const orderDiscount = getters.get_discount.toFixed(2)
         const orderFreightShipping = getFreightShippingPrice(state.freight_shipping).toFixed(2)
-        const orderFedexShipping = getFedexShippingPrice(state.fedex_shipping).toFixed(2)
+        const orderFedexShipping = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping).toFixed(2)
         const orderTax = (getters.get_sub_total * 0.08625).toFixed(2)
         const draftOrder = await createOrder({lineItems: state.line_items, discountRule: state.discount_data, orderFreightShipping: orderFreightShipping, orderFedexShipping: orderFedexShipping, orderTax: orderTax})
         // Make cart empty
@@ -184,7 +184,7 @@ const cart = {
       return totalPrice
     },
     freight_exist (state) {
-      isFreightExist = false
+      let isFreightExist = false
       const { line_items } = state
       line_items.map(lineItem => {
         lineItem.custom_options.map(co => {
@@ -200,7 +200,7 @@ const cart = {
       return {id: state.freight_shipping, shipping_price: price}
     },
     get_fedex_shipping_price (state) {
-      var price = getFedexShippingPrice(state.fedex_shipping)
+      var price = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping)
       return {id: state.fedex_shipping, shipping_price: price}
     },
     get_discount (state) {
@@ -264,7 +264,8 @@ const cart = {
       var totalPrice = 0
       var discountAmount = 0
       var freight_shipping_price = getFreightShippingPrice(state.freight_shipping)
-      var fedex_shipping_price = getFedexShippingPrice(state.fedex_shipping)
+      var fedex_shipping_price = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping)
+      console.log('fedex shipping price in calculating total: ', fedex_shipping_price)
       var validPeriod = checkDiscountPeriodValidation(state.discount_data.startsAt, state.discount_data.endsAt)
       state.line_items.map(lineItem => {
         totalPrice += lineItem.calculated_price

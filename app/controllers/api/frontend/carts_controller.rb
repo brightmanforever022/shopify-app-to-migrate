@@ -14,7 +14,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
   end
 
   def fedex_options_list
-    # puts "fedex parameters: #{cart_params[:cart]}"
     zipCode = cart_params[:cart][:zipCode]
     lineItemList = cart_params[:cart][:lineItems] ? cart_params[:cart][:lineItems] : []
 
@@ -29,14 +28,14 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       :country_code => "US" 
     }
     
-    recipient = { 
+    recipient = {
       :name => "Test Fedex Recipient",
       :company => "Home",
       :phone_number => "555-555-5555",
       # :address => "Main Street",
       # :city => "Boulder",
       # :state => "CO",
-      :postal_code => "93221",
+      :postal_code => zipCode,
       :country_code => "US",
       :residential => "true"
     }
@@ -91,44 +90,54 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       :mode => 'development'
     )
     
-    rateNextDay = fedex.rate(
-      :shipper=>shipper,
-      :recipient => recipient,
-      :packages => packages,
-      :service_type => "STANDARD_OVERNIGHT",
-      :shipping_options => shipping_options
-    )
-    rateGround = fedex.rate(
-      :shipper=>shipper,
-      :recipient => recipient,
-      :packages => packages,
-      :service_type => "FEDEX_GROUND",
-      :shipping_options => shipping_options
-    )
+    if packages.length() > 0
+      rateNextDay = fedex.rate(
+        :shipper=>shipper,
+        :recipient => recipient,
+        :packages => packages,
+        :service_type => "STANDARD_OVERNIGHT",
+        :shipping_options => shipping_options
+      )
+      rateGround = fedex.rate(
+        :shipper=>shipper,
+        :recipient => recipient,
+        :packages => packages,
+        :service_type => "FEDEX_GROUND",
+        :shipping_options => shipping_options
+      )
 
-    rateTwoDay = fedex.rate(
-      :shipper=>shipper,
-      :recipient => recipient,
-      :packages => packages,
-      :service_type => "FEDEX_2_DAY",
-      :shipping_options => shipping_options
-    )
-    
-    rateThreeDay = fedex.rate(
-      :shipper=>shipper,
-      :recipient => recipient,
-      :packages => packages,
-      :service_type => "FEDEX_EXPRESS_SAVER",
-      :shipping_options => shipping_options
-    )
-    
-    http_success_response({
-      rateGround: rateGround,
-      rateTwoDay: rateTwoDay,
-      rateThreeDay: rateThreeDay,
-      rateNextDay: rateNextDay,
-      shippingMarkup: shippingMarkup,
-    })
+      rateTwoDay = fedex.rate(
+        :shipper=>shipper,
+        :recipient => recipient,
+        :packages => packages,
+        :service_type => "FEDEX_2_DAY",
+        :shipping_options => shipping_options
+      )
+      
+      rateThreeDay = fedex.rate(
+        :shipper=>shipper,
+        :recipient => recipient,
+        :packages => packages,
+        :service_type => "FEDEX_EXPRESS_SAVER",
+        :shipping_options => shipping_options
+      )
+
+      http_success_response({
+        rateGround: rateGround,
+        rateTwoDay: rateTwoDay,
+        rateThreeDay: rateThreeDay,
+        rateNextDay: rateNextDay,
+        shippingMarkup: shippingMarkup,
+      })
+    else
+      http_success_response({
+        rateGround: nil,
+        rateTwoDay: nil,
+        rateThreeDay: nil,
+        rateNextDay: nil,
+        shippingMarkup: 0,
+      })
+    end
   end
 
   private
