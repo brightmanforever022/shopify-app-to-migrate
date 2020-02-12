@@ -25,16 +25,17 @@ export function getFreightShippingPrice(id) {
 	return shippingPrice
 }
 
-export function getFedexShippingPrice(id) {
-	var shippingPrice = 0
-	if (id == 1) {
-		shippingPrice = 36.7
-	} else if (id == 2) {
-		shippingPrice = 58.39
-	} else if (id == 3) {
-		shippingPrice = 73.93
-	} else if (id == 4) {
-		shippingPrice = 102.59
+export function getFedexShippingPrice(fedexShippingList, fedexType) {
+	switch(fedexType) {
+		case 'ground':
+			return fedexShippingList.ground.total_net_charge ? parseFloat(fedexShippingList.ground.total_net_charge) : 0
+		case 'twoday':
+			return fedexShippingList.twoday.total_net_charge ? parseFloat(fedexShippingList.twoday.total_net_charge) : 0
+		case 'threeday':
+			return fedexShippingList.threeday.total_net_charge ? parseFloat(fedexShippingList.threeday.total_net_charge) : 0
+		case 'nextday':
+			return fedexShippingList.nextday.total_net_charge ? parseFloat(fedexShippingList.nextday.total_net_charge) : 0
+		default:
+			return 0
 	}
-	return shippingPrice
 }

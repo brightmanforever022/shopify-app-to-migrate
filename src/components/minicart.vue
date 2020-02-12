@@ -92,22 +92,22 @@
           </div>
           <div class="fedex-shipping-body">
             <ul>
-              <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-1" class="active">
+              <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-ground" class="active">
                 <span>Ground</span>
                 <span>$36.70</span>
                 <span>Get it by October 26</span>
               </li>
-              <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-2">
+              <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
                 <span>$58.39</span>
                 <span>Get it by October 29</span>
               </li>
-              <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-3">
+              <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
                 <span>$73.93</span>
                 <span>Get it by November 9</span>
               </li>
-              <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-4">
+              <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
                 <span>$102.59</span>
                 <span>Get it by November 16</span>
@@ -386,12 +386,12 @@ export default {
         })
 
         if (zipValid) {
-          this.shippingDetailShow = true
           // get details of shipping options
           try {
             this.shippingLoading = true
             await this.$store.dispatch('cart/fetchShippingList', this.zipCode)
             this.shippingLoading = false
+            this.shippingDetailShow = true
           } catch (error) {
             console.log(error)
           }
@@ -422,10 +422,11 @@ export default {
       $('.freight-shipping-body li').removeClass('active')
       $('#freight-shipping-option-'+shippingId).addClass('active')
     },
-    fedexShipping (shippingId) {
-      this.$store.dispatch('cart/setFedexShipping', shippingId)
+    fedexShipping (fedexType) {
+      this.$store.dispatch('cart/setFedexShipping', fedexType)
+      console.log('fedex type: ', fedexType)
       $('.fedex-shipping-body li').removeClass('active')
-      $('#fedex-shipping-option-'+shippingId).addClass('active')
+      $('#fedex-shipping-option-'+fedexType).addClass('active')
     },
     async createOrder () {
       this.checkoutLoading = true
