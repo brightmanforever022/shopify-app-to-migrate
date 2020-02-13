@@ -34,8 +34,5 @@ yarn-debug.log*
 .yarn-integrity
 
 
-#/public/frontend/app.js
-#/public/frontend/app.js.map
-#/public/frontend/packs
-#public/frontend/*.html
-public/frontend/*
+/public/frontend/packs
+# /public/frontend/*.html
