@@ -156,7 +156,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     shippingLine = {
       title: 'Total Shipping',
       custom: true,
-      handle: null,
+      handle: nil,
       price: totalShippingPrice
     }
 
