@@ -153,24 +153,23 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     end
     # Add freight shipping into line item list
     totalShippingPrice = freightShipping + fedexShipping
-    shippingItem = {
+    shippingLine = {
       title: 'Total Shipping',
-      quantity: 1,
+      custom: true,
+      handle: null,
       price: totalShippingPrice
     }
 
-    if freightShipping.to_i > 0
-      line_items << shippingItem
-    end
-    
     if !discountTarget
       draft_order = ShopifyAPI::DraftOrder.new({
         line_items: line_items,
+        shipping_line: shippingLine,
         email: 'yong@halfhelix.com'
       })
     elsif discountValid && discountTarget
       draft_order = ShopifyAPI::DraftOrder.new({
         line_items: line_items,
+        shipping_line: shippingLine,
         applied_discount: {
           description: 'custom all line',
           title: 'custom',
