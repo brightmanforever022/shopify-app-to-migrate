@@ -1,5 +1,6 @@
 class Api::Frontend::CartsController < Api::Frontend::BaseController
   require 'fedex'
+  require 'json'
 
   def index
     
@@ -17,31 +18,44 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     zipCode = cart_params[:cart][:zipCode]
     lineItemList = cart_params[:cart][:lineItems] ? cart_params[:cart][:lineItems] : []
 
-    shipper = { 
-      :name => "Test Fedex Sender",
-      :company => "Home",
-      :phone_number => "121-333-2332",
-      :address => "Main Street",
-      :city => "Littleton",
-      :state => "CO",
-      :postal_code => "80125",
-      :country_code => "US" 
-    }
-    
-    recipient = {
-      :name => "Test Fedex Recipient",
-      :company => "Home",
-      :phone_number => "555-555-5555",
-      # :address => "Main Street",
-      # :city => "Boulder",
-      # :state => "CO",
-      :postal_code => zipCode,
-      :country_code => "US",
-      :residential => "true"
+    shipping_options = {
+      :packaging_type => "YOUR_PACKAGING",
+      :drop_off_type => "REGULAR_PICKUP"
     }
 
-    packages = []
-    shippingMarkup = 0
+    fedex = Fedex::Shipment.new(
+      :key => 'h8cacZZYQvu7iebt',
+      :password => 'SJ8UjWWR5ylk1NOUNEZGrllFW',
+      :account_number => '510087240',
+      :meter => '114043658',
+      :mode => 'development'
+    )
+    
+    # shipper = {
+    #   :name => "Test Fedex Sender",
+    #   :company => "Home",
+    #   :postal_code => "80125",
+    #   :country_code => "US"
+    # }
+    
+    # recipient = {
+    #   :name => "Test Fedex Recipient",
+    #   :company => "Home",
+    #   :postal_code => zipCode,
+    #   :country_code => "US",
+    #   :residential => "true"
+    # }
+
+    # packages = []
+    shippingMarkup = 0.0
+    lineRateList = {
+      ground: 0.0,
+      nextday: 0.0,
+      twoday: 0.0,
+      threeday: 0.0,
+      shippingMarkup: 0.0,
+    }
+
     lineItemList.each do |lineItem|
       isFreight = false
       lineItem[:custom_options].each do |cop|
@@ -51,6 +65,8 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       end
 
       if !isFreight
+        shippingMarkup = 0
+        packages = []
         lineItem[:custom_options].each do |co|
           puts co
           if co[:weight] > 0
@@ -66,78 +82,53 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               :weight => {:units => "LB", :value => co[:weight2]},
               :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
             }
+            # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
+            shippingMarkup += lineItem[:calculated_price] * 5 / 100
           end
           if co[:weight3] > 0
             packages << {
               :weight => {:units => "LB", :value => co[:weight3]},
               :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
             }
+            # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
+            shippingMarkup += lineItem[:calculated_price] * 5 / 100
           end
+
         end
+        
+        # get rate per lineitem
+        # shipper postal code should be from product info. In product table, there is a field - dropshippingid, dropshipping table has zipcode.
+        # zipcode should be in lineItem
+        shipper = {
+          :name => "Test Fedex Sender",
+          :company => "Home",
+          :postal_code => "80125",
+          :country_code => "US"
+        }
+        
+        recipient = {
+          :name => "Test Fedex Recipient",
+          :company => "Home",
+          :postal_code => zipCode,
+          :country_code => "US",
+          :residential => "true"
+        }
+        lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
+        lineRateList[:ground] += lineRate[:rateGround].to_f
+        lineRateList[:nextday] += lineRate[:rateNextDay].to_f
+        lineRateList[:twoday] += lineRate[:rateTwoDay].to_f
+        lineRateList[:threeday] += lineRate[:rateThreeDay].to_f
+        lineRateList[:shippingMarkup] += shippingMarkup
+
       end
     end
-    
-    shipping_options = {
-      :packaging_type => "YOUR_PACKAGING",
-      :drop_off_type => "REGULAR_PICKUP"
-    }
-
-    fedex = Fedex::Shipment.new(
-      :key => 'h8cacZZYQvu7iebt',
-      :password => 'SJ8UjWWR5ylk1NOUNEZGrllFW',
-      :account_number => '510087240',
-      :meter => '114043658',
-      :mode => 'development'
-    )
-    
-    if packages.length() > 0
-      rateNextDay = fedex.rate(
-        :shipper=>shipper,
-        :recipient => recipient,
-        :packages => packages,
-        :service_type => "STANDARD_OVERNIGHT",
-        :shipping_options => shipping_options
-      )
-      rateGround = fedex.rate(
-        :shipper=>shipper,
-        :recipient => recipient,
-        :packages => packages,
-        :service_type => "FEDEX_GROUND",
-        :shipping_options => shipping_options
-      )
-
-      rateTwoDay = fedex.rate(
-        :shipper=>shipper,
-        :recipient => recipient,
-        :packages => packages,
-        :service_type => "FEDEX_2_DAY",
-        :shipping_options => shipping_options
-      )
-      
-      rateThreeDay = fedex.rate(
-        :shipper=>shipper,
-        :recipient => recipient,
-        :packages => packages,
-        :service_type => "FEDEX_EXPRESS_SAVER",
-        :shipping_options => shipping_options
-      )
-
-      http_success_response({
-        rateGround: rateGround,
-        rateTwoDay: rateTwoDay,
-        rateThreeDay: rateThreeDay,
-        rateNextDay: rateNextDay,
-        shippingMarkup: shippingMarkup,
-      })
-    else
-      http_success_response({
-        rateGround: nil,
-        rateTwoDay: nil,
-        rateThreeDay: nil,
-        rateNextDay: nil,
-        shippingMarkup: 0,
-      })
-    end
+    http_success_response({
+      ground: lineRateList[:ground],
+      nextday: lineRateList[:nextday],
+      twoday: lineRateList[:twoday],
+      threeday: lineRateList[:threeday],
+      shippingMarkup: lineRateList[:shippingMarkup],
+    })
   end
 
   private
@@ -145,4 +136,60 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       params.except(:controller, :action, :id)
     end
 
+    def get_rates_list(packages, shipper, recipient, shipping_options, fedexInstance)
+      if packages.length() > 0
+        rateGround = fedexInstance.rate(
+          :shipper=>shipper,
+          :recipient => recipient,
+          :packages => packages,
+          :service_type => "FEDEX_GROUND",
+          :shipping_options => shipping_options
+        )
+        rateNextDay = fedexInstance.rate(
+          :shipper=>shipper,
+          :recipient => recipient,
+          :packages => packages,
+          :service_type => "STANDARD_OVERNIGHT",
+          :shipping_options => shipping_options
+        )
+        rateTwoDay = fedexInstance.rate(
+          :shipper=>shipper,
+          :recipient => recipient,
+          :packages => packages,
+          :service_type => "FEDEX_2_DAY",
+          :shipping_options => shipping_options
+        )
+        
+        rateThreeDay = fedexInstance.rate(
+          :shipper=>shipper,
+          :recipient => recipient,
+          :packages => packages,
+          :service_type => "FEDEX_EXPRESS_SAVER",
+          :shipping_options => shipping_options
+        )
+
+        rateGroundData = JSON.parse(rateGround[0].to_json)
+        rateNextDayData = JSON.parse(rateNextDay[0].to_json)
+        rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
+        rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
+        puts "ground: #{rateGroundData}"
+        puts "next day: #{rateNextDayData}"
+        puts "two day: #{rateTwoDayData}"
+        puts "three day: #{rateThreeDayData}"
+  
+        return {
+          rateGround: rateGroundData['total_net_charge'],
+          rateNextDay: rateNextDayData['total_net_charge'],
+          rateTwoDay: rateTwoDayData['total_net_charge'],
+          rateThreeDay: rateThreeDayData['total_net_charge'],
+        }
+      else
+        return {
+          rateGround: 0,
+          rateTwoDay: 0,
+          rateThreeDay: 0,
+          rateNextDay: 0,
+        }
+      end
+    end
 end

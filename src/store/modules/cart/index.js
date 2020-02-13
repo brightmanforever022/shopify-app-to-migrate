@@ -12,10 +12,10 @@ const cart = {
     freight_shipping: 1,
     fedex_shipping: 'ground',
     fedex_shipping_list: {
-      ground: {},
-      twoday: {},
-      threeday: {},
-      nextday: {},
+      ground: 0,
+      twoday: 0,
+      threeday: 0,
+      nextday: 0,
       shippingMarkup: 0,
     },
   },
@@ -71,27 +71,29 @@ const cart = {
     },
     async fetchShippingList ({commit, state}, zipCode) {
       try {
-        let shippingRateList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
-        if (shippingRateList) {
-          var shippingList = {
-            ground: shippingRateList.data.rateGround ? shippingRateList.data.rateGround[0] : {},
-            twoday: shippingRateList.data.rateTwoDay ? shippingRateList.data.rateTwoDay[0] : {},
-            threeday: shippingRateList.data.rateThreeDay ? shippingRateList.data.rateThreeDay[0] : {},
-            nextday: shippingRateList.data.rateNextDay ? shippingRateList.data.rateNextDay[0] : {},
-            shippingMarkup: shippingRateList.data.shippingMarkup,
-          }
+        let shippingList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
+        console.log('fedex shipping list: ', shippingList.data)
+        commit('SET_SHIPPING_LIST', shippingList.data)
+        // if (shippingRateList) {
+        //   var shippingList = {
+        //     ground: shippingRateList.data.rateGround ? shippingRateList.data.rateGround[0] : {},
+        //     twoday: shippingRateList.data.rateTwoDay ? shippingRateList.data.rateTwoDay[0] : {},
+        //     threeday: shippingRateList.data.rateThreeDay ? shippingRateList.data.rateThreeDay[0] : {},
+        //     nextday: shippingRateList.data.rateNextDay ? shippingRateList.data.rateNextDay[0] : {},
+        //     shippingMarkup: shippingRateList.data.shippingMarkup,
+        //   }
   
-          console.log('fedex shipping list: ', shippingList)
-          commit('SET_SHIPPING_LIST', shippingList)
-        } else {
-          commit('SET_SHIPPING_LIST', {
-            ground: {},
-            twoday: {},
-            threeday: {},
-            nextday: {},
-            shippingMarkup: 0,
-          })
-        }
+        //   console.log('fedex shipping list: ', shippingList)
+        //   commit('SET_SHIPPING_LIST', shippingList)
+        // } else {
+        //   commit('SET_SHIPPING_LIST', {
+        //     ground: {},
+        //     twoday: {},
+        //     threeday: {},
+        //     nextday: {},
+        //     shippingMarkup: 0,
+        //   })
+        // }
       } catch (error) {
         console.log(error)
       }
