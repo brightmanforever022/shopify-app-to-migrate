@@ -28,13 +28,13 @@ export function getFreightShippingPrice(id) {
 export function getFedexShippingPrice(fedexShippingList, fedexType) {
 	switch(fedexType) {
 		case 'ground':
-			return fedexShippingList.ground.total_net_charge ? parseFloat(fedexShippingList.ground.total_net_charge) : 0
+			return parseFloat(fedexShippingList.ground)
 		case 'twoday':
-			return fedexShippingList.twoday.total_net_charge ? parseFloat(fedexShippingList.twoday.total_net_charge) : 0
+			return parseFloat(fedexShippingList.twoday)
 		case 'threeday':
-			return fedexShippingList.threeday.total_net_charge ? parseFloat(fedexShippingList.threeday.total_net_charge) : 0
+			return parseFloat(fedexShippingList.threeday)
 		case 'nextday':
-			return fedexShippingList.nextday.total_net_charge ? parseFloat(fedexShippingList.nextday.total_net_charge) : 0
+			return parseFloat(fedexShippingList.nextday)
 		default:
 			return 0
 	}

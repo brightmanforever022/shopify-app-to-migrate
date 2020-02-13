@@ -10,8 +10,8 @@
     <div class="display_cart-wrapper">
       <div class="checkout-buttons">
         <div class="checkout-button">
-          <button @click.prevent="createOrder" :disabled="checkoutLoading"><icon-lock/>SECURE CHECKOUT</button>
-          <p>Please Choose a shipping selection below</p>
+          <button @click.prevent="createOrder" :disabled="checkoutLoading || !shippingDetailShow"><icon-lock/>SECURE CHECKOUT</button>
+          <p v-if="!shippingDetailShow">Please Choose a shipping selection below</p>
         </div>
         <div class="card-list">
           <a href=""><icon-visa/></a>
@@ -74,7 +74,7 @@
         </p>
         <div class="zip-code-form">
           <label for="zip_code">ZIP Code</label>
-          <input type="text" id="zip_code" v-model="zipCode" v-on:keyup="showShippingOptions" placeholder="1001">
+          <input type="text" id="zip_code" v-model="zipCode" v-on:keyup="showShippingOptions" placeholder="12345">
           <button @click.prevent="fetchShipping">SHOW SHIPPING OPTIONS</button>
         </div>
         <loading
@@ -94,22 +94,22 @@
             <ul>
               <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-ground" class="active">
                 <span>Ground</span>
-                <span>$36.70</span>
+                <span>{{fedex_shipping_list.ground | money}}</span>
                 <span>Get it by October 26</span>
               </li>
               <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
-                <span>$58.39</span>
+                <span>{{fedex_shipping_list.threeday | money}}</span>
                 <span>Get it by October 29</span>
               </li>
               <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
-                <span>$73.93</span>
+                <span>{{fedex_shipping_list.twoday | money}}</span>
                 <span>Get it by November 9</span>
               </li>
               <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
-                <span>$102.59</span>
+                <span>{{fedex_shipping_list.nextday | money}}</span>
                 <span>Get it by November 16</span>
               </li>
             </ul>
@@ -202,7 +202,7 @@
                   <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
                   <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
                 </li>
-                <li>
+                <li v-if="freight_exist">
                   <span class="summary-title">Optional Commercial Lift-Gate Service:</span>
                   <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
                 </li>
@@ -228,7 +228,7 @@
           <div class="checkout-buttons">
             <div class="checkout-button">
               <button @click.prevent="createOrder" :disabled="checkoutLoading"><icon-lock/>SECURE CHECKOUT</button>
-              <p>Please Choose a shipping selection below</p>
+              <p v-if="!shippingDetailShow">Please Choose a shipping selection below</p>
             </div>
             <div class="card-list">
               <a href=""><icon-visa/></a>
@@ -299,6 +299,7 @@ export default {
       discount_total: 'cart/get_discount',
       freight_shipping: 'cart/get_freight_shipping_price',
       fedex_shipping: 'cart/get_fedex_shipping_price',
+      fedex_shipping_list: 'cart/get_shippingn_list',
       freight_exist: 'cart/freight_exist',
     })
   },
