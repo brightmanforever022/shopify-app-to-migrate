@@ -172,6 +172,10 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
         rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
+        puts "ground: #{rateGroundData}"
+        puts "next day: #{rateNextDayData}"
+        puts "two day: #{rateTwoDayData}"
+        puts "three day: #{rateThreeDayData}"
   
         return {
           rateGround: rateGroundData['total_net_charge'],
