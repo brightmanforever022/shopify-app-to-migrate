@@ -83,7 +83,7 @@
         />
       </div>
       <div class="shipping-details" v-show="shippingDetailShow">
-        <div class="fedex-shipping">
+        <div class="fedex-shipping" v-if="fedex_exist">
           <h4>FedEx/UPS Shipping Options</h4>
           <div class="fedex-shipping-header">
             <span>Service</span>
@@ -198,7 +198,7 @@
                   <span class="summary-title">Discount:</span>
                   <span class="summary-price">{{discount_total | money}}</span>
                 </li>
-                <li>
+                <li v-if="fedex_exist">
                   <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
                   <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
                 </li>
@@ -301,6 +301,7 @@ export default {
       fedex_shipping: 'cart/get_fedex_shipping_price',
       fedex_shipping_list: 'cart/get_shippingn_list',
       freight_exist: 'cart/freight_exist',
+      fedex_exist: 'cart/fedex_exist',
     })
   },
   created () {

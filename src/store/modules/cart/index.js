@@ -197,6 +197,23 @@ const cart = {
       })
       return isFreightExist
     },
+    fedex_exist (state) {
+      let numberOfFreight = 0
+      const { line_items } = state
+      line_items.map(lineItem => {
+        let isFreight = false
+        lineItem.custom_options.map(co => {
+          if (co.freight) {
+            isFreight = true
+          }
+        })
+        if (isFreight) {
+          numberOfFreight++
+        }
+      })
+
+      return numberOfFreight < line_items.length
+    },
     get_freight_shipping_price (state) {
       var price = getFreightShippingPrice(state.freight_shipping)
       return {id: state.freight_shipping, shipping_price: price}
