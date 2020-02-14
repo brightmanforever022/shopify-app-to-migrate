@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_222406) do
+ActiveRecord::Schema.define(version: 2020_02_14_192258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -43,7 +43,8 @@ ActiveRecord::Schema.define(version: 2020_02_10_222406) do
     t.bigint "group_id"
     t.bigint "dattribute_id"
     t.string "excepts", default: ""
-    t.string "table_row", default: "0"
+    t.string "table_row_option", default: "0"
+    t.string "table_row_vendor", default: "0"
     t.index ["dattribute_id"], name: "index_drellations_on_dattribute_id"
     t.index ["group_id"], name: "index_drellations_on_group_id"
   end
