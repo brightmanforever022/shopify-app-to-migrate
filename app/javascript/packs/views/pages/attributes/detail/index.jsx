@@ -39,6 +39,9 @@ class NewAttribute extends Component {
       attribute_code: '',
       postal_code: '',
       freight: false,
+      min_ship_quantity: 0,
+      max_ship_quantity: 0,
+      ship_price_percent: 0,
       store_list: [],
       selectedStoreList: '',
       vendor_sku: '',
@@ -88,6 +91,9 @@ class NewAttribute extends Component {
             selectedStoreList: data.attribute.store_list,
             vendor_sku: data.attribute.vendor_sku,
             store_list: data.storeList,
+            min_ship_quantity: data.attribute.min_ship_quantity,
+            max_ship_quantity: data.attribute.max_ship_quantity,
+            ship_price_percent: data.attribute.ship_price_percent,
             loading: false
           })
         }
@@ -138,7 +144,7 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, selectedStoreList, vendor_sku } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, selectedStoreList, vendor_sku, min_ship_quantity, max_ship_quantity, ship_price_percent } = this.state
     this.setState({saving: true})
     let store_list = selectedStoreList
     if (id) {
@@ -164,6 +170,9 @@ class NewAttribute extends Component {
         freight,
         store_list,
         vendor_sku,
+        min_ship_quantity,
+        max_ship_quantity,
+        ship_price_percent,
         cb: data => {
           this.setState({saving: false})
         }
@@ -190,6 +199,9 @@ class NewAttribute extends Component {
         freight,
         store_list,
         vendor_sku,
+        min_ship_quantity,
+        max_ship_quantity,
+        ship_price_percent,
         cb: data => {
           this.setState({saving: false})
           this.props.history.push({
@@ -201,7 +213,7 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, store_list, selectedStoreList, vendor_sku, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
+    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, store_list, selectedStoreList, vendor_sku, min_ship_quantity, max_ship_quantity, ship_price_percent, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -249,7 +261,7 @@ class NewAttribute extends Component {
                         <TextField
                           value={attribute_code}
                           onChange={this.handleChange('attribute_code')}
-                          label="Attribute SKU"
+                          label="Attribute Code"
                         />
                         <TextField
                           value={postal_code}
@@ -264,6 +276,21 @@ class NewAttribute extends Component {
                           value={vendor_sku}
                           onChange={this.handleChange('vendor_sku')}
                           label="Vendor SKU"
+                        />
+                        <TextField
+                          value={min_ship_quantity}
+                          onChange={this.handleChange('min_ship_quantity')}
+                          label="Minimal Ship Quantity"
+                        />
+                        <TextField
+                          value={max_ship_quantity}
+                          onChange={this.handleChange('max_ship_quantity')}
+                          label="Maximum Ship Quantity"
+                        />
+                        <TextField
+                          value={ship_price_percent}
+                          onChange={this.handleChange('ship_price_percent')}
+                          label="Ship Price Percent"
                         />
                         <TextField
                           value={width}

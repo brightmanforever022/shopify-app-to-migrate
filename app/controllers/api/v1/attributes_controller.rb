@@ -44,7 +44,10 @@ class Api::V1::AttributesController < AuthenticatedController
       postal_code: attribute_params[:postal_code],
       freight: attribute_params[:freight],
       store_list: attribute_params[:store_list],
-      vendor_sku: attribute_params[:vendor_sku]
+      vendor_sku: attribute_params[:vendor_sku],
+      min_ship_quantity: attribute_params[:min_ship_quantity],
+      max_ship_quantity: attribute_params[:max_ship_quantity],
+      ship_price_percent: attribute_params[:ship_price_percent]
     )
     if @attribute.save
       http_success_response({attribute: @attribute})
@@ -80,7 +83,10 @@ class Api::V1::AttributesController < AuthenticatedController
       postal_code: attribute_params[:postal_code],
       freight: attribute_params[:freight],
       store_list: attribute_params[:store_list],
-      vendor_sku: attribute_params[:vendor_sku]
+      vendor_sku: attribute_params[:vendor_sku],
+      min_ship_quantity: attribute_params[:min_ship_quantity],
+      max_ship_quantity: attribute_params[:max_ship_quantity],
+      ship_price_percent: attribute_params[:ship_price_percent]
     })
 
     render json: {attribute: @attribute }
