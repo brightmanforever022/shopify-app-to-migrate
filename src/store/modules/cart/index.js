@@ -13,6 +13,7 @@ const cart = {
     fedex_shipping: 'ground',
     fedex_shipping_list: {
       ground: 0,
+      groundPeriod: 1,
       twoday: 0,
       threeday: 0,
       nextday: 0,
@@ -276,7 +277,7 @@ const cart = {
       }
       return discountAmount
     },
-    get_shippingn_list (state) {
+    get_shipping_list (state) {
       return state.fedex_shipping_list
     },
     get_total (state) {

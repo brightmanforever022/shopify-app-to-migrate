@@ -95,22 +95,23 @@
               <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-ground" class="active">
                 <span>Ground</span>
                 <span>{{fedex_shipping_list.ground | money}}</span>
-                <span>Get it by October 26</span>
+                <!-- <span>Get it by October 26</span> -->
+                <span>{{fedex_shipping_list.groundPeriod}} Business Days</span>
               </li>
               <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
                 <span>{{fedex_shipping_list.threeday | money}}</span>
-                <span>Get it by October 29</span>
+                <span>3 Business Days</span>
               </li>
               <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
                 <span>{{fedex_shipping_list.twoday | money}}</span>
-                <span>Get it by November 9</span>
+                <span>2 Business Days</span>
               </li>
               <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
                 <span>{{fedex_shipping_list.nextday | money}}</span>
-                <span>Get it by November 16</span>
+                <span>A Business Day</span>
               </li>
             </ul>
           </div>
@@ -203,7 +204,7 @@
                   <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
                 </li>
                 <li v-if="freight_exist">
-                  <span class="summary-title">Optional Commercial Lift-Gate Service:</span>
+                  <span class="summary-title">{{freightShippingList[freight_shipping.id - 1]}}:</span>
                   <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
                 </li>
                 <li>
@@ -299,7 +300,7 @@ export default {
       discount_total: 'cart/get_discount',
       freight_shipping: 'cart/get_freight_shipping_price',
       fedex_shipping: 'cart/get_fedex_shipping_price',
-      fedex_shipping_list: 'cart/get_shippingn_list',
+      fedex_shipping_list: 'cart/get_shipping_list',
       freight_exist: 'cart/freight_exist',
       fedex_exist: 'cart/fedex_exist',
     })
@@ -331,7 +332,15 @@ export default {
         [96701, 96898],
         [99501, 99950]
       ],
-      shippingDetailShow: false
+      shippingDetailShow: false,
+      freightShippingList: [
+        'Commercial Basic Free Freight Delivery (Standard Dock to Dock Service)',
+        'Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)',
+        'Commercial Special Freight Delivery (Commercial Lift-Gate & Inside Service)',
+        'Commercial Freight Delivery (Inside Service to Exact Location)',
+        'RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)',
+        'RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)'
+      ]
     }
   },
   methods: {
