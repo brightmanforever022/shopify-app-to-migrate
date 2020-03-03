@@ -458,33 +458,29 @@ class NewTemplate extends Component {
 
   changeTableRowOption = (index, id, evt) => {
     const { groups } = this.state
-    const tableRowRegex = /^[0-9,]+$/
-    if (tableRowRegex.test(evt)) {
-      groups[index].drellations.map(dr => {
-        if (dr.dattribute_id == id) {
-          dr.table_row_option = evt
-          return dr
-        } else {
-          return dr
-        }
-      })
-      this.setState({ groups: groups })
-    }
+    let changedValue = evt.replace(/^,+|(,)+|[^0-9,]+/g, '$1')
+    groups[index].drellations.map(dr => {
+      if (dr.dattribute_id == id) {
+        dr.table_row_option = changedValue
+        return dr
+      } else {
+        return dr
+      }
+    })
+    this.setState({ groups: groups })
   }
   changeTableRowVendor = (index, id, evt) => {
     const { groups } = this.state
-    const tableRowRegex = /^[0-9,]+$/
-    if (tableRowRegex.test(evt)) {
-      groups[index].drellations.map(dr => {
-        if (dr.dattribute_id == id) {
-          dr.table_row_vendor = evt
-          return dr
-        } else {
-          return dr
-        }
-      })
-      this.setState({ groups: groups })
-    }
+    let changedValue = evt.replace(/^,+|(,)+|[^0-9,]+/g, '$1')
+    groups[index].drellations.map(dr => {
+      if (dr.dattribute_id == id) {
+        dr.table_row_vendor = changedValue
+        return dr
+      } else {
+        return dr
+      }
+    })
+    this.setState({ groups: groups })
   }
 
   renderItem = index => item => {
