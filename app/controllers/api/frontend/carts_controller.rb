@@ -114,7 +114,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :residential => "true"
         }
         lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
-        lineRateList[:ground] += lineRate[:rateGround].to_f
+        lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f
         lineRateList[:nextday] += lineRate[:rateNextDay].to_f
         lineRateList[:twoday] += lineRate[:rateTwoDay].to_f
         lineRateList[:threeday] += lineRate[:rateThreeDay].to_f

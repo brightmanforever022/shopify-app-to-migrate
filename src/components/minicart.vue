@@ -455,6 +455,7 @@ export default {
         selected_options: data.selected_options,
         custom_options: data.custom_options,
         calculated_item_price: data.calculated_item_price,
+        free_ground: data.free_ground,
         wishId: data.lineId
       }
       try {

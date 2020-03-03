@@ -39,6 +39,7 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
           handle
           id
           title
+          tags
           onlineStoreUrl
           collections(first: 5) {
             edges {

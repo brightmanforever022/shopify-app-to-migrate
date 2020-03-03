@@ -320,6 +320,7 @@ export default {
         original_price: this.original_price,
         calculated_item_price: this.calculated_item_price,
         calculated_price: this.calculated_price,
+        free_ground: this.productData.tags.includes('free-ground') ? true : false,
         wishlisted: false,
       }
       
@@ -327,7 +328,7 @@ export default {
         const res = await this.$store.dispatch('cart/addCart', cartItem)
         this.openConfirm()
       } catch (error) {
-        console.log(err)
+        console.log(error)
       }
     },
     async addToWhishlist () {
@@ -347,7 +348,8 @@ export default {
         variant_id: this.variant_id,
         selected_options: this.variant.selectedOptions,
         custom_options: this.custom_options,
-        calculated_item_price: this.calculated_item_price
+        calculated_item_price: this.calculated_item_price,
+        free_ground: this.productData.tags.includes('free-ground') ? true : false,
       }
       try {
         const res = await this.$store.dispatch('wishlist/addWish', wishItem)
