@@ -135,7 +135,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f
         groundPeriod = periodList.index(lineRate[:groundPeriod])
         lineRateList[:groundPeriod] = lineRateList[:groundPeriod] > groundPeriod ? lineRateList[:groundPeriod] : groundPeriod
-        puts "----period: #{lineRateList[:groundPeriod] + 1} days"
+        # puts "----period: #{lineRateList[:groundPeriod] + 1} days"
         lineRateList[:nextday] += lineRate[:rateNextDay].to_f
         lineRateList[:twoday] += lineRate[:rateTwoDay].to_f
         lineRateList[:threeday] += lineRate[:rateThreeDay].to_f
@@ -194,7 +194,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
         rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
-        puts "----------------ground: #{rateGroundData}"
+        # puts "----------------ground: #{rateGroundData}"
         # puts "next day: #{rateNextDayData}"
         # puts "two day: #{rateTwoDayData}"
         # puts "three day: #{rateThreeDayData}"

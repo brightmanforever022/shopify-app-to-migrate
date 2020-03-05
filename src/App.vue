@@ -5,24 +5,42 @@
       is-full-page
     />
     <customize
-      v-if="!loading"
+      v-if="!loading && isPDP"
     ></customize>
+    <div
+      class="overlay__bg minicart"
+      :class="{'visibled': display_cart_opened}"
+      :key="display-cart"
+      @click.prevent="closeDisplayCart"
+    ></div>
+    <minicart
+      v-show="display_cart_opened"
+      :close="closeDisplayCart"
+      :continue_shopping="closeDisplayCart"
+    >
+    </minicart>
   </div>
 </template>
 <script>
+import $ from 'jquery'
 import { get } from '@/api/product'
 import Loading from 'vue-loading-overlay'
 import Customize from '@/components/customize'
+import Minicart from '@/components/minicart'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   name: 'App',
   components: {
     Loading,
-    Customize
+    Customize,
+    Minicart
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      isPDP: false,
+      display_cart_opened: false
     }
   },
   created () {
@@ -37,8 +55,9 @@ export default {
   methods: {
     loadProduct () {
       let id = window.PRODUCT_ID
-      if (id) {
+      if (id != 'empty') {
         this.loading = true
+        this.isPDP = true
         get(id).then(res => {
           let product = res.data.product.data
           this.$store.dispatch('product/set', product)
@@ -50,7 +69,14 @@ export default {
           this.loading = false
         })
       }
-    }
+    },
+
+    closeDisplayCart () {
+      this.display_cart_opened = false
+      $('.product__details').css('z-index', 'initial')
+      $('#shopify-section-header .header').css('z-index', '101')
+    },
+    
   }
 }
 </script>

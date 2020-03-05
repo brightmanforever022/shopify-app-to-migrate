@@ -157,7 +157,7 @@
       </button>
     </div>
 
-    <div
+    <!-- <div
       class="overlay__bg minicart"
       :class="{'visibled': display_cart_opened}"
       :key="display-cart"
@@ -168,7 +168,7 @@
       :close="closeDisplayCart"
       :continue_shopping="continueShopping"
     >
-    </minicart>
+    </minicart> -->
   </fragment>
 </template>
 <script>

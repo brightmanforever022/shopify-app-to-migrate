@@ -292,7 +292,6 @@ export default {
   mixins: [ priceMixin ],
   computed: {
     ...mapGetters({
-      variant: 'product/variant',
       line_items: 'cart/get_line_items',
       wish_id_list: 'wishlist/get_wish_id_list',
       sub_total: 'cart/get_sub_total',

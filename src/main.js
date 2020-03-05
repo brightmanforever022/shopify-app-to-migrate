@@ -4,7 +4,6 @@ import VueI18n from 'vue-i18n'
 import { Plugin } from 'vue-fragment'
 
 import App from './App.vue'
-import Cart from './Cart.vue'
 import store from './store'
 import './filters'
 // import router from './router'
@@ -25,19 +24,16 @@ Vue.component('v-style', {
 
 const pageDetect = window.PAGEDETECT
 var appSelector = null
-var selectedApp = null
 if (pageDetect == 'cart') {
   appSelector = window.document.getElementById('d4s-customize-app-cart')
-  selectedApp = Cart
 } else {
   appSelector = window.document.getElementById('d4s-customize-app')
-  selectedApp = App
 }
 if (appSelector) {
   window.VueQuizApp = new Vue({
     el: appSelector,
     store,
     // router,
-    render: h => h(selectedApp)
+    render: h => h(App)
   })
 }
