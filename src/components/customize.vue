@@ -3,11 +3,11 @@
     <div class="product__form--instock">
       <div class="stock__shipping-delivery">
         <h3>{{stock}}</h3>
-        <p>Order today and receive it by October 12 - 16.</p>
+        <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p>
       </div>
-      <div class="made__in">
+      <!-- <div class="made__in">
         <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/6/assets/made-in-usa.svg?31567" alt="" />
-      </div>
+      </div> -->
     </div>
     <div class="product__form-container">
       <div class="product__form-container--header">
@@ -22,7 +22,6 @@
 
       <div class="form__body">
         <input-quantity></input-quantity>
-        <!-- <variant-selection></variant-selection> -->
         <form-description></form-description>
         <form-selection
           v-if="customizable && fully_customized"
@@ -58,6 +57,24 @@ export default {
     }),
     stock () {
       return this.variant.inventoryQuantity > 0 ? 'In stock' : 'Out of stock'
+    },
+    computedTime () {
+      const currentDate = new Date()
+      const currentHour = currentDate.getHours()
+      const currentMinute = currentDate.getMinutes()
+      let timeString = currentMinute > 0 ? (23 - currentHour) + ' hours ' : (24 - currentHour) + ' hours'
+      timeString += currentMinute > 0 ? (60 - currentMinute) + ' minutes' : ''
+      return timeString
+    },
+    computedDate () {
+      const monthList = [
+        'January', 'February', 'March', 'April',
+        'May', 'June', 'July', 'August',
+        'September', 'October', 'November', 'December'
+      ]
+      const currentDate = new Date()
+      const estimateDate = new Date(currentDate.getTime() + 86400000 * 7)
+      return monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate()
     }
   }
 }
