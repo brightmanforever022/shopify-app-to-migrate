@@ -157,18 +157,6 @@
       </button>
     </div>
 
-    <!-- <div
-      class="overlay__bg minicart"
-      :class="{'visibled': display_cart_opened}"
-      :key="display-cart"
-      @click.prevent="closeDisplayCart"
-    ></div>
-    <minicart
-      v-show="display_cart_opened"
-      :close="closeDisplayCart"
-      :continue_shopping="continueShopping"
-    >
-    </minicart> -->
   </fragment>
 </template>
 <script>
@@ -196,6 +184,11 @@ export default {
       except_list: 'order/except_list',
     })
   },
+  props: {
+    openDisplayCart: {
+      type: Function
+    }
+  },
   mixins: [ priceMixin ],
   components: {
     InputQuantity,
@@ -209,8 +202,7 @@ export default {
       noselected: 'noselected',
       loading: false,
       is_opened: false,
-      addtocart_confirm_opened: false,
-      display_cart_opened: false
+      addtocart_confirm_opened: false
     }
   },
   created () {
@@ -244,16 +236,6 @@ export default {
     viewDisplayCart () {
       this.closeConfirm()
       this.openDisplayCart()
-    },
-    openDisplayCart () {
-      this.display_cart_opened = true
-      $('.product__details').css('z-index', '-1')
-      $('#shopify-section-header .header').css('z-index', '-1')
-    },
-    closeDisplayCart () {
-      this.display_cart_opened = false
-      $('.product__details').css('z-index', 'initial')
-      $('#shopify-section-header .header').css('z-index', '101')
     },
     isActiveOption (item) {
       if (!this.except_list.includes(item.id)) {

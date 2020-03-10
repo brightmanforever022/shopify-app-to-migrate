@@ -6,6 +6,9 @@
     />
     <customize
       v-if="!loading && isPDP"
+      :openDisplayCart="openDisplayCart"
+      :closeDiaplayCart="closeDiaplayCart"
+      
     ></customize>
     <div
       class="overlay__bg minicart"
@@ -71,11 +74,16 @@ export default {
       }
     },
 
+    openDisplayCart () {
+      this.display_cart_opened = true
+      $('.product__details').css('z-index', '-1')
+      $('#shopify-section-header .header').css('z-index', '-1')
+    },
     closeDisplayCart () {
       this.display_cart_opened = false
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
-    },
+    }
     
   }
 }

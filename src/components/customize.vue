@@ -26,7 +26,10 @@
         <form-selection
           v-if="customizable && fully_customized"
         ></form-selection>
-        <form-actions></form-actions>
+        <form-actions
+          :openDisplayCart="openDisplayCart"
+        >
+        </form-actions>
       </div>
     </div>
     <div
@@ -62,6 +65,11 @@ export default {
     FormSelection,
     FormActions,
     RequestQuote
+  },
+  props: {
+    openDisplayCart: {
+      type: Function
+    }
   },
   mixins: [ priceMixin ],
   computed: {
