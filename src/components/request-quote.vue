@@ -4,7 +4,7 @@
       class="product__section-overlay"
       :class="{'visibled': isQuoteModal}"
     >
-      <h3>this is request quote app</h3>
+      <h3>This is request quote app</h3>
     </div>
   </fragment>
 </template>
