@@ -116,6 +116,7 @@ export default {
       } else {
         alert('please make selections firstly')
       }
+      this.isQuoteModal = true
     },
     closeQuoteModal () {
       this.isQuoteModal = false

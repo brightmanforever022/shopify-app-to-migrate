@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/frontend/' : '/',
+  outputDir: 'public/frontend',
   configureWebpack: {
     output: {
       filename: 'app.js'

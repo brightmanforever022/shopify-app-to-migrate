@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest public/frontend src/main.js"
+    "build": "vue-cli-service build src/main.js"
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
