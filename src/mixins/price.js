@@ -19,14 +19,13 @@ export default {
     },
     calculated_item_price () {
       const firstGroupLabel = this.template.groups[0].label
-      let add_on_prices = this.options.length > 0 ? this.options.filter(opp => opp.group != firstGroupLabel).map(opt => opt.price ? (opt.price_type ? Number(this.original_price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
+      let add_on_prices = this.options.length > 1 ? this.options.filter(opp => opp.group != firstGroupLabel).map(opt => opt.price ? (opt.price_type ? Number(this.original_price) * opt.price / 100 : opt.price) : 0).reduce((prev, next) => prev + next) : 0
       return Number(this.original_price) + add_on_prices
     },
     calculated_price () {
       return (this.calculated_item_price * this.quantity)
     },
     fully_customized () {
-      // return this.options.length === this.template(this.variant_id).groups.length
       return this.options.length === this.template.groups.length
     },
     customizable () {

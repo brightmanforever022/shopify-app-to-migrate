@@ -16,7 +16,7 @@
           <span class="price">{{calculated_price | money}}</span>
         </div>
         <div class="product__form--request-quote">
-          <a href="">Request a Quote</a>
+          <a @click.prevent="openQuoteModal">Request a Quote</a>
         </div>
       </div>
 
@@ -29,6 +29,18 @@
         <form-actions></form-actions>
       </div>
     </div>
+    <div
+      class="overlay__bg"
+      :key="quote-request"
+      :class="{'visibled': isQuoteModal}"
+      @click.prevent="closeQuoteModal"
+    ></div>
+    <request-quote
+      v-show="isQuoteModal"
+      :isQuoteModal="isQuoteModal"
+      :closeQuote="closeQuoteModal"
+    >
+    </request-quote>
   </fragment>
 </template>
 <script>
@@ -37,6 +49,7 @@ import InputQuantity from '@/components/quantity'
 import FormDescription from '@/components/form-description'
 import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
+import RequestQuote from '@/components/request-quote'
 import { mapGetters } from 'vuex'
 import priceMixin from '@/mixins/price'
 
@@ -47,7 +60,8 @@ export default {
     // VariantSelection,
     FormDescription,
     FormSelection,
-    FormActions
+    FormActions,
+    RequestQuote
   },
   mixins: [ priceMixin ],
   computed: {
@@ -76,6 +90,29 @@ export default {
       const estimateDate = new Date(currentDate.getTime() + 86400000 * 7)
       return monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate()
     }
-  }
+  },
+  data () {
+    return {
+      isQuoteModal: false,
+    }
+  },
+  created () {
+    console.log('quote modal open? ', this.isQuoteModal)
+  },
+
+  methods: {
+    openQuoteModal () {
+      if (this.customizable && this.fully_customized) {
+        this.isQuoteModal = true
+        console.log('open quote modal')
+      } else {
+        alert('please make selections firstly')
+      }
+    },
+    closeQuoteModal () {
+      this.isQuoteModal = false
+      console.log('close quote modal')
+    }
+  },
 }
 </script>
