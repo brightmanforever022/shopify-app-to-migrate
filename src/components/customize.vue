@@ -50,6 +50,7 @@ import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
 import RequestQuote from '@/components/request-quote'
 import { mapGetters } from 'vuex'
+import $ from 'jquery'
 import priceMixin from '@/mixins/price'
 
 export default {
@@ -113,11 +114,12 @@ export default {
         alert('please make selections firstly')
       }
       */
+      $('#shopify-section-header .header').css('z-index', '-1')
       this.isQuoteModal = true
     },
     closeQuoteModal () {
+      $('#shopify-section-header .header').css('z-index', '101')
       this.isQuoteModal = false
-      console.log('close quote modal')
     }
   },
 }
