@@ -5,9 +5,6 @@
         <h3>{{stock}}</h3>
         <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p>
       </div>
-      <!-- <div class="made__in">
-        <img src="//cdn.shopify.com/s/files/1/0036/4393/2761/t/6/assets/made-in-usa.svg?31567" alt="" />
-      </div> -->
     </div>
     <div class="product__form-container">
       <div class="product__form-container--header">
@@ -48,7 +45,6 @@
 </template>
 <script>
 import InputQuantity from '@/components/quantity'
-// import VariantSelection from '@/components/variant-selection'
 import FormDescription from '@/components/form-description'
 import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
@@ -60,7 +56,6 @@ export default {
   name: 'Customize',
   components: {
     InputQuantity,
-    // VariantSelection,
     FormDescription,
     FormSelection,
     FormActions,
@@ -110,12 +105,14 @@ export default {
 
   methods: {
     openQuoteModal () {
+      /*
       if (this.customizable && this.fully_customized) {
         this.isQuoteModal = true
         console.log('open quote modal')
       } else {
         alert('please make selections firstly')
       }
+      */
       this.isQuoteModal = true
     },
     closeQuoteModal () {
