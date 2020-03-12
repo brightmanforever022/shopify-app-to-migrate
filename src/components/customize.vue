@@ -115,10 +115,12 @@ export default {
       }
       */
       $('#shopify-section-header .header').css('z-index', '-1')
+      $('.product__details').css('z-index', -1)
       this.isQuoteModal = true
     },
     closeQuoteModal () {
       $('#shopify-section-header .header').css('z-index', '101')
+      $('.product__details').css('z-index', 'initial')
       this.isQuoteModal = false
     }
   },

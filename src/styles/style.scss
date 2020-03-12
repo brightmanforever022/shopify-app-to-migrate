@@ -1133,6 +1133,18 @@
               color: #0086C8 !important;
             }
           }
+          &.item-detail {
+            font-weight: 500;
+            font-size: 10px;
+            line-height: 14px;
+            color: #000;
+
+            .item-id {
+              font-family: 'Cerebri Sans';
+              font-size: 14px;
+              line-height: 18px;
+            }
+          }
           .upload-link {
             padding: 5px 10px;
             background-color: #616D83;
@@ -1152,6 +1164,16 @@
           display: flex;
           margin-bottom: 7px;
         }
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+      button {
+        width: 100%;
+        padding: 15px 0;
+        background-color: #00B67A;
+        border-radius: 2px;
       }
     }
 
@@ -1161,23 +1183,66 @@
     align-items: right;
     margin-left: 20px;
     .quote-sidebar-links {
-      padding: 30px;
+      padding: 22px;
       background: white;
       margin-bottom: 20px;
       ul {
+        margin-left: 0;
         li {
           list-style: none;
+          margin-bottom: 25px;
           a {
+            display: flex;
             span {
               display: inline-block;
+              &.link-title {
+                margin-left: 22px;
+
+                p {
+                  font-weight: normal;
+                  font-size: 10px;
+                  line-height: 14px;
+                  color: #B2B8BF;
+                }
+              }
             }
+
+            &:hover, &:link {
+              border: none;
+              transition: unset;
+              -webkit-transition: unset;
+              -moz-transition: unset;
+              -o-transition: unset;
+            }
+          }
+          &:last-of-type {
+            margin-bottom: 0;
           }
         }
       }
     }
     .quote-sidebar-app {
-      padding: 30px;
+      padding: 22px;
       background: white;
+      .form__selections-view {
+        .quote__price {
+          margin-bottom: 20px;
+          span {
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 24px;
+            color: #000;
+          }
+        }
+        .quote__selection-view {
+          margin-top: 20px;
+          ul {
+            list-style: none;
+            margin-top: 20px;
+            margin-left: 0;
+          }
+        }
+      }
     }
   }
 }

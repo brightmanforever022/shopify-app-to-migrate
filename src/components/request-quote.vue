@@ -138,8 +138,9 @@
           <h4 class="quote-form-title">Quote Details</h4>
           <div class="quote-form-card">
 
-            <div class="form__row__full">
-              Item<span class="item-id">SCBBR</span>
+            <div class="form__row__full item-detail">
+              Item
+              <p class="item-id">SCBBR</p>
             </div>
             <div class="form__row__full">
               <label for="quote-quantity">Quantity *</label>
@@ -172,19 +173,19 @@
             <li>
               <a @click.prevent="liveChat">
                 <span><icon-live-chat /> </span>
-                <span>Live Chat</span>
+                <span class="link-title">Live Chat</span>
               </a>
             </li>
             <li>
               <a @click.prevent="phoneSupport">
                 <span><icon-phone-support /> </span>
-                <span>Phone Support <br>800-289-1539</span>
+                <span class="link-title">Phone Support<p>800-289-1539</p></span>
               </a>
             </li>
             <li>
               <a @click.prevent="emailUs">
                 <span><icon-email-us /> </span>
-                <span>Email us<br>info@displays4sale.com</span>
+                <span class="link-title">Email us<p>info@displays4sale.com</p></span>
               </a>
             </li>
           </ul>
@@ -268,9 +269,11 @@
       },
       phoneSupport () {
         console.log('clicked phone support')
+        window.location = 'tel:1800-289-1539'
       },
       emailUs () {
         console.log('clicked email us')
+        window.location = 'mailto:info@displays4sale.com'
       },
       submitQuoteRequest () {
         console.log('contact name: ', this.contactName)
