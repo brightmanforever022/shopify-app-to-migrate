@@ -18,7 +18,6 @@
     ></div>
     <minicart
       v-show="display_cart_opened"
-      :close="closeDisplayCart"
       :continue_shopping="closeDisplayCart"
     >
     </minicart>

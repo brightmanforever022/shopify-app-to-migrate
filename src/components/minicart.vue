@@ -1,11 +1,11 @@
 <template>
   <div class="display_cart-overlay">
     <div class="cart-header">
-      <a @click.prevent="continue_shopping"><span>&lt;</span>Continue Shopping</a>
+      <a @click.prevent="continue_shopping" class="continue-shopping"><span>&lt;</span>Continue Shopping</a>
       <h2>Your Cart</h2>
-      <span @click.prevent="close">
+      <a @click.prevent="continue_shopping" class="close-cart">
         <icon-close/>
-      </span>
+      </a>
     </div>
     <div class="display_cart-wrapper">
       <div class="checkout-buttons">
@@ -282,9 +282,6 @@ export default {
     Loading,
   },
   props: {
-    close: {
-      type: Function
-    },
     continue_shopping: {
       type: Function
     }

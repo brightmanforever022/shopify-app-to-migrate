@@ -186,7 +186,6 @@ import priceMixin from '@/mixins/price'
 import InputQuantity from '@/components/quantity'
 // import VariantSelection from '@/components/variant-selection'
 import IconHeart from '@/components/icons/icon-heart'
-import Minicart from '@/components/minicart'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
@@ -211,10 +210,8 @@ export default {
   mixins: [ priceMixin ],
   components: {
     InputQuantity,
-    // VariantSelection,
     IconHeart,
-    Loading,
-    Minicart
+    Loading
   },
   data () {
     return {
