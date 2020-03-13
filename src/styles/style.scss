@@ -1155,6 +1155,16 @@
             line-height: 18px;
             text-transform: uppercase;
           }
+          select {
+            height: 50px;
+            border: 1px solid #DEDEDE;
+            border-radius: 2px;
+            padding: 14px 20px;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            color: #B2B8BF;
+          }
         }
         .form__row__full, .flex__row__full {
           -ms-flex: 0 0 100%;

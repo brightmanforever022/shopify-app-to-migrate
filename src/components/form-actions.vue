@@ -37,7 +37,7 @@
           <label class="form__label" :for="`group-option-selector-${index}`">
             {{group.label}}
           </label>
-          <div class="select">
+          <div v-if="activeOptions(group.dattributes).length>1" class="select">
             <select
               :name="group.label"
               :class="`group-option-selector group-option-selector-${index} product-form__input`"
@@ -51,6 +51,25 @@
                 v-for="(item, key) in activeOptions(group.dattributes)"
                 :key="key"
                 :value="item.id"
+              >
+                {{item.label}}
+              </option>
+            </select>
+          </div>
+          <div v-if="activeOptions(group.dattributes).length<2" class="select">
+            <select
+              :name="group.label"
+              :class="`group-option-selector group-option-selector-${index} product-form__input`"
+              :id="`group-option-selector-${index}`"
+              :data-group="`${group.id}`"
+              @change="setAddOn"
+              :placeholder="`Select ${group.label}`"
+            >
+              <option
+                v-for="(item, key) in activeOptions(group.dattributes)"
+                :key="key"
+                :value="item.id"
+                :selected="true"
               >
                 {{item.label}}
               </option>
@@ -206,7 +225,7 @@ export default {
     }
   },
   created () {
-    
+    this.checkGroupAttributes()
   },
   methods: {
     openSelection () {
@@ -245,6 +264,42 @@ export default {
     activeOptions (options) {
       return options.filter(op => !this.except_list.includes(op.id))
     },
+    checkGroupAttributes () {
+      this.template.groups.map(gr => {
+        const activeAttributes = this.activeOptions(gr.dattributes)
+        if (activeAttributes.length == 1) {
+          this.setAutoOneAddon(gr, activeAttributes[0])
+        }
+      })
+    },
+    async setAutoOneAddon (group, item) {
+      if (item) {
+        item['group'] = group.label
+  
+        // get excepts for selected item
+        const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
+        const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
+          return {
+            groupId: drellation.group_id,
+            groupLabel: group.label,
+            exceptId: parseInt(ex)
+          }
+        })
+        try {
+          await this.$store.dispatch('order/upsert_customization', item)
+          await this.$store.dispatch('order/setExcepts',
+           {
+              groupId: drellation.group_id,
+              groupLabelList: this.exceptGroupList(drellation.excepts),
+              exceptData: newExcepts
+            }
+          )
+          // this.checkGroupAttributes()
+        } catch (error) {
+          console.log('Error in upsert customization: ', error)
+        }
+      }
+    },
     async setAddOn (evt) {
       let group_id = evt.target.dataset.group
       let item_id = evt.target.value
@@ -271,6 +326,7 @@ export default {
               exceptData: newExcepts
             }
           )
+          this.checkGroupAttributes()
         } catch (error) {
           console.log('Error in upsert customization: ', error)
         }
