@@ -1103,13 +1103,16 @@
             box-sizing: border-box;
             border-radius: 2px;
             padding: 14px 20px;
-            color: #B2B8BF;
+            // color: #B2B8BF;
             font-weight: normal;
             font-size: 14px;
             line-height: 20px;
 
             &:hover, &:focus {
               border-color: #0086C8;
+            }
+            &::-webkit-input-placeholder, &:-ms-input-placeholder, &::placeholder, &::-moz-placeholder {
+              color: #B2B8BF;
             }
           }
           input[type="checkbox"] {
@@ -1186,6 +1189,10 @@
         padding: 15px 0;
         background-color: #00B67A;
         border-radius: 2px;
+        color: white;
+        font-size: 14px;
+        line-height: 18px;
+        text-transform: uppercase;
       }
     }
 

@@ -46,8 +46,6 @@ export default {
       return this.template.groups[0]
     },
     optionsExceptFirst () {
-      // console.log('first group: ', this.firstGroup)
-      // console.log('first option: ', this.firstOption)
       return this.options.filter(op => op.group != this.firstGroup.label)
     }
   },

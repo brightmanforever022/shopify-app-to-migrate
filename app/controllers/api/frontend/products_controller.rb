@@ -55,14 +55,14 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
               }
             }
           }
-          options(first: 10) {
+          options(first: 2) {
             id
             name
             position
             values
           }
           totalInventory
-          variants(first: 100) {
+          variants(first: 2) {
             edges {
               cursor
               node {
@@ -70,6 +70,7 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
                 availableForSale
                 inventoryQuantity
                 price
+                sku
                 selectedOptions {
                   value
                   name

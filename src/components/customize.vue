@@ -101,13 +101,15 @@ export default {
     }
   },
   created () {
-    console.log('quote modal open? ', this.isQuoteModal)
+    // console.log('quote modal open? ', this.isQuoteModal)
   },
 
   methods: {
     openQuoteModal () {
       /*
       if (this.customizable && this.fully_customized) {
+        $('#shopify-section-header .header').css('z-index', '-1')
+        $('.product__details').css('z-index', -1)
         this.isQuoteModal = true
         console.log('open quote modal')
       } else {

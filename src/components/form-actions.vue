@@ -291,7 +291,6 @@ export default {
               exceptData: newExcepts
             }
           )
-          // this.checkGroupAttributes()
         } catch (error) {
           console.log('Error in upsert customization: ', error)
         }

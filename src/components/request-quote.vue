@@ -47,11 +47,35 @@
             </div>
             <div class="form__row">
               <label for="country">Country *</label>
-              <select v-model="contactCountry" id="country">
-                <option value=''>Select country</option>
+              <select v-model="contactCountry" @change.prevent="changeContactStates" id="country">
+                <option value='US'>United States</option>
+                <option value='CA'>Canada</option>                
               </select>
             </div>
-            <div class="form__row__full">
+            <div class="form__row">
+              <label for="state_region">State/Region *</label>
+              <select v-model="contactState" id="state_region">
+                <fragment v-if="contactCountry=='US'">
+                  <option
+                    v-for="(item, key) in this.stateList"
+                    :key="`state-${key}`"
+                    :value="item.stateCode"
+                  >
+                    {{item.state}}
+                  </option>
+                </fragment>
+                <fragment v-if="contactCountry=='CA'">
+                  <option
+                    v-for="(item, key) in this.provinceList"
+                    :key="`province-${key}`"
+                    :value="item.provinceId"
+                  >
+                    {{item.provinceName}}
+                  </option>
+                </fragment>
+              </select>
+            </div>
+            <div class="form__row">
               <label for="postal_code">Postal Code *</label>
               <input type="text" id="postal_code" v-model="postalCode" placeholder="Type postal code">
             </div>
@@ -125,8 +149,32 @@
             </div>
             <div class="form__row">
               <label for="billing-country">Country *</label>
-              <select v-model="billingCountry" id="billing-country">
-                <option value=''>Select country</option>
+              <select v-model="billingCountry" @change.prevent="changeBillingStates" id="billing-country">
+                <option value='US'>United States</option>
+                <option value='CA'>Canada</option>
+              </select>
+            </div>
+            <div class="form__row">
+              <label for="billing-state">State/Region *</label>
+              <select v-model="billingState" id="billing-state">
+                <fragment v-if="billingCountry=='US'">
+                  <option
+                    v-for="(item, key) in this.stateList"
+                    :key="`state-${key}`"
+                    :value="item.stateCode"
+                  >
+                    {{item.state}}
+                  </option>
+                </fragment>
+                <fragment v-if="billingCountry=='CA'">
+                  <option
+                    v-for="(item, key) in this.provinceList"
+                    :key="`province-${key}`"
+                    :value="item.provinceId"
+                  >
+                    {{item.provinceName}}
+                  </option>
+                </fragment>
               </select>
             </div>
             <div class="form__row">
@@ -140,7 +188,7 @@
 
             <div class="form__row__full item-detail">
               Item
-              <p class="item-id">SCBBR</p>
+              <p class="item-id">{{ productSKU }}</p>
             </div>
             <div class="form__row__full">
               <label for="quote-quantity">Quantity *</label>
@@ -208,6 +256,7 @@
   import IconPhoneSupport from '@/components/icons/icon-phone-support'
   import IconQuestionCircle from '@/components/icons/icon-question-circle'
   import priceMixin from '@/mixins/price'
+  import constantMixin from '@/mixins/constants'
   import QuoteItemDetail from '@/components/quote-item-detail'
   import '@/styles/style.scss'
 
@@ -221,13 +270,21 @@
         type: Boolean
       }
     },
-    mixins: [ priceMixin ],
+    mixins: [ priceMixin, constantMixin ],
     components: {
       IconEmailUs,
       IconLiveChat,
       IconPhoneSupport,
       QuoteItemDetail,
       IconQuestionCircle
+    },
+    computed: {
+      ...mapGetters({
+        variant: 'product/variant'
+      }),
+      productSKU() {
+        return this.variant.sku
+      }
     },
 
     data () {
@@ -240,6 +297,7 @@
         address2: '',
         townCity: '',
         contactCountry: '',
+        contactState: '',
         postalCode: '',
         isOutUS: false,
         outAddress: '',
@@ -252,6 +310,7 @@
         billingAddress2: '',
         billingTownCity: '',
         billingCountry: '',
+        billingState: '',
         billingPostalCode: '',
         quoteQuantity: 0,
         quoteElseKnow: '',
@@ -260,10 +319,16 @@
     },
 
     created () {
-      console.log('created')
+      console.log('sku: ', this.stateList)
     },
 
     methods: {
+      changeContactStates (evt) {
+        console.log('contact country: ', evt.target.value)
+      },
+      changeBillingStates (evt) {
+        console.log('billing country: ', evt.target.value)
+      },
       liveChat() {
         console.log('clicked live chat')
       },
