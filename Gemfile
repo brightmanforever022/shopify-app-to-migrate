@@ -73,7 +73,7 @@ gem 'sidekiq'
 gem 'sidekiq-cron'
 
 gem 'shopify_graphql_client', github: 'mikeyhew/shopify_graphql_client', branch: 'master'
-gem 'shopify_app'
+gem 'shopify_app', '=12.0.7'
 
 gem 'rack-cors'
 gem 'json'

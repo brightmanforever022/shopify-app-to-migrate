@@ -68,8 +68,6 @@ GEM
     bindex (0.8.1)
     bootsnap (1.4.6)
       msgpack (~> 1.0)
-    bootsnap (1.4.6-java)
-      msgpack (~> 1.0)
     browser_sniffer (1.2.1)
     builder (3.2.4)
     byebug (11.1.1)
@@ -107,9 +105,6 @@ GEM
       httparty (>= 0.14.0)
       nokogiri (>= 1.5.6)
     ffi (1.12.2)
-    ffi (1.12.2-java)
-    ffi (1.12.2-x64-mingw32)
-    ffi (1.12.2-x86-mingw32)
     fugit (1.3.3)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.1)
@@ -140,7 +135,6 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     json (2.3.0)
-    json (2.3.0-java)
     jwt (2.2.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -162,20 +156,11 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.14.0)
     msgpack (1.3.3)
-    msgpack (1.3.3-java)
-    msgpack (1.3.3-x64-mingw32)
-    msgpack (1.3.3-x86-mingw32)
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nio4r (2.5.2)
-    nio4r (2.5.2-java)
     nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.9-java)
-    nokogiri (1.10.9-x64-mingw32)
-      mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.9-x86-mingw32)
       mini_portile2 (~> 2.4.0)
     oauth2 (1.4.4)
       faraday (>= 0.8, < 2.0)
@@ -193,11 +178,8 @@ GEM
       activesupport
       omniauth-oauth2 (~> 1.5.0)
     pg (1.2.2)
-    pg (1.2.2-x64-mingw32)
-    pg (1.2.2-x86-mingw32)
     public_suffix (4.0.3)
     puma (3.12.4)
-    puma (3.12.4-java)
     raabro (1.1.6)
     rack (2.2.2)
     rack-cors (1.1.1)
@@ -261,11 +243,11 @@ GEM
       activeresource (>= 4.1.0, < 6.0.0)
       graphql-client
       rack
-    shopify_app (13.0.0)
+    shopify_app (12.0.7)
       browser_sniffer (~> 1.2.0)
-      omniauth-shopify-oauth2 (~> 2.2.2)
+      omniauth-shopify-oauth2 (~> 2.2.0)
       rails (> 5.2.1)
-      shopify_api (~> 9.0.2)
+      shopify_api (~> 9.0.1)
     sidekiq (6.0.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
@@ -289,12 +271,9 @@ GEM
     temple (0.8.2)
     thor (1.0.1)
     thread_safe (0.3.6)
-    thread_safe (0.3.6-java)
     tilt (2.0.10)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2019.3)
-      tzinfo (>= 1.0.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     web-console (3.7.0)
@@ -312,18 +291,12 @@ GEM
       railties (>= 4.2)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
-    websocket-driver (0.7.1-java)
-      websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
     xpath (3.2.0)
       nokogiri (~> 1.8)
 
 PLATFORMS
-  java
   ruby
-  x64-mingw32
-  x86-mingw32
-  x86-mswin32
 
 DEPENDENCIES
   barnes
@@ -343,7 +316,7 @@ DEPENDENCIES
   rails (~> 5.2.3)
   sass-rails (~> 5.0)
   selenium-webdriver
-  shopify_app
+  shopify_app (= 12.0.7)
   shopify_graphql_client!
   sidekiq
   sidekiq-cron
@@ -359,4 +332,4 @@ RUBY VERSION
    ruby 2.6.1p33
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
