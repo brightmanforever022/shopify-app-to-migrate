@@ -79,4 +79,3 @@ gem 'rack-cors'
 gem 'json'
 
 gem "fedex", "~> 3.10"
-gem 'shopify_app'
