@@ -48,8 +48,8 @@
             <div class="form__row">
               <label for="country">Country *</label>
               <select v-model="contactCountry" @change.prevent="changeContactStates" id="country">
-                <option value='US'>United States</option>
-                <option value='CA'>Canada</option>                
+                <option value='US' :selected="contactCountry=='US'">United States</option>
+                <option value='CA' :selected="contactCountry=='CA'">Canada</option>                
               </select>
             </div>
             <div class="form__row">
@@ -60,6 +60,7 @@
                     v-for="(item, key) in this.stateList"
                     :key="`state-${key}`"
                     :value="item.stateCode"
+                    :selected="item.stateCode==contactState"
                   >
                     {{item.state}}
                   </option>
@@ -69,6 +70,7 @@
                     v-for="(item, key) in this.provinceList"
                     :key="`province-${key}`"
                     :value="item.provinceId"
+                    :selected="item.provinceId==contactState"
                   >
                     {{item.provinceName}}
                   </option>
@@ -150,8 +152,8 @@
             <div class="form__row">
               <label for="billing-country">Country *</label>
               <select v-model="billingCountry" @change.prevent="changeBillingStates" id="billing-country">
-                <option value='US'>United States</option>
-                <option value='CA'>Canada</option>
+                <option value='US' :selected="billingCountry=='US'">United States</option>
+                <option value='CA' :selected="billingCountry=='CA'">Canada</option>
               </select>
             </div>
             <div class="form__row">
@@ -162,6 +164,7 @@
                     v-for="(item, key) in this.stateList"
                     :key="`state-${key}`"
                     :value="item.stateCode"
+                    :selected="item.stateCode==billingState"
                   >
                     {{item.state}}
                   </option>
@@ -171,6 +174,7 @@
                     v-for="(item, key) in this.provinceList"
                     :key="`province-${key}`"
                     :value="item.provinceId"
+                    :selected="item.provinceId==billingState"
                   >
                     {{item.provinceName}}
                   </option>
@@ -296,8 +300,8 @@
         address1: '',
         address2: '',
         townCity: '',
-        contactCountry: '',
-        contactState: '',
+        contactCountry: 'US',
+        contactState: 'AL',
         postalCode: '',
         isOutUS: false,
         outAddress: '',
@@ -309,8 +313,8 @@
         billingAddress1: '',
         billingAddress2: '',
         billingTownCity: '',
-        billingCountry: '',
-        billingState: '',
+        billingCountry: 'US',
+        billingState: 'AL',
         billingPostalCode: '',
         quoteQuantity: 0,
         quoteElseKnow: '',
@@ -319,7 +323,7 @@
     },
 
     created () {
-      console.log('sku: ', this.stateList)
+      // console.log('sku: ', this.stateList)
     },
 
     methods: {
