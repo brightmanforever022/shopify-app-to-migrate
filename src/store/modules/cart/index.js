@@ -1,7 +1,7 @@
 import { initializeCart, getCart, addCart, removeCart, plusCartItem, minusCartItem, getFedexList } from '@/api/cart'
 import { getWishlist } from '@/api/wishlist'
 import { getDiscount } from '@/api/discount'
-import { createOrder } from '@/api/order'
+import { createOrder, createQuote } from '@/api/order'
 import { checkDiscountPeriodValidation, getFreightShippingPrice, getFedexShippingPrice } from '@/helpers'
 
 const cart = {
@@ -135,7 +135,16 @@ const cart = {
       } catch (err) {
         console.log(err)
       }
-    }
+    },
+
+    async createQuote ({ commit, state, getters }) {
+      try {
+        const newQuote = await createQuote({ lines: state.line_items })
+        console.log('created quote: ', newQuote.data)
+      } catch (error) {
+        console.log('error generated when creating new quote')
+      }
+    },
   },
   mutations: {
     SET_CART: (state, data) => {

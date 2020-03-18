@@ -191,6 +191,11 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     end
   end
 
+  def createQuote
+    puts params[:lines]
+    render json: { quote: 'NEWQUOTE' }
+  end
+
   def checkDiscount(startsAt, endsAt)
     currentDate = Time.new().to_i
     if startsAt.present?

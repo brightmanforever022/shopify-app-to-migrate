@@ -7,3 +7,11 @@ export function createOrder (data) {
     data: data
   })
 }
+
+export function createQuote (data) {
+  return request({
+    url: `/orders/quote`,
+    method: 'post',
+    data: data
+  })
+}

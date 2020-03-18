@@ -211,7 +211,7 @@
                 <icon-question-circle />
               </div>
               <a @click.prevent="$refs.file.click()" class="upload-link">choose file</a>
-              <input type="file" ref="file" id="quote-upload" name="uploadFile" />
+              <input type="file" ref="file" id="quote-upload" v-on:change="handleFileUpload()" name="uploadFile" />
             </div>
           </div>
 
@@ -318,7 +318,7 @@
         billingPostalCode: '',
         quoteQuantity: 0,
         quoteElseKnow: '',
-
+        file: ''
       }
     },
 
@@ -333,6 +333,11 @@
       changeBillingStates (evt) {
         console.log('billing country: ', evt.target.value)
       },
+      handleFileUpload () {
+        console.log('you uploaded a file')
+        this.file = this.$refs.file.files[0]
+        console.log('file: ', this.file)
+      },
       liveChat() {
         console.log('clicked live chat')
       },
@@ -344,9 +349,10 @@
         console.log('clicked email us')
         window.location = 'mailto:info@displays4sale.com'
       },
-      submitQuoteRequest () {
+      async submitQuoteRequest () {
         console.log('contact name: ', this.contactName)
         console.log('submitted quote request')
+        await this.$store.dispatch('cart/createQuote')
       }
     }
 

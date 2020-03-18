@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     namespace :frontend do
       resources :products
       resources :orders
+      post 'orders/quote' => 'orders#createQuote'
       resources :discounts
       resources :carts
       post 'carts/fedex/options/list' => 'carts#fedex_options_list'
