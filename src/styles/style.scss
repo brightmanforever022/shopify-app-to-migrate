@@ -1001,6 +1001,26 @@
   }
 }
 
+.form__actions {
+  a.request-quote, a.save-wishlist {
+    border: none;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 145%;
+    color: #333333;
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-left: 10px;
+    }
+  }
+  a.request-quote {
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+}
 .quote__app-overlay {
   position: fixed;
   display: flex;
@@ -1015,7 +1035,7 @@
   padding-bottom: 100px;
   
   &.visibled {
-    top: 100px;
+    top: 70px;
     right: 50%;
     transform: translate(50%);
   }

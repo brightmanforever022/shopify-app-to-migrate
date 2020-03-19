@@ -174,6 +174,14 @@
         <span>Add to cart</span>
         <span v-if="!fully_customzed && customizable">(Make Selections first)</span>
       </button>
+      <a @click.prevent="openQuote" class="request-quote">
+        <icon-request-quote />
+        <span>Request a Quote</span>
+      </a>
+      <a @click.prevent="openQuote" class="save-wishlist">
+        <icon-wishlist />
+        <span>Save to wish list</span>
+      </a>
     </div>
 
   </fragment>
@@ -186,6 +194,8 @@ import priceMixin from '@/mixins/price'
 import InputQuantity from '@/components/quantity'
 // import VariantSelection from '@/components/variant-selection'
 import IconHeart from '@/components/icons/icon-heart'
+import IconRequestQuote from '@/components/icons/icon-request-quote'
+import IconWishlist from '@/components/icons/icon-wishlist'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
@@ -205,12 +215,17 @@ export default {
   props: {
     openDisplayCart: {
       type: Function
+    },
+    openQuote: {
+      type: Function
     }
   },
   mixins: [ priceMixin ],
   components: {
     InputQuantity,
     IconHeart,
+    IconRequestQuote,
+    IconWishlist,
     Loading
   },
   data () {

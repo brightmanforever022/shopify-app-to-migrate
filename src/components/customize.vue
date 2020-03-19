@@ -3,7 +3,8 @@
     <div class="product__form--instock">
       <div class="stock__shipping-delivery">
         <h3>{{stock}}</h3>
-        <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p>
+        <!-- <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p> -->
+        <p>Order today and receive it by {{computedDate}}.</p>
       </div>
     </div>
     <div class="product__form-container">
@@ -11,9 +12,6 @@
         <div class="product__form--price">
           From
           <span class="price">{{calculated_price | money}}</span>
-        </div>
-        <div class="product__form--request-quote">
-          <a @click.prevent="openQuoteModal">Request a Quote</a>
         </div>
       </div>
 
@@ -25,6 +23,7 @@
         ></form-selection>
         <form-actions
           :openDisplayCart="openDisplayCart"
+          :openQuote="openQuoteModal"
         >
         </form-actions>
       </div>
