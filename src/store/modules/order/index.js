@@ -1,4 +1,4 @@
-import { createOrder } from '@/api/order'
+import { createOrder, createQuote } from '@/api/order'
 
 const order = {
   namespaced: true,
@@ -33,7 +33,15 @@ const order = {
           reject(err)
         })
       })
-    }
+    },
+    async createQuote ({ commit, state, getters }) {
+      try {
+        const newQuote = await createQuote({ quoteDetail: state.custom_options })
+        return newQuote.data
+      } catch (error) {
+        console.log('error generated when creating new quote')
+      }
+    },
   },
   mutations: {
     SET_QUANTITY: (state, quantity) => {

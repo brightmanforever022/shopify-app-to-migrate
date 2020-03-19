@@ -47,7 +47,7 @@
             </div>
             <div class="form__row">
               <label for="country">Country *</label>
-              <select v-model="contactCountry" @change.prevent="changeContactStates" id="country">
+              <select v-model="contactCountry" id="country">
                 <option value='US' :selected="contactCountry=='US'">United States</option>
                 <option value='CA' :selected="contactCountry=='CA'">Canada</option>                
               </select>
@@ -151,7 +151,7 @@
             </div>
             <div class="form__row">
               <label for="billing-country">Country *</label>
-              <select v-model="billingCountry" @change.prevent="changeBillingStates" id="billing-country">
+              <select v-model="billingCountry" id="billing-country">
                 <option value='US' :selected="billingCountry=='US'">United States</option>
                 <option value='CA' :selected="billingCountry=='CA'">Canada</option>
               </select>
@@ -327,32 +327,29 @@
     },
 
     methods: {
-      changeContactStates (evt) {
-        console.log('contact country: ', evt.target.value)
-      },
-      changeBillingStates (evt) {
-        console.log('billing country: ', evt.target.value)
-      },
       handleFileUpload () {
-        console.log('you uploaded a file')
         this.file = this.$refs.file.files[0]
-        console.log('file: ', this.file)
+      },
+      async submitFiles () {
+        let formData = new FormData()
+        formData.append('quote_file', this.file);
+        const uploaded = await this.$store.dispatch('product/uploadFile', formData)
+        return uploaded
       },
       liveChat() {
         console.log('clicked live chat')
       },
       phoneSupport () {
-        console.log('clicked phone support')
         window.location = 'tel:1800-289-1539'
       },
       emailUs () {
-        console.log('clicked email us')
         window.location = 'mailto:info@displays4sale.com'
       },
       async submitQuoteRequest () {
-        console.log('contact name: ', this.contactName)
-        console.log('submitted quote request')
-        await this.$store.dispatch('cart/createQuote')
+        const uploadedFile = await this.submitFiles()
+        console.log('uploaded file: ', uploadedFile)
+        const createdQuote = await this.$store.dispatch('order/createQuote')
+        console.log('created quote: ', createdQuote)
       }
     }
 

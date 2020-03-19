@@ -191,8 +191,13 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     end
   end
 
+  def uploadFile
+    puts "--------------------- uploaded file: #{params[:quote_file]}"
+    render json: { file: 'asdf' }
+  end
+
   def createQuote
-    puts params[:lines]
+    puts "----------------submitted quote details: #{params[:quoteDetail]}"
     render json: { quote: 'NEWQUOTE' }
   end
 

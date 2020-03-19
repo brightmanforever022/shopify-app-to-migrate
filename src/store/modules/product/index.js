@@ -1,4 +1,5 @@
 import { get } from '@/api/product'
+import { uploadFile } from '@/api/quote'
 
 const product = {
   namespaced: true,
@@ -22,6 +23,10 @@ const product = {
     },
     setVariant ({commit}, option) {
       commit('SET_VARIANT', option)
+    },
+    async uploadFile ({commit}, data) {
+      const uploadedFile = await uploadFile(data)
+      return uploadedFile.data
     }
   },
   mutations: {

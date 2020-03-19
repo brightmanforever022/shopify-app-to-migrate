@@ -178,7 +178,7 @@
         <icon-request-quote />
         <span>Request a Quote</span>
       </a>
-      <a @click.prevent="openQuote" class="save-wishlist">
+      <a @click.prevent="addToWhishlist" class="save-wishlist">
         <icon-wishlist />
         <span>Save to wish list</span>
       </a>
