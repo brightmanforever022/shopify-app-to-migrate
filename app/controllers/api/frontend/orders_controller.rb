@@ -198,9 +198,14 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
   def createQuote
     puts "----------------submitted quote details: #{params[:quoteDetail]}"
+    puts "----------------submitted contact data: #{params[:contactData]}"
     render json: { quote: 'NEWQUOTE' }
   end
 
+  def createQuoteWithCart
+    puts "here, it creates draftorder with cart data"
+  end
+  
   def checkDiscount(startsAt, endsAt)
     currentDate = Time.new().to_i
     if startsAt.present?

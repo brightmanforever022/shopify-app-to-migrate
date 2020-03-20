@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       resources :products
       resources :orders
       post 'orders/quote' => 'orders#createQuote'
+      post 'orders/quotecart' => 'orders#createQuoteWithCart'
       post 'orders/uploadfile' => 'orders#uploadFile'
       resources :discounts
       resources :carts

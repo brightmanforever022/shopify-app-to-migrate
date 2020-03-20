@@ -131,60 +131,62 @@
           <div class="quote-form-card">
             <div class="form__row__full">
               <div class="flex__row__full">
-                <input type="checkbox" id="same-shipping-address" v-model="isSameAddress">
+                <input type="checkbox" id="same-shipping-address" v-model="isSameAddress" @change="sameWithShipping($event)" />
                 <label for="same-shipping-address">
                   Same as Shipping Address
                 </label>
               </div>
             </div>
-            <div class="form__row">
-              <label for="billing-address1">Address Line 1 *</label>
-              <input type="text" id="billing-address1" v-model="billingAddress1" placeholder="Type address">
-            </div>
-            <div class="form__row">
-              <label for="billing-address2">Address Line 2 (optional)</label>
-              <input type="text" id="billing-address2" v-model="billingAddress2" placeholder="Apt., Suite, Bldg, PO Box(optional)">
-            </div>
-            <div class="form__row">
-              <label for="billing-town_city">Town/City *</label>
-              <input type="text" id="billing-town_city" v-model="billingTownCity" placeholder="Type town/city">
-            </div>
-            <div class="form__row">
-              <label for="billing-country">Country *</label>
-              <select v-model="billingCountry" id="billing-country">
-                <option value='US' :selected="billingCountry=='US'">United States</option>
-                <option value='CA' :selected="billingCountry=='CA'">Canada</option>
-              </select>
-            </div>
-            <div class="form__row">
-              <label for="billing-state">State/Region *</label>
-              <select v-model="billingState" id="billing-state">
-                <fragment v-if="billingCountry=='US'">
-                  <option
-                    v-for="(item, key) in this.stateList"
-                    :key="`state-${key}`"
-                    :value="item.stateCode"
-                    :selected="item.stateCode==billingState"
-                  >
-                    {{item.state}}
-                  </option>
-                </fragment>
-                <fragment v-if="billingCountry=='CA'">
-                  <option
-                    v-for="(item, key) in this.provinceList"
-                    :key="`province-${key}`"
-                    :value="item.provinceId"
-                    :selected="item.provinceId==billingState"
-                  >
-                    {{item.provinceName}}
-                  </option>
-                </fragment>
-              </select>
-            </div>
-            <div class="form__row">
-              <label for="billing-postal_code">Postal Code *</label>
-              <input type="text" id="billing-postal_code" v-model="billingPostalCode" placeholder="Type postal code">
-            </div>
+            <template v-if="!isSameAddress">
+              <div class="form__row">
+                <label for="billing-address1">Address Line 1 *</label>
+                <input type="text" id="billing-address1" v-model="billingAddress1" placeholder="Type address">
+              </div>
+              <div class="form__row">
+                <label for="billing-address2">Address Line 2 (optional)</label>
+                <input type="text" id="billing-address2" v-model="billingAddress2" placeholder="Apt., Suite, Bldg, PO Box(optional)">
+              </div>
+              <div class="form__row">
+                <label for="billing-town_city">Town/City *</label>
+                <input type="text" id="billing-town_city" v-model="billingTownCity" placeholder="Type town/city">
+              </div>
+              <div class="form__row">
+                <label for="billing-country">Country *</label>
+                <select v-model="billingCountry" id="billing-country">
+                  <option value='US' :selected="billingCountry=='US'">United States</option>
+                  <option value='CA' :selected="billingCountry=='CA'">Canada</option>
+                </select>
+              </div>
+              <div class="form__row">
+                <label for="billing-state">State/Region *</label>
+                <select v-model="billingState" id="billing-state">
+                  <fragment v-if="billingCountry=='US'">
+                    <option
+                      v-for="(item, key) in this.stateList"
+                      :key="`state-${key}`"
+                      :value="item.stateCode"
+                      :selected="item.stateCode==billingState"
+                    >
+                      {{item.state}}
+                    </option>
+                  </fragment>
+                  <fragment v-if="billingCountry=='CA'">
+                    <option
+                      v-for="(item, key) in this.provinceList"
+                      :key="`province-${key}`"
+                      :value="item.provinceId"
+                      :selected="item.provinceId==billingState"
+                    >
+                      {{item.provinceName}}
+                    </option>
+                  </fragment>
+                </select>
+              </div>
+              <div class="form__row">
+                <label for="billing-postal_code">Postal Code *</label>
+                <input type="text" id="billing-postal_code" v-model="billingPostalCode" placeholder="Type postal code">
+              </div>
+            </template>
           </div>
 
           <h4 class="quote-form-title">Quote Details</h4>
@@ -318,7 +320,7 @@
         billingPostalCode: '',
         quoteQuantity: 0,
         quoteElseKnow: '',
-        file: ''
+        file: '',
       }
     },
 
@@ -327,6 +329,17 @@
     },
 
     methods: {
+      sameWithShipping (e) {
+        console.log('is same address: ', this.isSameAddress)
+        if (this.isSameAddress) {
+          this.billingAddress1 =  this.address1
+          this.billingAddress2 = this.address2
+          this.billingTownCity = this.townCity
+          this.billingCountry = this.contactCountry
+          this.billingState = this.contactState
+          this.billingPostalCode = this.postalCode
+        }
+      },
       handleFileUpload () {
         this.file = this.$refs.file.files[0]
       },
@@ -348,7 +361,32 @@
       async submitQuoteRequest () {
         const uploadedFile = await this.submitFiles()
         console.log('uploaded file: ', uploadedFile)
-        const createdQuote = await this.$store.dispatch('order/createQuote')
+        const createdQuote = await this.$store.dispatch('order/createQuote', {
+          contactName: this.contactName,
+          contactCompany: this.contactCompany,
+          contactEmail: this.contactEmail,
+          contactPhone: this.contactPhone,
+          address1: this.address1,
+          address2: this.address2,
+          townCity: this.townCity,
+          contactCountry: this.contactCountry,
+          contactState: this.contactState,
+          postalCode: this.postalCode,
+          isOutUS: this.falseisOutUS,
+          outAddress: this.outAddress,
+          isResidential: this.isResidential,
+          shippingMethod: this.shippingMethod,
+          isLiftGate: this.isLiftGate,
+          isFreight: this.isFreight,
+          billingAddress1: this.billingAddress1,
+          billingAddress2: this.billingAddress2,
+          billingTownCity: this.billingTownCity,
+          billingCountry: this.billingCountry,
+          billingState: this.billingState,
+          billingPostalCode: this.billingPostalCode,
+          quoteQuantity: this.quoteQuantity,
+          quoteElseKnow: this.quoteElseKnow
+        })
         console.log('created quote: ', createdQuote)
       }
     }

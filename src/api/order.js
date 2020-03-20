@@ -15,3 +15,11 @@ export function createQuote (data) {
     data: data
   })
 }
+
+export function createQuoteWithCart (data) {
+  return request({
+    url: `/orders/quotecart`,
+    method: 'post',
+    data: data
+  })
+}

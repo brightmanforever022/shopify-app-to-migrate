@@ -34,9 +34,10 @@ const order = {
         })
       })
     },
-    async createQuote ({ commit, state, getters }) {
+    async createQuote ({ commit, state, getters }, contactData) {
       try {
-        const newQuote = await createQuote({ quoteDetail: state.custom_options })
+        console.log('contact data: ', contactData)
+        const newQuote = await createQuote({ quoteDetail: state.custom_options, contactData: contactData })
         return newQuote.data
       } catch (error) {
         console.log('error generated when creating new quote')
