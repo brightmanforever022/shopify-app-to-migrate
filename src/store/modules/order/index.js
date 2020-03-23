@@ -37,7 +37,7 @@ const order = {
     async createQuote ({ commit, state, getters }, contactData) {
       try {
         console.log('contact data: ', contactData)
-        const newQuote = await createQuote({ quoteDetail: state.custom_options, contactData: contactData })
+        const newQuote = await createQuote({ quoteDetail: state.custom_options, contactDetail: contactData })
         return newQuote.data
       } catch (error) {
         console.log('error generated when creating new quote')

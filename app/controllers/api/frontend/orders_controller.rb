@@ -193,15 +193,23 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
   def uploadFile
     puts "--------------------- uploaded file: #{params[:quote_file]}"
+    
     render json: { file: 'asdf' }
   end
-
+  
+  # create draft order based on the product selected on product page
   def createQuote
-    puts "----------------submitted quote details: #{params[:quoteDetail]}"
-    puts "----------------submitted contact data: #{params[:contactData]}"
+    # puts "----------------submitted quote details: #{params[:quoteDetail]}"
+    # puts "----------------submitted contact data: #{params[:contactDetail]}"
+    # quoteDetail = params[:quoteDetail]
+    # contactDetail = params[:contactDetail]
+
+    puts "-------submitted data #{params[:order]}"
+
     render json: { quote: 'NEWQUOTE' }
   end
 
+  # create draft order based on the data in cart
   def createQuoteWithCart
     puts "here, it creates draftorder with cart data"
   end

@@ -330,7 +330,6 @@
 
     methods: {
       sameWithShipping (e) {
-        console.log('is same address: ', this.isSameAddress)
         if (this.isSameAddress) {
           this.billingAddress1 =  this.address1
           this.billingAddress2 = this.address2
@@ -341,9 +340,15 @@
         }
       },
       handleFileUpload () {
-        this.file = this.$refs.file.files[0]
+        const fileData = this.$refs.file.files[0]
+        if (fileData.size > 1024 * 1024 * 2) {
+          alert('Sorry, the file size is larger than 2 MB. Please retry with smaller file.')
+        } else {
+          console.log('file data: ', fileData)
+          this.file = this.$refs.file.files[0]
+        }
       },
-      async submitFiles () {
+      async submitFile () {
         let formData = new FormData()
         formData.append('quote_file', this.file);
         const uploaded = await this.$store.dispatch('product/uploadFile', formData)
@@ -359,7 +364,7 @@
         window.location = 'mailto:info@displays4sale.com'
       },
       async submitQuoteRequest () {
-        const uploadedFile = await this.submitFiles()
+        const uploadedFile = await this.submitFile()
         console.log('uploaded file: ', uploadedFile)
         const createdQuote = await this.$store.dispatch('order/createQuote', {
           contactName: this.contactName,
