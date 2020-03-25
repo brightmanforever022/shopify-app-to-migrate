@@ -1,4 +1,5 @@
 class Api::Frontend::OrdersController < Api::Frontend::BaseController
+  require 'aws-sdk'
 
   def create
     @shop.connect
@@ -192,19 +193,42 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
   end
 
   def uploadFile
-    puts "--------------------- uploaded file: #{params[:quote_file]}"
-    
+    # puts "--------------------- uploaded file: #{params[:quote_file]}"
+    Aws.config.update({
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+      region: 'us-east-2'
+    })
+
+    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+
+    s3 = Aws::S3::Client.new(
+      region: 'us-east-2',
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    )
+    # s3bucket =  s3.bucket[ENV['S3_BUCKET']]
+
+    # obj = s3bucket.objects[params[:quote_file].original_filename]
+    # obj.write(
+    #   file: params[:quote_file],
+    #   acl: :public_read
+    # )
+    resp = s3.list_buckets()
+    puts "================= #{resp}"
     render json: { file: 'asdf' }
+    # render json: {
+    #   url: obj.public_url,
+    #   name: obj.key
+    # }
   end
   
   # create draft order based on the product selected on product page
   def createQuote
-    # puts "----------------submitted quote details: #{params[:quoteDetail]}"
-    # puts "----------------submitted contact data: #{params[:contactDetail]}"
     # quoteDetail = params[:quoteDetail]
     # contactDetail = params[:contactDetail]
 
-    puts "-------submitted data #{params[:order]}"
+    # puts "-------submitted data #{params[:order]}"
 
     render json: { quote: 'NEWQUOTE' }
   end

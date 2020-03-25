@@ -14,7 +14,7 @@
           <div class="quote-form-card">
             <div class="form__row">
               <label for="contact_name">Contact Name *</label>
-              <input type="text" id="contact_name" v-model="contactName" placeholder="Type 2222 name">
+              <input type="text" id="contact_name" v-model="contactName" placeholder="Type name">
             </div>
 
             <div class="form__row">
@@ -377,7 +377,7 @@
           contactCountry: this.contactCountry,
           contactState: this.contactState,
           postalCode: this.postalCode,
-          isOutUS: this.falseisOutUS,
+          isOutUS: this.isOutUS,
           outAddress: this.outAddress,
           isResidential: this.isResidential,
           shippingMethod: this.shippingMethod,
