@@ -194,29 +194,36 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
   def uploadFile
     # puts "--------------------- uploaded file: #{params[:quote_file]}"
-    Aws.config.update({
-      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
-      region: 'us-east-2'
-    })
-
-    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
-
-    s3 = Aws::S3::Client.new(
+    creds = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+    s3client = Aws::S3::Client.new(
       region: 'us-east-2',
-      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+      credentials: creds
     )
-    # s3bucket =  s3.bucket[ENV['S3_BUCKET']]
 
-    # obj = s3bucket.objects[params[:quote_file].original_filename]
-    # obj.write(
-    #   file: params[:quote_file],
-    #   acl: :public_read
-    # )
-    resp = s3.list_buckets()
-    puts "================= #{resp}"
+    # resp = s3client.list_objects_v2({
+    #   bucket: 'displays4sale', 
+    #   max_keys: 5
+    # })
+    # puts "================= #{resp}"
+
+    # resp = s3client.get_object({
+    #   bucket: 'displays4sale', 
+    #   key: 'Displays4Sale/request_quote/'
+    # })
+    # puts "================= #{resp}"
+    
+    s3res = Aws::S3::Resource.new(
+      region: 'us-east-2',
+      credentials: creds
+    )
+
+    fileName = File.basename(params[:quote_file].original_filename, File.extname(params[:quote_file].original_filename))
+    obj = s3res.bucket('displays4sale').object('Displays4Sale/request_quote/' + fileName + Time.now.to_i.to_s + '.jpg')
+    obj.put(body: params[:quote_file], acl: 'public-read')
+    puts "--------------- #{obj.public_url}"
+
     render json: { file: 'asdf' }
+
     # render json: {
     #   url: obj.public_url,
     #   name: obj.key
