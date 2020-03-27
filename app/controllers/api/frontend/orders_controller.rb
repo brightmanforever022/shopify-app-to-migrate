@@ -193,34 +193,18 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
   end
 
   def uploadFile
-    # puts "--------------------- uploaded file: #{params[:quote_file]}"
     creds = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
-    s3client = Aws::S3::Client.new(
-      region: 'us-east-2',
-      credentials: creds
-    )
-
-    # resp = s3client.list_objects_v2({
-    #   bucket: 'displays4sale', 
-    #   max_keys: 5
-    # })
-    # puts "================= #{resp}"
-
-    # resp = s3client.get_object({
-    #   bucket: 'displays4sale', 
-    #   key: 'Displays4Sale/request_quote/'
-    # })
-    # puts "================= #{resp}"
-    
+    # upload file into s3
     s3res = Aws::S3::Resource.new(
       region: 'us-east-2',
       credentials: creds
     )
 
     fileName = File.basename(params[:quote_file].original_filename, File.extname(params[:quote_file].original_filename))
-    obj = s3res.bucket('displays4sale').object('Displays4Sale/request_quote/' + fileName + Time.now.to_i.to_s + '.jpg')
+    obj = s3res.bucket('displays4sale').object('Displays4Sale/request_quote/' + fileName + Time.now.to_i.to_s + File.extname(params[:quote_file].original_filename))
     obj.put(body: params[:quote_file], acl: 'public-read')
     puts "--------------- #{obj.public_url}"
+    uploadedFileUrl = obj.public_url
 
     render json: { file: 'asdf' }
 
@@ -232,12 +216,54 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
   
   # create draft order based on the product selected on product page
   def createQuote
-    # quoteDetail = params[:quoteDetail]
-    # contactDetail = params[:contactDetail]
+    @shop.connect
 
-    # puts "-------submitted data #{params[:order]}"
+    # getting data from parameters
+    quoteDetail = params[:quoteDetail]
+    contactDetail = params[:contactDetail]
 
-    render json: { quote: 'NEWQUOTE' }
+    # Initialize line item list
+    line_items = []
+    line_items << {
+      variant_id: params[:variantId],
+      quantity: params[:quantity].to_i
+    }
+    quoteDetail.each do |option|
+      customItem = {}
+      if option[:price_type]
+        customItem = {
+          title: option[:label],
+          quantity: params[:quantity].to_i,
+          price: contactDetail[:originalPrice].to_f * option[:price].to_f / 100,
+          requires_shipping: false
+        }
+      else
+        customItem = {
+          title: option[:label],
+          quantity: params[:quantity].to_i,
+          price: option[:price],
+          requires_shipping: true
+        }
+      end
+      line_items << customItem
+    end
+
+    draft_order = ShopifyAPI::DraftOrder.new({
+      line_items: line_items,
+      email: params[:contactDetail][:contactEmail]
+    })
+
+    if draft_order.save
+      sleep 1.second
+      draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
+      draft_order.send_invoice(draft_order_invoice)
+      render json: {draft_order: draft_order}
+    else
+      puts draft_order.errors.full_messages
+      render json: {draft_order: draft_order}
+    end
+
+    # render json: { quote: 'NEWQUOTE' }
   end
 
   # create draft order based on the data in cart

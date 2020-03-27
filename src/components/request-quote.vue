@@ -350,7 +350,7 @@
       },
       async submitFile () {
         let formData = new FormData()
-        formData.append('quote_file', this.file);
+        formData.append('quote_file', this.file)
         const uploaded = await this.$store.dispatch('product/uploadFile', formData)
         return uploaded
       },
@@ -365,7 +365,6 @@
       },
       async submitQuoteRequest () {
         const uploadedFile = await this.submitFile()
-        console.log('uploaded file: ', uploadedFile)
         const createdQuote = await this.$store.dispatch('order/createQuote', {
           contactName: this.contactName,
           contactCompany: this.contactCompany,
@@ -390,7 +389,8 @@
           billingState: this.billingState,
           billingPostalCode: this.billingPostalCode,
           quoteQuantity: this.quoteQuantity,
-          quoteElseKnow: this.quoteElseKnow
+          quoteElseKnow: this.quoteElseKnow,
+          originalPrice: this.original_price
         })
         console.log('created quote: ', createdQuote)
       }
