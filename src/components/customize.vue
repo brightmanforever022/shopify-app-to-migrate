@@ -35,7 +35,7 @@
       @click.prevent="closeQuoteModal"
     ></div>
     <request-quote
-      v-show="isQuoteModal"
+      v-if="isQuoteModal"
       :isQuoteModal="isQuoteModal"
       :closeQuote="closeQuoteModal"
     >

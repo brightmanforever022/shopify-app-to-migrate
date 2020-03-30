@@ -206,7 +206,7 @@
             </div>
             <div class="form__row__full">
               <label for="quote-quantity">Quantity *</label>
-              <input type="text" id="quote-quantity" v-model="quoteQuantity" placeholder="Can be entered as a number or range">
+              <input type="text" id="quote-quantity" v-model="quoteQuantity" v-on:input="setQuantity" placeholder="Can be entered as a number or range">
               <span :class="['quote-form-errors', validateElement('quote-quantity')]">This field is invalid</span>
             </div>
             <div class="form__row__full">
@@ -295,7 +295,8 @@
     },
     computed: {
       ...mapGetters({
-        variant: 'product/variant'
+        variant: 'product/variant',
+        quantity: 'order/quantity',
       }),
       productSKU() {
         return this.variant.sku
@@ -327,14 +328,14 @@
         billingCountry: 'US',
         billingState: 'AL',
         billingPostalCode: '',
-        quoteQuantity: 0,
+        quoteQuantity: 1,
         quoteElseKnow: '',
         file: '',
       }
     },
 
     created () {
-      // console.log('sku: ', this.stateList)
+      this.quoteQuantity = this.quantity
     },
 
     methods: {
@@ -498,14 +499,14 @@
       },
       async validateForm () {
         const elementList = [
-          'contact_name', 
-          'contact_email', 
-          'address1', 
-          'town_city', 
-          'postal_code', 
-          'billing-address1', 
-          'billing-town_city', 
-          'billing-postal_code', 
+          'contact_name',
+          'contact_email',
+          'address1',
+          'town_city',
+          'postal_code',
+          'billing-address1',
+          'billing-town_city',
+          'billing-postal_code',
           'quote-quantity'
         ]
         let validateResult = true
@@ -516,8 +517,14 @@
         })
         return validateResult
       },
-      
 
+      setQuantity (e) {
+        const quoteQuantity = parseInt(e.target.value)
+        if (quoteQuantity > 0) {
+          this.$store.dispatch('order/setQuantity', quoteQuantity)
+        }
+      }
+      
     }
 
   }
