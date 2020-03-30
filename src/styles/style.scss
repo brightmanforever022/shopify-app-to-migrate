@@ -1158,6 +1158,18 @@
               color: #0086C8 !important;
             }
           }
+          .quote-form-errors {
+            font-size: 10px;
+            color: red;
+            margin-top: 10px;
+
+            &.quote-valid {
+              display: none;
+            }
+            &.quote-unvalid {
+              display: block;
+            }
+          }
           &.item-detail {
             font-weight: 500;
             font-size: 10px;

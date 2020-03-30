@@ -15,18 +15,20 @@
             <div class="form__row">
               <label for="contact_name">Contact Name *</label>
               <input type="text" id="contact_name" v-model="contactName" placeholder="Type name">
+              <span :class="['quote-form-errors', validateElement('contact_name')]">This field is invalid</span>
             </div>
 
             <div class="form__row">
-              <label for="contact_name">Company (optional)</label>
+              <label for="company">Company (optional)</label>
               <input type="text" id="company" v-model="contactCompany" placeholder="Type company (optional)">
             </div>
             <div class="form__row">
-              <label for="contact_name">Email Address *</label>
+              <label for="contact_email">Email Address *</label>
               <input type="text" id="contact_email" v-model="contactEmail" placeholder="Type your email address">
+              <span :class="['quote-form-errors', validateElement('contact_email')]">This field is invalid</span>
             </div>
             <div class="form__row">
-              <label for="contact_name">Phone Number (optional)</label>
+              <label for="contact_phone">Phone Number (optional)</label>
               <input type="text" id="contact_phone" v-model="contactPhone" placeholder="(555) 555-555 (optional)">
             </div>
           </div>
@@ -36,6 +38,7 @@
             <div class="form__row__full">
               <label for="address1">Address Line 1 *</label>
               <input type="text" id="address1" v-model="address1" placeholder="Type address">
+              <span :class="['quote-form-errors', validateElement('address1')]">This field is invalid</span>
             </div>
             <div class="form__row__full">
               <label for="address2">Address Line 2 (optional)</label>
@@ -44,6 +47,7 @@
             <div class="form__row">
               <label for="town_city">Town/City *</label>
               <input type="text" id="town_city" v-model="townCity" placeholder="Type town/city">
+              <span :class="['quote-form-errors', validateElement('town_city')]">This field is invalid</span>
             </div>
             <div class="form__row">
               <label for="country">Country *</label>
@@ -80,6 +84,7 @@
             <div class="form__row">
               <label for="postal_code">Postal Code *</label>
               <input type="text" id="postal_code" v-model="postalCode" placeholder="Type postal code">
+              <span :class="['quote-form-errors', validateElement('postal_code')]">This field is invalid</span>
             </div>
             <div class="form__row__full">
               <div class="flex__row__full">
@@ -141,6 +146,7 @@
               <div class="form__row">
                 <label for="billing-address1">Address Line 1 *</label>
                 <input type="text" id="billing-address1" v-model="billingAddress1" placeholder="Type address">
+                <span :class="['quote-form-errors', validateElement('billing-address1')]">This field is invalid</span>
               </div>
               <div class="form__row">
                 <label for="billing-address2">Address Line 2 (optional)</label>
@@ -149,6 +155,7 @@
               <div class="form__row">
                 <label for="billing-town_city">Town/City *</label>
                 <input type="text" id="billing-town_city" v-model="billingTownCity" placeholder="Type town/city">
+                <span :class="['quote-form-errors', validateElement('billing-town_city')]">This field is invalid</span>
               </div>
               <div class="form__row">
                 <label for="billing-country">Country *</label>
@@ -185,6 +192,7 @@
               <div class="form__row">
                 <label for="billing-postal_code">Postal Code *</label>
                 <input type="text" id="billing-postal_code" v-model="billingPostalCode" placeholder="Type postal code">
+                <span :class="['quote-form-errors', validateElement('billing-postal_code')]">This field is invalid</span>
               </div>
             </template>
           </div>
@@ -199,6 +207,7 @@
             <div class="form__row__full">
               <label for="quote-quantity">Quantity *</label>
               <input type="text" id="quote-quantity" v-model="quoteQuantity" placeholder="Can be entered as a number or range">
+              <span :class="['quote-form-errors', validateElement('quote-quantity')]">This field is invalid</span>
             </div>
             <div class="form__row__full">
               <div class="flex__row__full">
@@ -364,36 +373,151 @@
         window.location = 'mailto:info@displays4sale.com'
       },
       async submitQuoteRequest () {
-        const uploadedFile = await this.submitFile()
-        const createdQuote = await this.$store.dispatch('order/createQuote', {
-          contactName: this.contactName,
-          contactCompany: this.contactCompany,
-          contactEmail: this.contactEmail,
-          contactPhone: this.contactPhone,
-          address1: this.address1,
-          address2: this.address2,
-          townCity: this.townCity,
-          contactCountry: this.contactCountry,
-          contactState: this.contactState,
-          postalCode: this.postalCode,
-          isOutUS: this.isOutUS,
-          outAddress: this.outAddress,
-          isResidential: this.isResidential,
-          shippingMethod: this.shippingMethod,
-          isLiftGate: this.isLiftGate,
-          isFreight: this.isFreight,
-          billingAddress1: this.billingAddress1,
-          billingAddress2: this.billingAddress2,
-          billingTownCity: this.billingTownCity,
-          billingCountry: this.billingCountry,
-          billingState: this.billingState,
-          billingPostalCode: this.billingPostalCode,
-          quoteQuantity: this.quoteQuantity,
-          quoteElseKnow: this.quoteElseKnow,
-          originalPrice: this.original_price
+        console.log('submit quote request')
+        this.sameWithShipping()
+        const validateResult = await this.validateForm()
+        if (validateResult) {
+          // /*
+          const uploadedFile = await this.submitFile()
+          console.log('uploaded file: ', uploadedFile)
+          const createdQuote = await this.$store.dispatch('order/createQuote', {
+            contactName: this.contactName,
+            contactCompany: this.contactCompany,
+            contactEmail: this.contactEmail,
+            contactPhone: this.contactPhone,
+            address1: this.address1,
+            address2: this.address2,
+            townCity: this.townCity,
+            contactCountry: this.contactCountry,
+            contactState: this.contactState,
+            postalCode: this.postalCode,
+            isOutUS: this.isOutUS,
+            outAddress: this.outAddress,
+            isResidential: this.isResidential,
+            shippingMethod: this.shippingMethod,
+            isLiftGate: this.isLiftGate,
+            isFreight: this.isFreight,
+            billingAddress1: this.billingAddress1,
+            billingAddress2: this.billingAddress2,
+            billingTownCity: this.billingTownCity,
+            billingCountry: this.billingCountry,
+            billingState: this.billingState,
+            billingPostalCode: this.billingPostalCode,
+            quoteQuantity: this.quoteQuantity,
+            quoteElseKnow: this.quoteElseKnow,
+            originalPrice: this.original_price,
+            uploadedFile: uploadedFile
+          })
+          console.log('created quote: ', createdQuote)
+          // */
+        } else {
+          alert('please fill the form with correct data')
+          return false
+        }
+
+      },
+      validateElement (elementName) {
+        return this.checkElement(elementName, 0) ? 'quote-valid' : 'quote-unvalid'
+      },
+      checkElement (el, checkLevel) {
+        let regex = ''
+        switch(el) {
+          case 'contact_name':
+            regex = /^[a-zA-Z ]{2,30}$/
+            if (checkLevel == 0) {
+              return (this.contactName == '') ? true : (regex.test(this.contactName) ? true : false)
+            } else {
+              return regex.test(this.contactName) ? true : false
+            }
+            break
+          case 'contact_email':
+            regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+            if (checkLevel == 0) {
+              return (this.contactEmail == '') ? true : (regex.test(this.contactEmail) ? true : false)
+            } else {
+              return regex.test(this.contactEmail) ? true : false
+            }
+            break
+          case 'address1':
+            regex = /^[a-zA-Z0-9\s,'-]*$/
+            if (checkLevel == 0) {
+              return (this.address1 == '') ? true : (regex.test(this.address1) ? true : false)
+            } else {
+              return regex.test(this.address1) ? true : false
+            }
+            break
+          case 'town_city':
+            regex = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
+            if (checkLevel == 0) {
+              return (this.townCity == '') ? true : (regex.test(this.townCity) ? true : false)
+            } else {
+              return regex.test(this.townCity) ? true : false
+            }
+            break
+          case 'postal_code':
+            regex = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+            if (checkLevel == 0) {
+              return (this.postalCode == '') ? true : (regex.test(this.postalCode) ? true : false)
+            } else {
+              return regex.test(this.postalCode) ? true : false
+            }
+            break
+          case 'billing-address1':
+            regex = /^[a-zA-Z0-9\s,'-]*$/
+            if (checkLevel == 0) {
+              return (this.billingAddress1 == '') ? true : (regex.test(this.billingAddress1) ? true : false)
+            } else {
+              return regex.test(this.billingAddress1) ? true : false
+            }
+            break
+          case 'billing-town_city':
+            regex = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
+            if (checkLevel == 0) {
+              return (this.billingTownCity == '') ? true : (regex.test(this.billingTownCity) ? true : false)
+            } else {
+              return regex.test(this.billingTownCity) ? true : false
+            }
+            break
+          case 'billing-postal_code':
+            regex = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+            if (checkLevel == 0) {
+              return (this.billingPostalCode == '') ? true : (regex.test(this.billingPostalCode) ? true : false)
+            } else {
+              return regex.test(this.billingPostalCode) ? true : false
+            }
+            break
+          case 'quote-quantity':
+            regex = /^\d*$/
+            if (checkLevel == 0) {
+              return (this.quoteQuantity == 0) ? true : (regex.test(this.quoteQuantity) ? true : false)
+            } else {
+              return regex.test(this.quoteQuantity) ? true : false
+            }
+            break
+        }
+      },
+      async validateForm () {
+        const elementList = [
+          'contact_name', 
+          'contact_email', 
+          'address1', 
+          'town_city', 
+          'postal_code', 
+          'billing-address1', 
+          'billing-town_city', 
+          'billing-postal_code', 
+          'quote-quantity'
+        ]
+        let validateResult = true
+        elementList.map(el => {
+          if (!this.checkElement(el, 1)) {
+            validateResult = false
+          }
         })
-        console.log('created quote: ', createdQuote)
-      }
+        return validateResult
+      },
+      
+
     }
 
   }

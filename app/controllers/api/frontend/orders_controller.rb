@@ -203,15 +203,12 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     fileName = File.basename(params[:quote_file].original_filename, File.extname(params[:quote_file].original_filename))
     obj = s3res.bucket('displays4sale').object('Displays4Sale/request_quote/' + fileName + Time.now.to_i.to_s + File.extname(params[:quote_file].original_filename))
     obj.put(body: params[:quote_file], acl: 'public-read')
-    puts "--------------- #{obj.public_url}"
     uploadedFileUrl = obj.public_url
 
-    render json: { file: 'asdf' }
-
-    # render json: {
-    #   url: obj.public_url,
-    #   name: obj.key
-    # }
+    render json: {
+      url: obj.public_url,
+      name: fileName
+    }
   end
   
   # create draft order based on the product selected on product page
@@ -247,23 +244,59 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       end
       line_items << customItem
     end
+    
+    customerName = contactDetail[:contactName].split(' ')
+    customerData = {
+      email: contactDetail[:contactEmail],
+      first_name: customerName[0],
+      last_name: customerName[1] ? customerName[1] : '',
+    }
+    if contactDetail[:contactPhone] != ''
+      customerData[:phone] = contactDetail[:contactPhone]
+    end
 
+    shippingAddress = {
+      address1: contactDetail[:address1],
+      address2: contactDetail[:address2],
+      city: contactDetail[:townCity],
+      company: contactDetail[:contactCompany],
+      country: contactDetail[:contactCountry],
+      province: contactDetail[:contactState],
+      first_name: customerName[0],
+      last_name: customerName[1] ? customerName[1] : '',
+      name: contactDetail[:contactName],
+      phone: contactDetail[:contactPhone],
+      zip: contactDetail[:postalCode],
+    }
     draft_order = ShopifyAPI::DraftOrder.new({
       line_items: line_items,
-      email: params[:contactDetail][:contactEmail]
+      email: contactDetail[:contactEmail],
+      customer: customerData,
+      shipping_address: shippingAddress,
     })
 
     if draft_order.save
       sleep 1.second
       draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
       draft_order.send_invoice(draft_order_invoice)
-      render json: {draft_order: draft_order}
+      # store draftorder id and file url. file url is in contactDetail[:uploadedFile].url
+      @quote = Quote.new(
+        dorder_id: draft_order.id,
+        dorder_name: draft_order.name,
+        dorder_invoice_url: draft_order.invoice_url,
+        uploaded_file_url: contactDetail[:uploadedFile][:url],
+        uploaded_file_name: contactDetail[:uploadedFile][:name],
+        shop: @shop
+      )
+      if @quote.save
+        render json: {quote: @quote}
+      else
+        render json: {error: @quote.errors.full_messages}
+      end
     else
       puts draft_order.errors.full_messages
       render json: {draft_order: draft_order}
     end
-
-    # render json: { quote: 'NEWQUOTE' }
   end
 
   # create draft order based on the data in cart

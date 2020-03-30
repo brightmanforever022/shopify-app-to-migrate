@@ -105,19 +105,21 @@ export default {
 
   methods: {
     openQuoteModal () {
-      /*
+      // /*
       if (this.customizable && this.fully_customized) {
         $('#shopify-section-header .header').css('z-index', '-1')
         $('.product__details').css('z-index', -1)
         this.isQuoteModal = true
-        console.log('open quote modal')
       } else {
         alert('please make selections firstly')
       }
-      */
+      // */
+
+      /*
       $('#shopify-section-header .header').css('z-index', '-1')
       $('.product__details').css('z-index', -1)
       this.isQuoteModal = true
+      */
     },
     closeQuoteModal () {
       $('#shopify-section-header .header').css('z-index', '101')

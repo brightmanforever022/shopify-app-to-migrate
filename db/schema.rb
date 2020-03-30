@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_17_201623) do
+ActiveRecord::Schema.define(version: 2020_03_30_160223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -76,6 +76,18 @@ ActiveRecord::Schema.define(version: 2020_02_17_201623) do
     t.index ["group_id"], name: "index_items_on_group_id"
   end
 
+  create_table "quotes", force: :cascade do |t|
+    t.string "dorder_id"
+    t.string "dorder_name"
+    t.string "dorder_invoice_url"
+    t.string "uploaded_file_url"
+    t.string "uploaded_file_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "shop_id"
+    t.index ["shop_id"], name: "index_quotes_on_shop_id"
+  end
+
   create_table "shops", force: :cascade do |t|
     t.string "shopify_domain", null: false
     t.string "shopify_token", null: false
@@ -110,6 +122,7 @@ ActiveRecord::Schema.define(version: 2020_02_17_201623) do
 
   add_foreign_key "groups", "templates"
   add_foreign_key "items", "groups"
+  add_foreign_key "quotes", "shops"
   add_foreign_key "templates", "shops"
   add_foreign_key "variants", "templates"
 end
