@@ -28,10 +28,12 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
 
     def get_product id
       ShopifyGraphQLClient.client.allow_dynamic_queries = true
+      puts product_query(id)
       result = ShopifyGraphQLClient.query(ShopifyGraphQLClient.parse(product_query(id)))
       result.data.product
     end
     def product_query product_id
+      metaQuery = 'namespace: "shipping", key: "shipping_summary"'
       query = 'id: "gid://shopify/Product/' + product_id.to_s + '"'
       "{
         product(#{query}) {
@@ -55,14 +57,14 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
               }
             }
           }
-          options(first: 2) {
+          options(first: 1) {
             id
             name
             position
             values
           }
           totalInventory
-          variants(first: 2) {
+          variants(first: 1) {
             edges {
               cursor
               node {
@@ -77,6 +79,9 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
                 }
               }
             }
+          }
+          metafield(#{metaQuery}) {
+            value
           }
         }
       }"

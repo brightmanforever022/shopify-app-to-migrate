@@ -295,6 +295,7 @@
     },
     computed: {
       ...mapGetters({
+        productData: 'product/get',
         variant: 'product/variant',
         quantity: 'order/quantity',
       }),
@@ -407,6 +408,7 @@
             quoteQuantity: this.quoteQuantity,
             quoteElseKnow: this.quoteElseKnow,
             originalPrice: this.original_price,
+            metaShipping: this.productData.metafield,
             uploadedFile: uploadedFile
           })
           console.log('created quote: ', createdQuote)

@@ -218,29 +218,34 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     # getting data from parameters
     quoteDetail = params[:quoteDetail]
     contactDetail = params[:contactDetail]
-
+    productQuantity = params[:quantity].to_i
+    
     # Initialize line item list
     line_items = []
     line_items << {
       variant_id: params[:variantId],
-      quantity: params[:quantity].to_i
+      quantity: productQuantity,
+      
     }
+    subTotalPrice = 0.0
     quoteDetail.each do |option|
       customItem = {}
       if option[:price_type]
         customItem = {
           title: option[:label],
-          quantity: params[:quantity].to_i,
+          quantity: productQuantity,
           price: contactDetail[:originalPrice].to_f * option[:price].to_f / 100,
           requires_shipping: false
         }
+        subTotalPrice += contactDetail[:originalPrice].to_f * option[:price].to_f / 100 * productQuantity
       else
         customItem = {
           title: option[:label],
-          quantity: params[:quantity].to_i,
-          price: option[:price],
+          quantity: productQuantity,
+          price: option[:price].to_f,
           requires_shipping: true
         }
+        subTotalPrice += option[:price].to_f * productQuantity
       end
       line_items << customItem
     end
@@ -268,13 +273,50 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       phone: contactDetail[:contactPhone],
       zip: contactDetail[:postalCode],
     }
+
+    # get discount rules from product
+    metaShipping = contactDetail[:metaShipping][:value]
+    mapShippingLines = metaShipping.split("\n")
+    shippingDiscountList = []
+    
+    mapShippingLines.each do |shippingLine|
+      shippingLineItems = shippingLine.split(',')
+      shippingQtyItems = shippingLineItems[0].split(' ')
+      shippingQty = shippingQtyItems[1].split('-')
+      qtyFrom = shippingQty[0].to_i
+      qtyTo = shippingQty[1].to_i
+      shippingLineItems[1]["%"] = ""
+      discountPercent = shippingLineItems[1].to_i
+
+      shippingDiscountList.push({
+        qtyFrom: qtyFrom,
+        qtyTo: qtyTo,
+        discountPercent: discountPercent
+      })
+    end
+
+    # get proper discount amount by product quantity
+    discountAmount = 0
+    shippingDiscountList.each do |discountItem|
+      if productQuantity >= discountItem[:qtyFrom] and productQuantity <= discountItem[:qtyTo]
+        discountAmount = discountItem[:discountPercent]
+      end
+    end
+    
     draft_order = ShopifyAPI::DraftOrder.new({
       line_items: line_items,
+      applied_discount: {
+        title: "Quantity Discount",
+        description: "This is the discount by quantity rules.",
+        value: discountAmount,
+        value_type: 'percentage',
+        amount: subTotalPrice * discountAmount / 100
+      },
       email: contactDetail[:contactEmail],
       customer: customerData,
       shipping_address: shippingAddress,
     })
-
+    
     if draft_order.save
       sleep 1.second
       draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
@@ -297,6 +339,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       puts draft_order.errors.full_messages
       render json: {draft_order: draft_order}
     end
+    # render json: {draft_order: 'draft_order'}
   end
 
   # create draft order based on the data in cart
