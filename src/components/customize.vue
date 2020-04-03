@@ -1,10 +1,10 @@
 <template>
   <fragment>
-    <div class="product__form--instock">
+    <div class="product__form--instock" title="The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.">
       <div class="stock__shipping-delivery">
         <h3>{{stock}}</h3>
         <!-- <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p> -->
-        <p title="The delivery date range shown is based on ground shipping for the quantity selected. For additional information review the Shipping tab below.">Order today and receive it by {{computedDate}}.</p>
+        <p>Order today and receive it by {{computedDate}}.</p>
       </div>
     </div>
     <div class="product__form-container">
@@ -69,6 +69,7 @@ export default {
   mixins: [ priceMixin ],
   computed: {
     ...mapGetters({
+      product: 'product/get',
       variant: 'product/variant',
       quantity: 'order/quantity'
     }),
@@ -89,8 +90,33 @@ export default {
         'May', 'June', 'July', 'August',
         'September', 'October', 'November', 'December'
       ]
+
+      const discountRuleLines = this.product.metafield.value.split('\n')
+      let discountRuleList = []
+      discountRuleLines.forEach(ruleLine => {
+        let shippingLineItems = ruleLine.split(',')
+        const shippingQtyItems = shippingLineItems[0].split(' ')
+        const shippingQty = shippingQtyItems[1].split('-')
+        const qtyFrom = parseInt(shippingQty[0])
+        const qtyTo = parseInt(shippingQty[1])
+        let shipPeriod = parseInt(shippingLineItems[2].replace(" Usually Ships in ", "").split('-'))
+        const shipDays = shippingLineItems[2].includes('Weeks') ? shipPeriod * 7 : shipPeriod
+        
+        discountRuleList.push({
+          qtyFrom: qtyFrom,
+          qtyTo: qtyTo,
+          shipPeriod: shipDays
+        })
+      });
+      console.log('ship rule list: ', discountRuleList)
+      let shipPeriod = 0
+      discountRuleList.forEach(dr => {
+        if (this.quantity >= dr.qtyFrom && this.quantity <= dr.qtyTo) {
+          shipPeriod = dr.shipPeriod
+        }
+      })
       const currentDate = new Date()
-      const estimateDate = new Date(currentDate.getTime() + 86400000 * 7)
+      const estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriod)
       return monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate()
     }
   },
