@@ -4,7 +4,7 @@
       <div class="stock__shipping-delivery">
         <h3>{{stock}}</h3>
         <!-- <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p> -->
-        <p @click.prevent="gotoShippingTab">Order today and receive it by {{computedDate}}.</p>
+        <p title="The delivery date range shown is based on ground shipping for the quantity selected. For additional information review the Shipping tab below.">Order today and receive it by {{computedDate}}.</p>
       </div>
     </div>
     <div class="product__form-container">
@@ -125,12 +125,6 @@ export default {
       $('#shopify-section-header .header').css('z-index', '101')
       $('.product__details').css('z-index', 'initial')
       this.isQuoteModal = false
-    },
-    gotoShippingTab () {
-      $('.shipping-tab-header').trigger('click');
-      $('html, body').animate({
-        'scrollTop': $('.product__details-wrapper').position().top
-      })
     }
   },
 }
