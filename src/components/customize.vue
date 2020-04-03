@@ -4,7 +4,7 @@
       <div class="stock__shipping-delivery">
         <h3>{{stock}}</h3>
         <!-- <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p> -->
-        <p>Order today and receive it by {{computedDate}}.</p>
+        <p @click.prevent="gotoShippingTab">Order today and receive it by {{computedDate}}.</p>
       </div>
     </div>
     <div class="product__form-container">
@@ -111,7 +111,7 @@ export default {
         $('.product__details').css('z-index', -1)
         this.isQuoteModal = true
       } else {
-        alert('please make selections firstly')
+        alert('Please make product selections before requesting a quote.')
       }
       // */
 
@@ -125,6 +125,12 @@ export default {
       $('#shopify-section-header .header').css('z-index', '101')
       $('.product__details').css('z-index', 'initial')
       this.isQuoteModal = false
+    },
+    gotoShippingTab () {
+      $('.shipping-tab-header').trigger('click');
+      $('html, body').animate({
+        'scrollTop': $('.product__details-wrapper').position().top
+      })
     }
   },
 }
