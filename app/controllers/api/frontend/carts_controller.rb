@@ -89,7 +89,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           puts co
           if co[:weight] > 0
             packages << {
-              :weight => {:units => "LB", :value => co[:weight]},
+              :weight => {:units => "LB", :value => co[:weight] * 2.2},
               :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
             }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
@@ -97,7 +97,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight2] > 0
             packages << {
-              :weight => {:units => "LB", :value => co[:weight2]},
+              :weight => {:units => "LB", :value => co[:weight2] * 2.2},
               :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
             }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
@@ -105,7 +105,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight3] > 0
             packages << {
-              :weight => {:units => "LB", :value => co[:weight3]},
+              :weight => {:units => "LB", :value => co[:weight3] * 2.2},
               :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
             }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
@@ -194,7 +194,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
         rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
-        # puts "----------------ground: #{rateGroundData}"
+        puts "----------------ground: #{rateGround}"
         # puts "next day: #{rateNextDayData}"
         # puts "two day: #{rateTwoDayData}"
         # puts "three day: #{rateThreeDayData}"

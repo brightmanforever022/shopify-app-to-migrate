@@ -36,7 +36,7 @@
               <div class="main-detail">
                 <div class="detail-qty">
                   <a :href="line_item.product_url" :target="_blank">{{line_item.product_title}}</a>
-                  <span>Item ID # SCBBR</span>
+                  <span>Item ID # {{ line_item.sku }}</span>
                   <cart-input-quantity :quantity="line_item.quantity" :line_id="line_item.lineId"></cart-input-quantity>
                 </div>
                 <div class="detail-price">
@@ -96,22 +96,22 @@
                 <span>Ground</span>
                 <span>{{fedex_shipping_list.ground | money}}</span>
                 <!-- <span>Get it by October 26</span> -->
-                <span>{{fedex_shipping_list.groundPeriod}} Business Days</span>
+                <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
                 <span>{{fedex_shipping_list.threeday | money}}</span>
-                <span>3 Business Days</span>
+                <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
                 <span>{{fedex_shipping_list.twoday | money}}</span>
-                <span>2 Business Days</span>
+                <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
                 <span>{{fedex_shipping_list.nextday | money}}</span>
-                <span>A Business Day</span>
+                <span>{{ shipPeriod.duration }}</span>
               </li>
             </ul>
           </div>
@@ -298,8 +298,47 @@ export default {
       fedex_shipping: 'cart/get_fedex_shipping_price',
       fedex_shipping_list: 'cart/get_shipping_list',
       freight_exist: 'cart/freight_exist',
-      fedex_exist: 'cart/fedex_exist',
-    })
+      fedex_exist: 'cart/fedex_exist'
+    }),
+    shipPeriod () {
+      // get total quantity
+      let totalQuantity = 0
+      let discountRuleList = []
+      this.line_items.forEach(lit => {
+        totalQuantity += lit.quantity
+        const discountRuleLines = lit.shipping_summary.split('\n')
+        console.log('discount rules: ', discountRuleLines)        
+        discountRuleLines.forEach(ruleLine => {
+          let shippingLineItems = ruleLine.split(',')
+          const shippingQtyItems = shippingLineItems[0].split(' ')
+          const shippingQty = shippingQtyItems[1].split('-')
+          const qtyFrom = parseInt(shippingQty[0])
+          const qtyTo = parseInt(shippingQty[1])
+          const shipDuration = shippingLineItems[2]
+          let shipPeriod = parseInt(shippingLineItems[2].replace(" Usually Ships in ", "").split('-'))
+          const shipDays = shippingLineItems[2].includes('Weeks') ? shipPeriod * 7 : shipPeriod
+          
+          discountRuleList.push({
+            qtyFrom: qtyFrom,
+            qtyTo: qtyTo,
+            shipDuration: shipDuration,
+            shipPeriod: shipDays
+          })
+        });
+      })
+
+      console.log('ship rule list in cart: ', discountRuleList)
+      let shipPeriod = 0
+      let shipDuration = ''
+      discountRuleList.forEach(dr => {
+        if (totalQuantity >= dr.qtyFrom && totalQuantity <= dr.qtyTo) {
+          shipPeriod = dr.shipPeriod
+          shipDuration = dr.shipDuration
+        }
+      })
+
+      return { period: shipPeriod, duration: shipDuration }
+    }
   },
   created () {
     this.$store.dispatch('cart/get')

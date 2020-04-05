@@ -81,6 +81,7 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
             }
           }
           metafield(#{metaQuery}) {
+            key
             value
           }
         }

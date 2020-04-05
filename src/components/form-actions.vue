@@ -367,6 +367,8 @@ export default {
         selected_options: this.variant.selectedOptions,
         custom_options: this.custom_options,
         quantity: this.quantity,
+        sku: this.variant.sku,
+        shipping_summary: this.productData.metafield.value,
         original_price: this.original_price,
         calculated_item_price: this.calculated_item_price,
         calculated_price: this.calculated_price,
@@ -398,6 +400,7 @@ export default {
         variant_id: this.variant_id,
         selected_options: this.variant.selectedOptions,
         custom_options: this.custom_options,
+        sku: this.variant.sku,
         calculated_item_price: this.calculated_item_price,
         free_ground: this.productData.tags.includes('free-ground') ? true : false,
       }
