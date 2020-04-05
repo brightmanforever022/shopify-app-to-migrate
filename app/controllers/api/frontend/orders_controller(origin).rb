@@ -33,8 +33,6 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       subTotal += item[:calculated_price]
       # Initialize line item
       line_item = {}
-      customDescription = []
-      customPrice = 0.0
       if discountValid && !discountTarget
         if discountRule[:itemEntitlements][:collections][:edges].length() > 0
           discountRule[:itemEntitlements][:collections][:edges].each do |collectionDiscount|
@@ -98,35 +96,61 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
       # Push customized line item
       item[:custom_options].each do |option|
-        # customItem = {}
-        # if option[:price_type]
-        #   customItem = {
-        #     title: option[:label],
-        #     quantity: item[:quantity],
-        #     price: item[:original_price].to_f * option[:price].to_f / 100,
-        #     requires_shipping: false
-        #   }
-        #   customPrice += 
-        # else
-        #   customItem = {
-        #     title: option[:label],
-        #     quantity: item[:quantity],
-        #     price: option[:price],
-        #     requires_shipping: true
-        #   }
-        # end
-        customPrice += option[:price_type] ? item[:original_price].to_f * option[:price].to_f / 100 : option[:price]
-        customDescription.push({
-          name: ' - ' + option[:group],
-          value: option[:label] + '<br/>'
-        })        
+        customItem = {}
+        if option[:shopify_variant_id].present?
+          if discountValid && !discountTarget
+            customItem = {
+              variant_id: option[:shopify_variant_id],
+              quantity: item[:quantity],
+              applied_discount: {
+                description: 'custom item',
+                title: 'custom item',
+                value_type: discountType,
+                value: discountValue,
+                amount: discountType=='percentage' ? option[:price] * item[:quantity].to_i * discountValue / 100 : 0
+              }
+            }
+          else
+            customItem = {
+              variant_id: option[:shopify_variant_id],
+              quantity: item[:quantity]
+            }
+          end
+        else
+          if discountValid && !discountTarget
+            customItem = {
+              title: option[:label],
+              quantity: item[:quantity],
+              price: option[:price],
+              requires_shipping: true,
+              applied_discount: {
+                description: 'custom item',
+                title: 'custom item',
+                value_type: discountType,
+                value: discountValue,
+                amount: discountType=='percentage' ? option[:price] * item[:quantity] * discountValue / 100 : 0
+              }
+            }
+          else
+            if option[:price_type]
+              customItem = {
+                title: option[:label],
+                quantity: item[:quantity],
+                price: item[:original_price].to_f * option[:price].to_f / 100,
+                requires_shipping: false
+              }
+            else
+              customItem = {
+                title: option[:label],
+                quantity: item[:quantity],
+                price: option[:price],
+                requires_shipping: true
+              }
+            end
+          end
+        end
+        line_items << customItem
       end
-      line_items.push({
-        title: 'You selected following options in above product',
-        quantity: item[:quantity].to_i,
-        price: customPrice,
-        properties: customDescription
-      })
     end
     # Add freight shipping into line item list
     totalShippingPrice = freightShipping + fedexShipping
