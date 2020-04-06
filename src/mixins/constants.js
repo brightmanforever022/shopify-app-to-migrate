@@ -115,7 +115,7 @@ export default {
           stateCode: 'NE'
         },
         {
-          state: 'Nvada',
+          state: 'Nevada',
           stateCode: 'NV'
         },
         {
