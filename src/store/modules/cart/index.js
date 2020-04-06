@@ -127,8 +127,7 @@ const cart = {
         const orderDiscount = getters.get_discount.toFixed(2)
         const orderFreightShipping = getFreightShippingPrice(state.freight_shipping).toFixed(2)
         const orderFedexShipping = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping).toFixed(2)
-        const orderTax = (getters.get_sub_total * 0.08625).toFixed(2)
-        const draftOrder = await createOrder({lineItems: state.line_items, discountRule: state.discount_data, orderFreightShipping: orderFreightShipping, orderFedexShipping: orderFedexShipping, orderTax: orderTax})
+        const draftOrder = await createOrder({lineItems: state.line_items, discountRule: state.discount_data, orderFreightShipping: orderFreightShipping, orderFedexShipping: orderFedexShipping})
         // Make cart empty
         commit('SET_CART', [])
         return draftOrder.data.draft_order.invoice_url
@@ -344,7 +343,7 @@ const cart = {
           })
         }
       }
-      return totalPrice * 1.08625 + discountAmount + freight_shipping_price + fedex_shipping_price
+      return totalPrice + discountAmount + freight_shipping_price + fedex_shipping_price
     },
 
   }

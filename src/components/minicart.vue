@@ -94,7 +94,7 @@
             <ul>
               <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-ground" class="active">
                 <span>Ground</span>
-                <span>{{fedex_shipping_list.ground | money}}</span>
+                <span>{{ groundMoney }}</span>
                 <!-- <span>Get it by October 26</span> -->
                 <span>{{ shipPeriod.duration }}</span>
               </li>
@@ -116,8 +116,8 @@
             </ul>
           </div>
           <div class="fedex-shipping-date">
-            <span>Lead time to ship</span>: September 26, 2018<br /><br />
-            <span>Delivery estimate</span>: September 27, 2018 - October 02, 2018
+            <span>Lead time to ship</span>: {{ shipPeriod.leadFrom }} - {{ shipPeriod.leadTo }}<br /><br />
+            <span>Delivery estimate</span>: {{ shipPeriod.deliveryFrom }} - {{ shipPeriod.deliveryTo }}
           </div>
           <div class="need-quote">
             <h4>Need a Quote?</h4>
@@ -195,7 +195,7 @@
                   <span class="summary-title">Product Subtotal:</span>
                   <span class="summary-price">{{sub_total | money}}</span>
                 </li>
-                <li>
+                <li v-if="isPromoCode">
                   <span class="summary-title">Discount:</span>
                   <span class="summary-price">{{discount_total | money}}</span>
                 </li>
@@ -207,7 +207,7 @@
                   <span class="summary-title">{{freightShippingList[freight_shipping.id - 1]}}:</span>
                   <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
                 </li>
-                <li>
+                <!-- <li>
                   <span class="summary-title">
                     Sales Tax (8.625%): <a @click.prevent="showExplain">?</a>
                     <div class="explain-block" v-show="explainFlag">
@@ -218,7 +218,7 @@
                     </div>
                   </span>
                   <span class="summary-price">{{sub_total*0.08625 | money}}</span>
-                </li>
+                </li> -->
               </ul>
             </div>
             <div class="order-total">
@@ -301,6 +301,11 @@ export default {
       fedex_exist: 'cart/fedex_exist'
     }),
     shipPeriod () {
+      const monthList = [
+        'January', 'February', 'March', 'April',
+        'May', 'June', 'July', 'August',
+        'September', 'October', 'November', 'December'
+      ]
       // get total quantity
       let totalQuantity = 0
       let discountRuleList = []
@@ -315,29 +320,47 @@ export default {
           const qtyFrom = parseInt(shippingQty[0])
           const qtyTo = parseInt(shippingQty[1])
           const shipDuration = shippingLineItems[2]
-          let shipPeriod = parseInt(shippingLineItems[2].replace(" Usually Ships in ", "").split('-'))
-          const shipDays = shippingLineItems[2].includes('Weeks') ? shipPeriod * 7 : shipPeriod
+          let shipPeriod = shippingLineItems[2].split('-')
+          const shipPeriodFrom = parseInt(shipPeriod[0].replace('Usually Ships in ', ''))
+          const shipPeriodTo = parseInt(shipPeriod[1])
           
           discountRuleList.push({
             qtyFrom: qtyFrom,
             qtyTo: qtyTo,
             shipDuration: shipDuration,
-            shipPeriod: shipDays
+            shipPeriodFrom: shippingLineItems[2].includes('Weeks') ? shipPeriodFrom * 7 : shipPeriodFrom,
+            shipPeriodTo: shippingLineItems[2].includes('Weeks') ? shipPeriodTo * 7 : shipPeriodTo,
           })
         });
       })
 
-      console.log('ship rule list in cart: ', discountRuleList)
-      let shipPeriod = 0
+      console.log('ship rule list in cart1: ', discountRuleList)
+      let shipPeriodFrom = 0
+      let shipPeriodTo = 0
       let shipDuration = ''
       discountRuleList.forEach(dr => {
         if (totalQuantity >= dr.qtyFrom && totalQuantity <= dr.qtyTo) {
-          shipPeriod = dr.shipPeriod
+          shipPeriodFrom = dr.shipPeriodFrom
+          shipPeriodTo = dr.shipPeriodTo
           shipDuration = dr.shipDuration
         }
       })
 
-      return { period: shipPeriod, duration: shipDuration }
+      const currentDate = new Date()
+      let estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriodFrom)
+      const leadTimeFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
+      estimateDate = new Date(currentDate.getTime() + 86400000 * (shipPeriodFrom + 7))
+      const estimateFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
+      estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriodTo)
+      const leadTimeTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
+      estimateDate = new Date(currentDate.getTime() + 86400000 * (shipPeriodTo + 7))
+      const estimateTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
+
+      return { leadFrom: leadTimeFrom, leadTo: leadTimeTo, deliveryFrom: estimateFrom, deliveryTo: estimateTo, duration: shipDuration }
+    },
+
+    groundMoney () {
+      return (this.fedex_shipping_list.ground > 0 ? this.fedex_shipping_list.ground : 'Free Ground')
     }
   },
   created () {

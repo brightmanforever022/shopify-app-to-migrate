@@ -8,8 +8,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     discountRule = params[:discountRule]
     freightShipping = params[:orderFreightShipping].to_f
     fedexShipping = params[:orderFedexShipping].to_f
-    tax = params[:orderTax]
-
+    
     # Initialize line item list
     line_items = []
     # Check the discount is valid
