@@ -120,10 +120,11 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
           value: option[:label] + '<br/>'
         })        
       end
+      discountedCustomPrice = customPrice * (100 - getDiscountByQuantity(item[:shipping_summary], item[:quantity])) / 100
       line_items.push({
         title: 'You selected following options in above product',
         quantity: item[:quantity].to_i,
-        price: customPrice,
+        price: discountedCustomPrice,
         properties: customDescription
       })
     end
@@ -334,5 +335,33 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       return false
     end
   end
+
+  private
+    def getDiscountByQuantity(summary, quantity)
+      discountPercent = 0
+      shipDuration = ''
+      shipPeriodFrom = 0
+      shipPeriodTo = 0
+    
+      summaryLines = summary.split("\n")
+      summaryLines.each do |summaryLine|
+        shippingLineItems = summaryLine.split(',')
+        shippingQtyItems = shippingLineItems[0].split(' ')
+        shippingQty = shippingQtyItems[1].split('-')
+        qtyFrom = shippingQty[0].to_i
+        qtyTo = shippingQty[1].to_i
+        if quantity >= qtyFrom and quantity <= qtyTo
+          shippingLineItems[1]["%"] = ""
+          discountPercent = shippingLineItems[1].to_i
+          shipDuration = shippingLineItems[2]
+          shipPeriod = shippingLineItems[2].split('-')
+          shipPeriod[0]["Usually Ships in "] = ""
+          shipPeriodFrom = shipPeriod[0].to_i
+          shipPeriodTo = shipPeriod[1].to_i
+        end
+      end
+
+      return discountPercent
+    end
 
 end

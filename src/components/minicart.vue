@@ -298,69 +298,43 @@ export default {
       fedex_shipping: 'cart/get_fedex_shipping_price',
       fedex_shipping_list: 'cart/get_shipping_list',
       freight_exist: 'cart/freight_exist',
-      fedex_exist: 'cart/fedex_exist'
+      fedex_exist: 'cart/fedex_exist',
+      ship_period: 'cart/get_ship_period',
     }),
     shipPeriod () {
-      const monthList = [
-        'January', 'February', 'March', 'April',
-        'May', 'June', 'July', 'August',
-        'September', 'October', 'November', 'December'
-      ]
-      // get total quantity
-      let totalQuantity = 0
-      let discountRuleList = []
-      this.line_items.forEach(lit => {
-        totalQuantity += lit.quantity
-        const discountRuleLines = lit.shipping_summary.split('\n')
-        console.log('discount rules: ', discountRuleLines)        
-        discountRuleLines.forEach(ruleLine => {
-          let shippingLineItems = ruleLine.split(',')
-          const shippingQtyItems = shippingLineItems[0].split(' ')
-          const shippingQty = shippingQtyItems[1].split('-')
-          const qtyFrom = parseInt(shippingQty[0])
-          const qtyTo = parseInt(shippingQty[1])
-          const shipDuration = shippingLineItems[2]
-          let shipPeriod = shippingLineItems[2].split('-')
-          const shipPeriodFrom = parseInt(shipPeriod[0].replace('Usually Ships in ', ''))
-          const shipPeriodTo = parseInt(shipPeriod[1])
-          
-          discountRuleList.push({
-            qtyFrom: qtyFrom,
-            qtyTo: qtyTo,
-            shipDuration: shipDuration,
-            shipPeriodFrom: shippingLineItems[2].includes('Weeks') ? shipPeriodFrom * 7 : shipPeriodFrom,
-            shipPeriodTo: shippingLineItems[2].includes('Weeks') ? shipPeriodTo * 7 : shipPeriodTo,
-          })
-        });
-      })
-
-      console.log('ship rule list in cart1: ', discountRuleList)
       let shipPeriodFrom = 0
       let shipPeriodTo = 0
       let shipDuration = ''
-      discountRuleList.forEach(dr => {
-        if (totalQuantity >= dr.qtyFrom && totalQuantity <= dr.qtyTo) {
-          shipPeriodFrom = dr.shipPeriodFrom
-          shipPeriodTo = dr.shipPeriodTo
-          shipDuration = dr.shipDuration
+      let leadTimeFrom = ''
+      let leadTimeTo = ''
+      let estimateFrom = ''
+      let estimateTo = ''
+
+
+      this.line_items.map(lit => {
+        const shipPeriod = this.ship_period(lit)
+        console.log('ship period: ', shipPeriod)
+        if (shipPeriod.shipPeriodFrom > shipPeriodFrom) {
+          shipPeriodFrom = shipPeriod.shipPeriodFrom
+          shipPeriodTo = shipPeriod.shipPeriodTo
+          shipDuration = shipPeriod.shipDuration
+          leadTimeFrom = shipPeriod.leadTimeFrom
+          leadTimeTo = shipPeriod.leadTimeTo
+          estimateFrom = shipPeriod.estimateFrom
+          estimateTo = shipPeriod.estimateTo
         }
       })
 
-      const currentDate = new Date()
-      let estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriodFrom)
-      const leadTimeFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
-      estimateDate = new Date(currentDate.getTime() + 86400000 * (shipPeriodFrom + 7))
-      const estimateFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
-      estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriodTo)
-      const leadTimeTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
-      estimateDate = new Date(currentDate.getTime() + 86400000 * (shipPeriodTo + 7))
-      const estimateTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
-
-      return { leadFrom: leadTimeFrom, leadTo: leadTimeTo, deliveryFrom: estimateFrom, deliveryTo: estimateTo, duration: shipDuration }
+      return {
+        duration: shipDuration,
+        leadFrom: leadTimeFrom,
+        leadTo: leadTimeTo,
+        deliveryFrom: estimateFrom,
+        deliveryTo: estimateTo,
+      }
     },
-
     groundMoney () {
-      return (this.fedex_shipping_list.ground > 0 ? this.fedex_shipping_list.ground : 'Free Ground')
+      return (this.fedex_shipping_list.ground > 0 ? '$' + this.fedex_shipping_list.ground : 'Free Ground')
     }
   },
   created () {

@@ -17,16 +17,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
   def fedex_options_list
     zipCode = cart_params[:cart][:zipCode]
     lineItemList = cart_params[:cart][:lineItems] ? cart_params[:cart][:lineItems] : []
-    periodList = [
-      'ONE_DAY',
-      'TWO_DAYS',
-      'THREE_DAYS',
-      'FOUR_DAYS',
-      'FIVE_DAYS',
-      'SIX_DAYS',
-      'SEVEN_DAYS'
-    ]
-
+    
     shipping_options = {
       :packaging_type => "YOUR_PACKAGING",
       :drop_off_type => "REGULAR_PICKUP"
@@ -67,7 +58,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     shippingMarkup = 0.0
     lineRateList = {
       ground: 0.0,
-      groundPeriod: 1,
       nextday: 0.0,
       twoday: 0.0,
       threeday: 0.0,
@@ -81,6 +71,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           isFreight = true
         end
       end
+      puts "quantity: #{lineItem[:quantity]}"
 
       if !isFreight
         shippingMarkup = 0
@@ -132,20 +123,16 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :residential => "true"
         }
         lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
-        lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f
-        groundPeriod = periodList.index(lineRate[:groundPeriod])
-        lineRateList[:groundPeriod] = lineRateList[:groundPeriod] > groundPeriod ? lineRateList[:groundPeriod] : groundPeriod
-        # puts "----period: #{lineRateList[:groundPeriod] + 1} days"
-        lineRateList[:nextday] += lineRate[:rateNextDay].to_f
-        lineRateList[:twoday] += lineRate[:rateTwoDay].to_f
-        lineRateList[:threeday] += lineRate[:rateThreeDay].to_f
+        lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+        lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+        lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+        lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
         lineRateList[:shippingMarkup] += shippingMarkup
 
       end
     end
     http_success_response({
       ground: lineRateList[:ground],
-      groundPeriod: lineRateList[:groundPeriod] + 1,
       nextday: lineRateList[:nextday],
       twoday: lineRateList[:twoday],
       threeday: lineRateList[:threeday],
@@ -194,14 +181,9 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
         rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
-        puts "----------------ground: #{rateGround}"
-        # puts "next day: #{rateNextDayData}"
-        # puts "two day: #{rateTwoDayData}"
-        # puts "three day: #{rateThreeDayData}"
-  
+        
         return {
           rateGround: rateGroundData['total_net_charge'],
-          groundPeriod: rateGroundData['transit_time'],
           rateNextDay: rateNextDayData['total_net_charge'],
           rateTwoDay: rateTwoDayData['total_net_charge'],
           rateThreeDay: rateThreeDayData['total_net_charge'],
@@ -209,7 +191,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       else
         return {
           rateGround: 0,
-          groundPeriod: 0,
           rateTwoDay: 0,
           rateThreeDay: 0,
           rateNextDay: 0,

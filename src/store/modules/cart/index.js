@@ -2,7 +2,7 @@ import { initializeCart, getCart, addCart, removeCart, plusCartItem, minusCartIt
 import { getWishlist } from '@/api/wishlist'
 import { getDiscount } from '@/api/discount'
 import { createOrder, createQuoteWithCart } from '@/api/order'
-import { checkDiscountPeriodValidation, getFreightShippingPrice, getFedexShippingPrice } from '@/helpers'
+import { checkDiscountPeriodValidation, getFreightShippingPrice, getFedexShippingPrice, getDiscountByQuantity, getShippingPeriod } from '@/helpers'
 
 const cart = {
   namespaced: true,
@@ -13,7 +13,6 @@ const cart = {
     fedex_shipping: 'ground',
     fedex_shipping_list: {
       ground: 0,
-      groundPeriod: 1,
       twoday: 0,
       threeday: 0,
       nextday: 0,
@@ -190,9 +189,12 @@ const cart = {
     get_sub_total (state) {
       var totalPrice = 0
       state.line_items.map(lineItem => {
-        totalPrice += lineItem.calculated_price
+        totalPrice += lineItem.calculated_price * (100 - getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)) / 100
       })
       return totalPrice
+    },
+    get_ship_period: (state) => (lineItem) => {
+      return getShippingPeriod(lineItem.shipping_summary, lineItem.quantity)
     },
     freight_exist (state) {
       let isFreightExist = false
@@ -296,7 +298,7 @@ const cart = {
       console.log('fedex shipping price in calculating total: ', fedex_shipping_price)
       var validPeriod = checkDiscountPeriodValidation(state.discount_data.startsAt, state.discount_data.endsAt)
       state.line_items.map(lineItem => {
-        totalPrice += lineItem.calculated_price
+        totalPrice += lineItem.calculated_price * (100 - getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)) / 100
       })
       if (state.discount_data.title != '' && state.discount_data.status == 'ACTIVE' && validPeriod) {
         if (state.discount_data.itemEntitlements.targetAllLineItems) {
