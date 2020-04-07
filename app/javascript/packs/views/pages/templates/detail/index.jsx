@@ -93,7 +93,7 @@ class NewTemplate extends Component {
               width3: att.width3,
               length3: att.length3,
               girth3: att.girth3,
-              attribute_code: att.attibute_code ? att.attribute_code : '',
+              attribute_code: att.attribute_code ? att.attribute_code : '',
               store_name: att.store_name,
               vendor_sku: att.vendor_sku,
               postal_code: att.postal_code
@@ -372,9 +372,14 @@ class NewTemplate extends Component {
       searchText: value,
       cb: data => {
         var attributeList = data.attributes.map(att => {
+          const attributeCode = att.attibute_code ? att.attribute_code : ''
+          let attributeLabel = att.label
+          attributeLabel = att.attribute_code ? attributeLabel + ' @ ' + att.attribute_code : attributeLabel
+          attributeLabel = att.vendor_sku ? attributeLabel + ' @ ' + att.vendor_sku : attributeLabel
           return {
             value: att.id,
-            label: att.label,
+            real_label: att.label,
+            label: attributeLabel,
             price: att.price,
             price_type: att.price_type,
             weight: att.weight,
@@ -387,7 +392,7 @@ class NewTemplate extends Component {
             width3: att.width3,
             length3: att.length3,
             girth3: att.girth3,
-            attribute_code: att.attibute_code ? att.attribute_code : '',
+            attribute_code: attributeCode,
             store_name: att.store_name,
             vendor_sku: att.vendor_sku,
             postal_code: att.postal_code
@@ -424,7 +429,7 @@ class NewTemplate extends Component {
     
     let newOption = {
       id: selectedValue[0].value,
-      label: selectedValue[0].label,
+      label: selectedValue[0].real_label,
       price: selectedValue[0].price,
       price_type: selectedValue[0].price_type,
       weight: selectedValue[0].weight,
