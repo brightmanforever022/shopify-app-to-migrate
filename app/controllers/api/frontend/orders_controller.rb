@@ -290,6 +290,14 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       email: contactDetail[:contactEmail],
       customer: customerData,
       shipping_address: shippingAddress,
+      metafields: [
+        {
+          namespace: 'contact',
+          key: 'outAddress',
+          value_type: 'string',
+          value: 'this is test address for meta field upload',
+        },
+      ],
     })
     
     if draft_order.save
@@ -297,18 +305,22 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
       draft_order.send_invoice(draft_order_invoice)
       # store draftorder id and file url. file url is in contactDetail[:uploadedFile].url
-      @quote = Quote.new(
-        dorder_id: draft_order.id,
-        dorder_name: draft_order.name,
-        dorder_invoice_url: draft_order.invoice_url,
-        uploaded_file_url: contactDetail[:uploadedFile][:url],
-        uploaded_file_name: contactDetail[:uploadedFile][:name],
-        shop: @shop
-      )
-      if @quote.save
-        render json: {quote: @quote}
+      if contactDetail[:uploadedFile].present?
+        @quote = Quote.new(
+          dorder_id: draft_order.id,
+          dorder_name: draft_order.name,
+          dorder_invoice_url: draft_order.invoice_url,
+          uploaded_file_url: contactDetail[:uploadedFile][:url],
+          uploaded_file_name: contactDetail[:uploadedFile][:name],
+          shop: @shop
+        )
+        if @quote.save
+          render json: {quote: @quote}
+        else
+          render json: {error: @quote.errors.full_messages}
+        end
       else
-        render json: {error: @quote.errors.full_messages}
+        render json: {quote: draft_order}
       end
     else
       puts draft_order.errors.full_messages

@@ -375,13 +375,14 @@
         window.location = 'mailto:info@displays4sale.com'
       },
       async submitQuoteRequest () {
-        console.log('submit quote request')
         this.sameWithShipping()
         const validateResult = await this.validateForm()
         if (validateResult) {
           // /*
-          const uploadedFile = await this.submitFile()
-          console.log('uploaded file: ', uploadedFile)
+          let uploadedFile = null
+          if (this.file.size) {
+            uploadedFile = await this.submitFile()
+          }
           const createdQuote = await this.$store.dispatch('order/createQuote', {
             contactName: this.contactName,
             contactCompany: this.contactCompany,
