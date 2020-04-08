@@ -249,6 +249,18 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       zip: contactDetail[:postalCode],
     }
 
+    billingAddress = {
+      address1: contactDetail[:address1],
+      address2: contactDetail[:address2],
+      city: contactDetail[:townCity],
+      country: contactDetail[:contactCountry],
+      province: contactDetail[:contactState],
+      zip: contactDetail[:postalCode],
+    }
+    if contactDetail[:isSameAddress]
+      billingAddress = shippingAddress
+    end
+
     # get discount rules from product
     metaShipping = contactDetail[:metaShipping][:value]
     mapShippingLines = metaShipping.split("\n")
@@ -290,12 +302,49 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       email: contactDetail[:contactEmail],
       customer: customerData,
       shipping_address: shippingAddress,
+      billing_address: billingAddress,
       metafields: [
+        {
+          namespace: 'contact',
+          key: 'isOutUS',
+          value_type: 'integer',
+          value: contactDetail[:isOutUS] ? 1 : 0,
+        },
         {
           namespace: 'contact',
           key: 'outAddress',
           value_type: 'string',
-          value: 'this is test address for meta field upload',
+          value: (contactDetail[:outAddress] == '') ? 'empty' : contactDetail[:outAddress],
+        },
+        {
+          namespace: 'contact',
+          key: 'isResidential',
+          value_type: 'integer',
+          value: contactDetail[:isResidential] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'shippingMethod',
+          value_type: 'string',
+          value: (contactDetail[:shippingMethod] == '') ? 'empty' : contactDetail[:shippingMethod],
+        },
+        {
+          namespace: 'contact',
+          key: 'isLiftGate',
+          value_type: 'integer',
+          value: contactDetail[:isLiftGate] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'isFreight',
+          value_type: 'integer',
+          value: contactDetail[:isFreight] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'quoteElseKnow',
+          value_type: 'string',
+          value: (contactDetail[:quoteElseKnow] == '') ? 'empty' : contactDetail[:quoteElseKnow],
         },
       ],
     })
