@@ -131,21 +131,16 @@ export default {
 
   methods: {
     openQuoteModal () {
-      // /*
-      if (this.customizable && this.fully_customized) {
+      /*if (this.customizable && this.fully_customized) {
         $('#shopify-section-header .header').css('z-index', '-1')
         $('.product__details').css('z-index', -1)
         this.isQuoteModal = true
       } else {
         alert('Please make product selections before requesting a quote.')
-      }
-      // */
-
-      /*
+      }*/
       $('#shopify-section-header .header').css('z-index', '-1')
       $('.product__details').css('z-index', -1)
       this.isQuoteModal = true
-      */
     },
     closeQuoteModal () {
       $('#shopify-section-header .header').css('z-index', '101')

@@ -12,7 +12,7 @@
         v-for="(option, index) in options"
         :key="index"
       >{{option.group}}: {{option.label}}</li>
-      <li>Shipping method: Free ground freight</li>
+      <!-- <li>Shipping method: Free ground freight</li> -->
     </ul>
   </div>
 </template>

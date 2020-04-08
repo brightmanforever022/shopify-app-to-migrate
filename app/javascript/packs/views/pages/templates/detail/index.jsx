@@ -527,7 +527,7 @@ class NewTemplate extends Component {
               onChange={(e) => this.changeTableRowVendor(index, id, e)}
             />
           </div>
-          <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }<br/>{ weight + 'kg' }</div>
+          <div className="option-item">{ length + '" x ' + width + '" x ' + girth + '"' }<br/>{ weight + 'lbs' }</div>
           <div className="option-item">{ attribute_code }<br/>{ vendor_sku }</div>
           <div className="option-item">{ postal_code }</div>
         </div>

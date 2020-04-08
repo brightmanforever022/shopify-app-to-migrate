@@ -200,8 +200,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     line_items = []
     line_items << {
       variant_id: params[:variantId],
-      quantity: productQuantity,
-      
+      quantity: productQuantity,      
     }
     subTotalPrice = 0.0
     quoteDetail.each do |option|
