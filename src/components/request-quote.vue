@@ -117,7 +117,14 @@
                 <icon-question-circle />
               </div>
               <select v-model="shippingMethod" id="shipping-method" class="flex__row__full">
-                <option value=''>Select your preferred shipping method</option>
+                <option
+                  v-for="(shipItem, key) in shippingMethodList"
+                  :key="`shipmethod-${key}`"
+                  :value="shipItem.shipId"
+                  :selected="shipItem.shipId==shippingMethod"
+                >
+                  {{shipItem.shipName}}
+                </option>
               </select>
             </div>
             <div class="form__row__full">
@@ -317,7 +324,52 @@
       }),
       productSKU() {
         return this.variant.sku
-      }
+      },
+      shippingMethodList () {
+        return this.productData.tags.includes('is-freight') ? [
+          {
+            shipId: 'basic',
+            shipName: 'Commercial Basic Free Freight Delivery (Standard Dock to Dock Service)'
+          },
+          {
+            shipId: 'lift-gate',
+            shipName: 'Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)'
+          },
+          {
+            shipId: 'special',
+            shipName: 'Commercial Special Freight Delivery (Commercial Lift-Gate & Inside Service)'
+          },
+          {
+            shipId: 'exact-location',
+            shipName: 'Commercial Freight Delivery (Inside Service to Exact Location)'
+          },
+          {
+            shipId: 'residential-freight',
+            shipName: 'RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)'
+          },
+          {
+            shipId: 'residential-special',
+            shipName: 'RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)'
+          }
+        ] : [
+          {
+            shipId: 'ground',
+            shipName: 'Ground'
+          },
+          {
+            shipId: 'three_day',
+            shipName: '3 Day'
+          },
+          {
+            shipId: 'two_day',
+            shipName: '2 Day'
+          },
+          {
+            shipId: 'next_day',
+            shipName: 'Next Day'
+          }
+        ]
+      },
     },
 
     data () {
@@ -335,7 +387,7 @@
         isOutUS: false,
         outAddress: '',
         isResidential: false,
-        shippingMethod: '',
+        shippingMethod: 'ground',
         isLiftGate: false,
         isFreight: false,
         isSameAddress: false,
