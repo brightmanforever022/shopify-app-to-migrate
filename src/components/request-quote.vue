@@ -53,7 +53,15 @@
               <label for="country">Country *</label>
               <select v-model="contactCountry" id="country">
                 <option value='US' :selected="contactCountry=='US'">United States</option>
-                <option value='CA' :selected="contactCountry=='CA'">Canada</option>                
+                <option value='CA' :selected="contactCountry=='CA'">Canada</option>
+                <option
+                    v-for="(country, key) in this.countryList"
+                    :key="`country-${key}`"
+                    :value="country.countryId"
+                    :selected="country.countryId==contactCountry"
+                  >
+                    {{ country.countryName }}
+                  </option>
               </select>
             </div>
             <div class="form__row">
@@ -162,6 +170,14 @@
                 <select v-model="billingCountry" id="billing-country">
                   <option value='US' :selected="billingCountry=='US'">United States</option>
                   <option value='CA' :selected="billingCountry=='CA'">Canada</option>
+                  <option
+                    v-for="(country, key) in this.countryList"
+                    :key="`country-${key}`"
+                    :value="country.countryId"
+                    :selected="country.countryId==billingCountry"
+                  >
+                    {{ country.countryName }}
+                  </option>
                 </select>
               </div>
               <div class="form__row">

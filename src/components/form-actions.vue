@@ -108,7 +108,7 @@
 
     <div
       class="overlay__bg"
-      :class="{'visibled': addtocart_confirm_opened}"
+      v-if="addtocart_confirm_opened"
       :key="addtocart-confirm"
       @click.prevent="closeConfirm"
     ></div>
@@ -233,11 +233,12 @@ export default {
       noselected: 'noselected',
       loading: false,
       is_opened: false,
-      addtocart_confirm_opened: false
+      addtocart_confirm_opened: false,
+      selectedOptions: [],
     }
   },
   created () {
-    this.checkGroupAttributes()
+    this.checkGroupOneAttribute()
   },
   methods: {
     openSelection () {
@@ -276,7 +277,7 @@ export default {
     activeOptions (options) {
       return options.filter(op => !this.except_list.includes(op.id))
     },
-    checkGroupAttributes () {
+    checkGroupOneAttribute () {
       this.template.groups.map(gr => {
         const activeAttributes = this.activeOptions(gr.dattributes)
         if (activeAttributes.length == 1) {
@@ -300,7 +301,7 @@ export default {
         try {
           await this.$store.dispatch('order/upsert_customization', item)
           await this.$store.dispatch('order/setExcepts',
-           {
+            {
               groupId: drellation.group_id,
               groupLabelList: this.exceptGroupList(drellation.excepts),
               exceptData: newExcepts
@@ -337,7 +338,7 @@ export default {
               exceptData: newExcepts
             }
           )
-          this.checkGroupAttributes()
+          this.checkGroupOneAttribute()
         } catch (error) {
           console.log('Error in upsert customization: ', error)
         }

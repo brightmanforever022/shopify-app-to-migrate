@@ -2,12 +2,6 @@
   <div class="form__selections-view">
     <h4>Your selections</h4>
     <ul>
-      <!-- <li>Number of doors: {{quantity}}</li>
-      <li v-for="(opt, index) in variant.selectedOptions"
-        :key="index"
-      >
-        {{opt.name}}: {{opt.value}}
-      </li> -->
       <li
         v-for="(option, index) in options"
         :key="index"
@@ -24,7 +18,6 @@ export default {
     ...mapGetters({
       quantity: 'order/quantity',
       options: 'order/custom_options',
-      variant: 'product/variant'
     })
   }
 }

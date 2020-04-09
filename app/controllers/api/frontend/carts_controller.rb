@@ -71,16 +71,16 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           isFreight = true
         end
       end
-      puts "quantity: #{lineItem[:quantity]}"
-
+      
       if !isFreight
         shippingMarkup = 0
         packages = []
         lineItem[:custom_options].each do |co|
           puts co
           if co[:weight] > 0
+            realWeight = co[:weight] * 2.2
             packages << {
-              :weight => {:units => "LB", :value => co[:weight] * 2.2},
+              :weight => {:units => "LB", :value => co[:weight]},
               :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
             }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
@@ -122,6 +122,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :country_code => "US",
           :residential => "true"
         }
+        puts "-----------------packages: #{packages}"
         lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
         lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
         lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i

@@ -28,7 +28,6 @@ class Api::Frontend::ProductsController < Api::Frontend::BaseController
 
     def get_product id
       ShopifyGraphQLClient.client.allow_dynamic_queries = true
-      puts product_query(id)
       result = ShopifyGraphQLClient.query(ShopifyGraphQLClient.parse(product_query(id)))
       result.data.product
     end
