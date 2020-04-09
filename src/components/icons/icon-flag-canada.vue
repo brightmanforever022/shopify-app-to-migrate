@@ -11,6 +11,6 @@
 </template>
 <script>
 	export default {
-		name: 'IconFlag'
+		name: 'IconFlagCanada'
 	}
 </script>

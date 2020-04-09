@@ -61,7 +61,7 @@
       <div class="show-shipping-options">
         <h2>Shipping Options</h2>
         <p>
-          <IconFlag />
+          <IconFlagFlag />
           <span>
             Shipping to Canada? <a @click.prevent="showQuoteExplain">?</a>
             <div class="explain-quote-block" v-show="explainQuoteFlag">
@@ -260,7 +260,7 @@ import IconAmerica from '@/components/icons/icon-america'
 import IconDiscover from '@/components/icons/icon-discover'
 import IconPaypal from '@/components/icons/icon-paypal'
 import IconLock from '@/components/icons/icon-lock'
-import IconFlag from '@/components/icons/icon-flag'
+import IconFlagCanada from '@/components/icons/icon-flag-canada'
 import IconClose from '@/components/icons/icon-close'
 
 export default {
@@ -277,7 +277,7 @@ export default {
     IconDiscover,
     IconPaypal,
     IconLock,
-    IconFlag,
+    IconFlagCanada,
     IconClose,
     Loading,
   },

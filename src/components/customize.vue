@@ -2,9 +2,11 @@
   <fragment>
     <div class="product__form--instock" title="The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.">
       <div class="stock__shipping-delivery">
-        <h3>{{stock}}</h3>
-        <!-- <p>Order in the next <span>{{computedTime}}</span> and receive it by {{computedDate}}.</p> -->
-        <p>Order today and receive it by {{computedDate}}.</p>
+        <div>
+          <h3>{{stock}}</h3>
+          <p>Order today and receive it by {{computedDate}}.</p>
+        </div>
+        <icon-flag-usa v-if="!madeInUsa" />
       </div>
     </div>
     <div class="product__form-container">
@@ -48,9 +50,11 @@ import FormDescription from '@/components/form-description'
 import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
 import RequestQuote from '@/components/request-quote'
+import IconFlagUsa from '@/components/icons/icon-flag-usa'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
 import priceMixin from '@/mixins/price'
+import { getShippingPeriod } from '@/helpers'
 
 export default {
   name: 'Customize',
@@ -59,7 +63,8 @@ export default {
     FormDescription,
     FormSelection,
     FormActions,
-    RequestQuote
+    RequestQuote,
+    IconFlagUsa,
   },
   props: {
     openDisplayCart: {
@@ -74,7 +79,11 @@ export default {
       quantity: 'order/quantity'
     }),
     stock () {
-      return this.variant.inventoryQuantity > 0 ? 'In stock' : 'Out of stock'
+      const shipDays = getShippingPeriod(this.product.metafield.value, this.quantity)
+      return shipDays.shipPeriodFrom <= 3 ? 'In stock' : 'Built to Order'
+    },
+    madeInUsa () {
+      return this.product.tags.includes('made-in-usa')
     },
     computedTime () {
       const currentDate = new Date()
