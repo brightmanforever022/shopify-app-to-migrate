@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   get 'attributes' => 'home#index'
   get 'attributes/new' => 'home#index'
   get 'attributes/:id/edit' => 'home#index'
+  get 'freightoptions' => 'home#index'
+  get 'freightoptions/new' => 'home#index'
+  get 'freightoptions/:id/edit' => 'home#index'
 
   namespace :api do
     namespace :v1 do
@@ -21,6 +24,7 @@ Rails.application.routes.draw do
       resources :attributes
       get 'attributes/list/options' => 'attributes#search_options'
       get 'attributes/list/stores' => 'attributes#list_stores'
+      resources :freightoptions
     end
 
     namespace :frontend do

@@ -8,6 +8,10 @@ import Attribute from './views/pages/attributes'
 import NewAttribute from './views/pages/attributes/detail'
 import EditAttribute from './views/pages/attributes/detail'
 
+import Freightoption from './views/pages/freightoptions'
+import NewFreightoption from './views/pages/freightoptions/detail'
+import EditFreightoption from './views/pages/freightoptions/detail'
+
 const routes = [
   {
     path: '/',
@@ -43,6 +47,21 @@ const routes = [
     path: '/attributes/:id/edit',
     exact: true,
     component: EditAttribute
+  },
+  {
+    path: '/freightoptions',
+    exact: true,
+    component: Freightoption
+  },
+  {
+    path: '/freightoptions/new',
+    exact: true,
+    component: NewFreightoption
+  },
+  {
+    path: '/freightoptions/:id/edit',
+    exact: true,
+    component: EditFreightoption
   }
 ]
 

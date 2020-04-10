@@ -380,7 +380,7 @@ class NewAttribute extends Component {
                 confirming={confirming}
                 title="Are you sure?"
                 description="Do you really want to remove this record permanently?"
-                onConfirm={this.deleteTemplate}
+                onConfirm={this.deleteAttribute}
                 toggleConfirm={this.toggleConfirm}
               />
             </Layout>

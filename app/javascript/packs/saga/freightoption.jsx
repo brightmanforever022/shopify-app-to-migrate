@@ -4,15 +4,13 @@ import getErrorText from '../helper/serverErrors'
 import getMsgText from '../helper/toastMessage'
 
 import {
-  LOAD_ATTRIBUTES,
-  SEARCH_ATTRIBUTES,
-  LOAD_ATTRIBUTE,
-  CREATE_ATTRIBUTE,
-  ATTRIBUTES_TOGGLE,
-  ATTRIBUTE_TOGGLE,
-  LIST_STORE,
-  UPDATE_ATTRIBUTE,
-  DELETE_ATTRIBUTE,
+  LOAD_FREIGHTOPTIONS,
+  LOAD_FREIGHTOPTION,
+  CREATE_FREIGHTOPTION,
+  FREIGHTOPTIONS_TOGGLE,
+  FREIGHTOPTION_TOGGLE,
+  UPDATE_FREIGHTOPTION,
+  DELETE_FREIGHTOPTION,
   TOAST_TOGGLE,
 } from '../helper/types'
 
@@ -27,12 +25,12 @@ function errorHandler(error) {
   }
 }
 
-function* loadAttributes({data}) {
+function* loadFreightoptions({data}) {
   let res
   try {
     res = yield call(
       request.get,
-      `/attributes`,
+      `/freightoptions`,
       {params: data}
     )
   } catch (error) {
@@ -40,7 +38,7 @@ function* loadAttributes({data}) {
   } finally {
     if (res) {
       yield put({
-        type: ATTRIBUTES_TOGGLE,
+        type: FREIGHTOPTIONS_TOGGLE,
         payload: {
           ...res.data
         }
@@ -50,35 +48,12 @@ function* loadAttributes({data}) {
   }
 }
 
-function* searchAttributes({data}) {
-  let res
-  try {
-    res = yield call(
-      request.get,
-      `/attributes/list/options`,
-      {params: data}
-    )
-  } catch (error) {
-    yield put(errorHandler(error))
-  } finally {
-    if (res) {
-      yield put({
-        type: ATTRIBUTES_TOGGLE,
-        payload: {
-          ...res.data
-        }
-      })
-      data.cb && data.cb(res.data)
-    }
-  }
-}
-
-function* createAttribute({data}) {
+function* createFreightoption({data}) {
   let res
   try {
     res = yield call(
       request.post,
-      `/attributes`,
+      `/freightoptions`,
       data
     )
   } catch (error) {
@@ -98,12 +73,12 @@ function* createAttribute({data}) {
   }
 }
 
-function* loadAttribute({data}) {
+function* loadFreightoption({data}) {
   let res
   try {
     res = yield call(
       request.get,
-      `/attributes/${data.id}`
+      `/freightoptions/${data.id}`
     )
   } catch (error) {
     yield put(errorHandler(error))
@@ -114,28 +89,12 @@ function* loadAttribute({data}) {
   }
 }
 
-function* listStores({data}) {
-  let res
-  try {
-    res = yield call(
-      request.get,
-      `/attributes/list/stores`
-    )
-  } catch (error) {
-    yield put(errorHandler(error))
-  } finally {
-    if (res) {
-      data.cb && data.cb(res.data)
-    }
-  }
-}
-
-function* updateAttribute({data}) {
+function* updateFreightoption({data}) {
   let res
   try {
     res = yield call(
       request.patch,
-      `/attributes/${data.id}`,
+      `/freightoptions/${data.id}`,
       data
     )
   } catch (error) {
@@ -143,7 +102,7 @@ function* updateAttribute({data}) {
   } finally {
     if (res) {
       yield put({
-        type: ATTRIBUTE_TOGGLE,
+        type: FREIGHTOPTION_TOGGLE,
         payload: {
           ...res.data
         }
@@ -161,12 +120,12 @@ function* updateAttribute({data}) {
   }
 }
 
-function* deleteAttribute({data}) {
+function* deleteFreightoption({data}) {
   let res
   try {
     res = yield call(
       request.delete,
-      `/attributes/${data.id}`
+      `/freightoptions/${data.id}`
     )
   } catch (error) {
     yield put(errorHandler(error))
@@ -185,13 +144,11 @@ function* deleteAttribute({data}) {
   }
 }
 
-export function* attribute() {
-  yield takeLatest(LOAD_ATTRIBUTES, loadAttributes)
-  yield takeLatest(SEARCH_ATTRIBUTES, searchAttributes)
-  yield takeLatest(LOAD_ATTRIBUTE, loadAttribute)
-  yield takeLatest(LIST_STORE, listStores)
-  yield takeLatest(CREATE_ATTRIBUTE, createAttribute)
-  yield takeLatest(UPDATE_ATTRIBUTE, updateAttribute)
-  yield takeLatest(DELETE_ATTRIBUTE, deleteAttribute)
+export function* freightoption() {
+  yield takeLatest(LOAD_FREIGHTOPTIONS, loadFreightoptions)
+  yield takeLatest(LOAD_FREIGHTOPTION, loadFreightoption)
+  yield takeLatest(CREATE_FREIGHTOPTION, createFreightoption)
+  yield takeLatest(UPDATE_FREIGHTOPTION, updateFreightoption)
+  yield takeLatest(DELETE_FREIGHTOPTION, deleteFreightoption)
 }
 

@@ -4,6 +4,7 @@ import preloader from './preloader'
 import product from './product'
 import template from './template'
 import attribute from './attribute'
+import freightoption from './freightoption'
 import toast from './toast'
 
 const rootReducer = log => combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = log => combineReducers({
   toast,
   template,
   attribute,
+  freightoption,
   router: connectRouter(log)
 })
 

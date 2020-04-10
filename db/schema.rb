@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_090159) do
+ActiveRecord::Schema.define(version: 2020_04_10_172551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -50,6 +50,15 @@ ActiveRecord::Schema.define(version: 2020_04_10_090159) do
     t.string "table_row_vendor", default: "0"
     t.index ["dattribute_id"], name: "index_drellations_on_dattribute_id"
     t.index ["group_id"], name: "index_drellations_on_group_id"
+  end
+
+  create_table "freightoptions", force: :cascade do |t|
+    t.string "label"
+    t.float "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "shop_id"
+    t.index ["shop_id"], name: "index_freightoptions_on_shop_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -121,6 +130,7 @@ ActiveRecord::Schema.define(version: 2020_04_10_090159) do
     t.index ["template_id"], name: "index_variants_on_template_id"
   end
 
+  add_foreign_key "freightoptions", "shops"
   add_foreign_key "groups", "templates"
   add_foreign_key "items", "groups"
   add_foreign_key "quotes", "shops"

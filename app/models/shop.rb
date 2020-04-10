@@ -4,6 +4,7 @@ class Shop < ActiveRecord::Base
   validates_uniqueness_of :api_key
 
   has_many :templates, dependent: :destroy
+  has_many :freightoptions
 
   def api_version
     ShopifyApp.configuration.api_version

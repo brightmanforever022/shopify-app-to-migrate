@@ -12,6 +12,10 @@ class Home extends Component {
 
   gotoAttribute = () => {
     this.props.history.push(`/attributes`)
+	}
+	
+	gotoFreightoption = () => {
+    this.props.history.push(`/freightoptions`)
   }
 
   render () {
@@ -26,6 +30,9 @@ class Home extends Component {
 								</ButtonGroup>
 								<ButtonGroup fullWidth={true}>
 									<Button primary={true} onClick={this.gotoAttribute}>Manage Attributes</Button>
+								</ButtonGroup>
+								<ButtonGroup fullWidth={true}>
+									<Button primary={true} onClick={this.gotoFreightoption}>Manage Freight Options</Button>
 								</ButtonGroup>
 							</FormLayout>
 						</Card>
