@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_30_160223) do
+ActiveRecord::Schema.define(version: 2020_04_10_090159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2020_03_30_160223) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "shop_id"
+    t.string "product_id", default: ""
     t.index ["shop_id"], name: "index_templates_on_shop_id"
   end
 

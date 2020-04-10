@@ -11,7 +11,7 @@ class Template < ApplicationRecord
     def filtered_templates(filter_params)
       order('created_at DESC')
       .where(
-        t[:label].matches("%#{filter_params[:searchText]}%")
+        (t[:label].matches("%#{filter_params[:searchText]}%")).or(t[:product_id].matches("#{filter_params[:searchText].downcase}%"))
       )
     end
   end
