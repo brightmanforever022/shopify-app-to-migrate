@@ -313,7 +313,6 @@ export default {
 
       this.line_items.map(lit => {
         const shipPeriod = this.ship_period(lit)
-        console.log('ship period: ', shipPeriod)
         if (shipPeriod.shipPeriodFrom > shipPeriodFrom) {
           shipPeriodFrom = shipPeriod.shipPeriodFrom
           shipPeriodTo = shipPeriod.shipPeriodTo

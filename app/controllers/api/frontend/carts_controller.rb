@@ -133,11 +133,11 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       end
     end
     http_success_response({
-      ground: lineRateList[:ground],
-      nextday: lineRateList[:nextday],
-      twoday: lineRateList[:twoday],
-      threeday: lineRateList[:threeday],
-      shippingMarkup: lineRateList[:shippingMarkup],
+      ground: lineRateList[:ground].round(2),
+      nextday: lineRateList[:nextday].round(2),
+      twoday: lineRateList[:twoday].round(2),
+      threeday: lineRateList[:threeday].round(2),
+      shippingMarkup: lineRateList[:shippingMarkup].round(2),
     })
   end
 

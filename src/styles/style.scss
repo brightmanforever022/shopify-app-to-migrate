@@ -1301,14 +1301,17 @@
 .stock__shipping-delivery {
   display: flex;
   align-items: center;
-  
-  h3 {
-    text-align: left!important;
-  }
-  p {
-    cursor: pointer;
-  }
-  svg {
-    margin-left: 50px;
+  div {
+    width: 265px;
+    h3 {
+      text-align: left!important;
+    }
+    p {
+      cursor: pointer;
+      &:after {
+        content: '';
+        display: none !important;
+      }
+    }
   }
 }

@@ -6,7 +6,7 @@
           <h3>{{stock}}</h3>
           <p>Order today and receive it by {{computedDate}}.</p>
         </div>
-        <icon-flag-usa v-if="!madeInUsa" />
+        <icon-flag-usa v-if="madeInUsa" />
       </div>
     </div>
     <div class="product__form-container">
@@ -100,33 +100,13 @@ export default {
         'September', 'October', 'November', 'December'
       ]
 
-      const discountRuleLines = this.product.metafield.value.split('\n')
-      let discountRuleList = []
-      discountRuleLines.forEach(ruleLine => {
-        let shippingLineItems = ruleLine.split(',')
-        const shippingQtyItems = shippingLineItems[0].split(' ')
-        const shippingQty = shippingQtyItems[1].split('-')
-        const qtyFrom = parseInt(shippingQty[0])
-        const qtyTo = parseInt(shippingQty[1])
-        let shipPeriod = parseInt(shippingLineItems[2].replace(" Usually Ships in ", "").split('-'))
-        const shipDays = shippingLineItems[2].includes('Weeks') ? shipPeriod * 7 : shipPeriod
-        
-        discountRuleList.push({
-          qtyFrom: qtyFrom,
-          qtyTo: qtyTo,
-          shipPeriod: shipDays
-        })
-      });
-      console.log('ship rule list: ', discountRuleList)
-      let shipPeriod = 0
-      discountRuleList.forEach(dr => {
-        if (this.quantity >= dr.qtyFrom && this.quantity <= dr.qtyTo) {
-          shipPeriod = dr.shipPeriod
-        }
-      })
+      const shipDays = getShippingPeriod(this.product.metafield.value, this.quantity)
       const currentDate = new Date()
-      const estimateDate = new Date(currentDate.getTime() + 86400000 * shipPeriod)
-      return monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate()
+      const estimateDateFrom = new Date(currentDate.getTime() + 86400000 * shipDays.shipPeriodFrom)
+      const estimateDateTo = new Date(currentDate.getTime() + 86400000 * shipDays.shipPeriodTo)
+      return monthList[estimateDateFrom.getMonth()] + ' ' + estimateDateFrom.getDate() +
+              ' - ' + (estimateDateFrom.getMonth() != estimateDateTo.getMonth() ? monthList[estimateDateTo.getMonth()] + ' ' : '') +
+              estimateDateTo.getDate()
     }
   },
   data () {
@@ -140,13 +120,6 @@ export default {
 
   methods: {
     openQuoteModal () {
-      /*if (this.customizable && this.fully_customized) {
-        $('#shopify-section-header .header').css('z-index', '-1')
-        $('.product__details').css('z-index', -1)
-        this.isQuoteModal = true
-      } else {
-        alert('Please make product selections before requesting a quote.')
-      }*/
       $('#shopify-section-header .header').css('z-index', '-1')
       $('.product__details').css('z-index', -1)
       this.isQuoteModal = true
