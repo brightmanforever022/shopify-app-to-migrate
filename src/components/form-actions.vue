@@ -27,7 +27,7 @@
             :is-full-page="false"
           />
         </div>
-        <input-quantity></input-quantity>
+        <input-quantity :inSelect="1"></input-quantity>
         <!-- <variant-selection></variant-selection> -->
         <div
           v-for="(group, index) in template.groups"
@@ -35,7 +35,7 @@
           class="form__row selector-wrapper js product-form__item"
         >
           <label class="form__label" :for="`group-option-selector-${index}`">
-            {{group.label}}
+            {{ index + 2 }}. {{group.label}}
           </label>
           <div v-if="activeOptions(group.dattributes).length>1" class="select">
             <select

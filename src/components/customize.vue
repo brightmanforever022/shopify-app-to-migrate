@@ -18,7 +18,7 @@
       </div>
 
       <div class="form__body">
-        <input-quantity></input-quantity>
+        <input-quantity :inSelect="0"></input-quantity>
         <form-description></form-description>
         <form-selection
           v-if="customizable && fully_customized"
@@ -54,7 +54,7 @@ import IconFlagUsa from '@/components/icons/icon-flag-usa'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
 import priceMixin from '@/mixins/price'
-import { getShippingPeriod } from '@/helpers'
+import { getShippingPeriod, getAfterNDays } from '@/helpers'
 
 export default {
   name: 'Customize',
@@ -102,8 +102,8 @@ export default {
 
       const shipDays = getShippingPeriod(this.product.metafield.value, this.quantity)
       const currentDate = new Date()
-      const estimateDateFrom = new Date(currentDate.getTime() + 86400000 * shipDays.shipPeriodFrom)
-      const estimateDateTo = new Date(currentDate.getTime() + 86400000 * shipDays.shipPeriodTo)
+      const estimateDateFrom = getAfterNDays(shipDays.shipPeriodFrom)
+      const estimateDateTo = getAfterNDays(shipDays.shipPeriodTo)
       return monthList[estimateDateFrom.getMonth()] + ' ' + estimateDateFrom.getDate() +
               ' - ' + (estimateDateFrom.getMonth() != estimateDateTo.getMonth() ? monthList[estimateDateTo.getMonth()] + ' ' : '') +
               estimateDateTo.getDate()
