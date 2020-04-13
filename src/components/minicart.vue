@@ -466,7 +466,6 @@ export default {
     },
     fedexShipping (fedexType) {
       this.$store.dispatch('cart/setFedexShipping', fedexType)
-      console.log('fedex type: ', fedexType)
       $('.fedex-shipping-body li').removeClass('active')
       $('#fedex-shipping-option-'+fedexType).addClass('active')
     },
