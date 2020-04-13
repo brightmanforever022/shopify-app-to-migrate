@@ -1,8 +1,8 @@
-import { initializeCart, getCart, addCart, removeCart, plusCartItem, minusCartItem, getFedexList } from '@/api/cart'
+import { initializeCart, getCart, plusNCartItem, addCart, removeCart, plusCartItem, minusCartItem, getFedexList } from '@/api/cart'
 import { getWishlist } from '@/api/wishlist'
 import { getDiscount } from '@/api/discount'
 import { createOrder, createQuoteWithCart } from '@/api/order'
-import { checkDiscountPeriodValidation, getFreightShippingPrice, getFedexShippingPrice, getDiscountByQuantity, getShippingPeriod } from '@/helpers'
+import { checkDiscountPeriodValidation, getFreightShippingPrice, getFedexShippingPrice, getDiscountByQuantity, getShippingPeriod, compareOptions } from '@/helpers'
 
 const cart = {
   namespaced: true,
@@ -30,32 +30,49 @@ const cart = {
       commit('SET_CART', currentLineItems)
       return currentLineItems
     },
-		async addCart ({commit}, cartData) {
+		async addCart ({dispatch, commit, state}, cartData) {
       var cartDataWithID = cartData
-      // get wishlist
-      const wishList = await getWishlist()
-      // Check if this data exists in wishlist
-      var dataExists = false
-      var existId = ''
-      wishList.map(wishItem => {
-        if (cartData.variant_id == wishItem.variant_id && JSON.stringify(cartData.custom_options) == JSON.stringify(wishItem.custom_options)) {
-          dataExists = true
-          existId = wishItem.wishId
+      var currentLineItems = state.line_items
+      var existedLineIndex = -1
+      currentLineItems.forEach((li, index) => {
+        if (li.variant_id == cartData.variant_id && compareOptions(cartData.custom_options, li.custom_options)) {
+          existedLineIndex = index
         }
       })
-      if (dataExists) {
-        cartDataWithID.lineId = existId
+      if (existedLineIndex > -1) {
+        currentLineItems = await dispatch('plusNCart', {id: currentLineItems[existedLineIndex].lineId, quantity: cartData.quantity})
+        return currentLineItems
       } else {
-        var d = new Date()
-        cartDataWithID.lineId = d.getTime()
+        // get wishlist
+        const wishList = await getWishlist()
+        // Check if this data exists in wishlist
+        var dataExists = false
+        var existId = ''
+        wishList.map(wishItem => {
+          if (cartData.variant_id == wishItem.variant_id && JSON.stringify(cartData.custom_options) == JSON.stringify(wishItem.custom_options)) {
+            dataExists = true
+            existId = wishItem.wishId
+          }
+        })
+        if (dataExists) {
+          cartDataWithID.lineId = existId
+        } else {
+          var d = new Date()
+          cartDataWithID.lineId = d.getTime()
+        }
+        
+        var newLineItems = addCart(cartDataWithID)
+        commit('SET_CART', newLineItems)
+        return newLineItems
       }
-      
-      var newLineItems = addCart(cartDataWithID)
-      commit('SET_CART', newLineItems)
-      return newLineItems
 		},
 		removeCart ({commit}, lineId) {
       var newLineItems = removeCart(lineId)
+      commit('SET_CART', newLineItems)
+      return newLineItems
+    },
+    async plusNCart ({commit}, data) {
+      var newLineItems = await plusNCartItem(data.id, data.quantity)
       commit('SET_CART', newLineItems)
       return newLineItems
 		},
@@ -74,26 +91,6 @@ const cart = {
         let shippingList = await getFedexList({zipCode: zipCode, lineItems: state.line_items})
         console.log('fedex shipping list: ', shippingList.data)
         commit('SET_SHIPPING_LIST', shippingList.data)
-        // if (shippingRateList) {
-        //   var shippingList = {
-        //     ground: shippingRateList.data.rateGround ? shippingRateList.data.rateGround[0] : {},
-        //     twoday: shippingRateList.data.rateTwoDay ? shippingRateList.data.rateTwoDay[0] : {},
-        //     threeday: shippingRateList.data.rateThreeDay ? shippingRateList.data.rateThreeDay[0] : {},
-        //     nextday: shippingRateList.data.rateNextDay ? shippingRateList.data.rateNextDay[0] : {},
-        //     shippingMarkup: shippingRateList.data.shippingMarkup,
-        //   }
-  
-        //   console.log('fedex shipping list: ', shippingList)
-        //   commit('SET_SHIPPING_LIST', shippingList)
-        // } else {
-        //   commit('SET_SHIPPING_LIST', {
-        //     ground: {},
-        //     twoday: {},
-        //     threeday: {},
-        //     nextday: {},
-        //     shippingMarkup: 0,
-        //   })
-        // }
       } catch (error) {
         console.log(error)
       }
@@ -295,7 +292,7 @@ const cart = {
       var discountAmount = 0
       var freight_shipping_price = getFreightShippingPrice(state.freight_shipping)
       var fedex_shipping_price = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping)
-      console.log('fedex shipping price in calculating total: ', fedex_shipping_price)
+      // console.log('fedex shipping price in calculating total: ', fedex_shipping_price)
       var validPeriod = checkDiscountPeriodValidation(state.discount_data.startsAt, state.discount_data.endsAt)
       state.line_items.map(lineItem => {
         totalPrice += lineItem.calculated_price * (100 - getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)) / 100

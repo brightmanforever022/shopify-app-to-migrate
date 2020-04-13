@@ -115,3 +115,12 @@ export function getShippingPeriod(summary, quantity) {
 		shipPeriodTo: shipPeriodTo,
 	}
 }
+
+export function compareOptions (option1, option2) {
+	let firstOptionIdList = option1.map(op1 => parseInt(op1.id))
+	firstOptionIdList.sort(function(a, b){ return a-b })
+	let secondOptionIdList = option2.map(op2 => parseInt(op2.id))
+	secondOptionIdList.sort(function(a, b){ return a-b })
+
+	return (JSON.stringify(firstOptionIdList) == JSON.stringify(secondOptionIdList))
+}
