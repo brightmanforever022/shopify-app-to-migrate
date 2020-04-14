@@ -114,7 +114,7 @@
             <div class="form__row__full">
               <div class="flex__row__full">
                 <label for="shipping-method">Preferred Shipping Method </label>
-                <icon-question-circle />
+                <icon-question-circle v-tooltip.bottom-left="`Indicate the shipping method you would like us to quote. If you are unsure, please choose the standard shipping service.`" />
               </div>
               <select v-model="shippingMethod" id="shipping-method" class="flex__row__full">
                 <option
@@ -133,7 +133,7 @@
                 <label for="is-lift-gate">
                   For any Quote that requires Freight Truck Delivery, is a Lift-Gate required?
                 </label>
-                <icon-question-circle />
+                <icon-question-circle v-tooltip.bottom-left="`A lift-gate lowers deliveries from the truck to the ground. A lift-gate is required for commercial locations that DO NOT have a raised loading dock or forklift and ALL residential locations.`" />
               </div>
             </div>
             <div class="form__row__full">
@@ -142,7 +142,7 @@
                 <label for="is-freight">
                   <span>Is Freight, Inside Delivery Required</span>
                 </label>
-                <icon-question-circle />
+                <icon-question-circle v-tooltip.bottom-left="`Inside Delivery is an optional service where the freight driver brings the shipment to just inside the nearest entrance or doorway with no stairs.`" />
               </div>
             </div>
           </div>
@@ -235,14 +235,14 @@
             <div class="form__row__full">
               <div class="flex__row__full">
                 <label for="quote-else-know">Anything Else You'd Like us to Know?</label>
-                <icon-question-circle />
+                <icon-question-circle v-tooltip.bottom-left="`Please indicate any product details, customizations, due date, or special requests.`" />
               </div>
               <textarea id="quote-else-know" v-model="quoteElseKnow"></textarea>
             </div>
             <div class="form__row__full">
               <div class="flex__row__full">
                 <label for="quote-upload">Do you have anything you would like to upload?</label>
-                <icon-question-circle />
+                <icon-question-circle v-tooltip.bottom-left="`Please upload any specifications, drawings or documents that may assist us in providing you a quote.`" />
               </div>
               <a @click.prevent="$refs.file.click()" class="upload-link">choose file</a>
               <input type="file" ref="file" id="quote-upload" v-on:change="handleFileUpload()" name="uploadFile" />
@@ -287,6 +287,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+  import { VTooltip } from 'v-tooltip'
   import { mapGetters } from 'vuex'
   import $ from 'jquery'
   import IconEmailUs from '@/components/icons/icon-email-us'
@@ -405,6 +407,8 @@
 
     created () {
       this.quoteQuantity = this.quantity
+      Vue.use(VTooltip)
+      Vue.directive('tooltip', VTooltip)
     },
 
     methods: {

@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <div class="product__form--instock" title="The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.">
+    <div class="product__form--instock" v-tooltip.bottom-left="`The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.`">
       <div class="stock__shipping-delivery">
         <div>
           <h3>{{stock}}</h3>
@@ -45,6 +45,8 @@
   </fragment>
 </template>
 <script>
+import Vue from 'vue'
+import { VTooltip } from 'v-tooltip'
 import InputQuantity from '@/components/quantity'
 import FormDescription from '@/components/form-description'
 import FormSelection from '@/components/form-selection'
@@ -116,6 +118,8 @@ export default {
   },
   created () {
     // console.log('quote modal open? ', this.isQuoteModal)
+    Vue.use(VTooltip)
+    Vue.directive('tooltip', VTooltip)
   },
 
   methods: {
