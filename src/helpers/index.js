@@ -85,8 +85,8 @@ export function getShippingPeriod(summary, quantity) {
 		
 	})
 
-	shipPeriodFrom = shipDuration.includes('Weeks') ? shipPeriodFrom * 7 : shipPeriodFrom
-	shipPeriodTo = shipDuration.includes('Weeks') ? shipPeriodTo * 7 : shipPeriodTo
+	shipPeriodFrom = shipDuration.includes('Weeks') ? shipPeriodFrom * 5 : shipPeriodFrom
+	shipPeriodTo = shipDuration.includes('Weeks') ? shipPeriodTo * 5 : shipPeriodTo
 
 	let estimateDate = getAfterNDays(shipPeriodFrom)
 	const leadTimeFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
