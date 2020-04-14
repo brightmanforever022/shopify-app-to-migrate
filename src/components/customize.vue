@@ -1,10 +1,12 @@
 <template>
   <fragment>
-    <div class="product__form--instock" v-tooltip.bottom-left="`The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.`">
+    <div class="product__form--instock">
       <div class="stock__shipping-delivery">
         <div>
           <h3>{{stock}}</h3>
-          <p>Order today and receive it by {{computedDate}}.</p>
+          <p>
+            Order today and receive it by {{computedDate}}. <icon-question-circle  v-tooltip.bottom-left="`The delivery date range shown is based on ground shipping for the quantity selected. For additional information, review the Shipping tab below.`" />
+          </p>
         </div>
         <icon-flag-usa v-if="madeInUsa" />
       </div>
@@ -53,6 +55,7 @@ import FormSelection from '@/components/form-selection'
 import FormActions from '@/components/form-actions'
 import RequestQuote from '@/components/request-quote'
 import IconFlagUsa from '@/components/icons/icon-flag-usa'
+import IconQuestionCircle from '@/components/icons/icon-question-circle'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
 import priceMixin from '@/mixins/price'
@@ -67,6 +70,7 @@ export default {
     FormActions,
     RequestQuote,
     IconFlagUsa,
+    IconQuestionCircle,
   },
   props: {
     openDisplayCart: {
