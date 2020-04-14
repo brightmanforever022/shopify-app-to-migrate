@@ -159,7 +159,7 @@
             </div>
             <template v-if="!isSameAddress">
               <div class="form__row">
-                <label for="billing-address1">Address Line 1 *</label>
+                <label for="billing-address1">Address Line 1</label>
                 <input type="text" id="billing-address1" v-model="billingAddress1" placeholder="Type address">
                 <span :class="['quote-form-errors', validateElement('billing-address1')]">This field is invalid</span>
               </div>
@@ -168,12 +168,12 @@
                 <input type="text" id="billing-address2" v-model="billingAddress2" placeholder="Apt., Suite, Bldg, PO Box(optional)">
               </div>
               <div class="form__row">
-                <label for="billing-town_city">Town/City *</label>
+                <label for="billing-town_city">Town/City</label>
                 <input type="text" id="billing-town_city" v-model="billingTownCity" placeholder="Type town/city">
                 <span :class="['quote-form-errors', validateElement('billing-town_city')]">This field is invalid</span>
               </div>
               <div class="form__row">
-                <label for="billing-country">Country *</label>
+                <label for="billing-country">Country</label>
                 <select v-model="billingCountry" id="billing-country">
                   <option value='US' :selected="billingCountry=='US'">United States</option>
                   <option value='CA' :selected="billingCountry=='CA'">Canada</option>
@@ -188,7 +188,7 @@
                 </select>
               </div>
               <div class="form__row">
-                <label for="billing-state">State/Region *</label>
+                <label for="billing-state">State/Region</label>
                 <select v-model="billingState" id="billing-state">
                   <fragment v-if="billingCountry=='US'">
                     <option
@@ -207,13 +207,13 @@
                       :value="item.provinceId"
                       :selected="item.provinceId==billingState"
                     >
-                      {{item.provinceName}}
+                      {{ item.provinceName }}
                     </option>
                   </fragment>
                 </select>
               </div>
               <div class="form__row">
-                <label for="billing-postal_code">Postal Code *</label>
+                <label for="billing-postal_code">Postal Code</label>
                 <input type="text" id="billing-postal_code" v-model="billingPostalCode" placeholder="Type postal code">
                 <span :class="['quote-form-errors', validateElement('billing-postal_code')]">This field is invalid</span>
               </div>

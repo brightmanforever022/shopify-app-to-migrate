@@ -25,6 +25,7 @@ class Api::V1::FreightoptionsController < AuthenticatedController
     @freightoption = Freightoption.new(
       label: freightoption_params[:label],
       price: freightoption_params[:price],
+      description: freightoption_params[:description],
       shop: @shop
     )
     if @freightoption.save
@@ -46,7 +47,8 @@ class Api::V1::FreightoptionsController < AuthenticatedController
   def update
     @freightoption.update({
       label: freightoption_params[:label],
-      price: freightoption_params[:price]
+      price: freightoption_params[:price],
+      description: freightoption_params[:description],
     })
 
     render json: {
