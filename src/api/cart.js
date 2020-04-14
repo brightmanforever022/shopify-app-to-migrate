@@ -101,3 +101,10 @@ export function getFedexList (data) {
     data: data
   })
 }
+
+export function getFreightOptions () {
+  return request({
+    url: `/carts/freightoptions`,
+    method: 'post'
+  })
+}

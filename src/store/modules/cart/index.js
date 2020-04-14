@@ -10,6 +10,7 @@ const cart = {
     line_items: [],
     discount_data: {},
     freight_shipping: 1,
+    freight_option_list: [],
     fedex_shipping: 'ground',
     fedex_shipping_list: {
       ground: 0,
@@ -115,13 +116,16 @@ const cart = {
     setFreightShipping ({commit}, shippingId) {
       commit('SET_FREIGHT_SHIPPING', shippingId)
     },
+    setFreightOptionList ({ commit }, data) {
+      commit('SET_FREIGHT_OPTION_LIST', data)
+    },
     setFedexShipping ({commit}, fedexType) {
       commit('SET_FEDEX_SHIPPING', fedexType)
     },
     async createDraftOrder ({commit, state, getters}) {
       try {
         const orderDiscount = getters.get_discount.toFixed(2)
-        const orderFreightShipping = getFreightShippingPrice(state.freight_shipping).toFixed(2)
+        const orderFreightShipping = getFreightShippingPrice(state.freight_option_list, state.freight_shipping).toFixed(2)
         const orderFedexShipping = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping).toFixed(2)
         const draftOrder = await createOrder({lineItems: state.line_items, discountRule: state.discount_data, orderFreightShipping: orderFreightShipping, orderFedexShipping: orderFedexShipping})
         // Make cart empty
@@ -154,6 +158,9 @@ const cart = {
     SET_FREIGHT_SHIPPING: (state, id) => {
       state.freight_shipping = id
     },
+    SET_FREIGHT_OPTION_LIST: (state, data) => {
+      state.freight_option_list = data
+    },
     SET_FEDEX_SHIPPING: (state, id) => {
       state.fedex_shipping = id
     }
@@ -164,6 +171,9 @@ const cart = {
     },
     get_line_items (state) {
       return state.line_items
+    },
+    get_freight_options (state) {
+      return state.freight_option_list
     },
     get_quantity_by_id: (state) => (lineId) => {
       var lineQuantity = 0
@@ -223,7 +233,7 @@ const cart = {
       return numberOfFreight < line_items.length
     },
     get_freight_shipping_price (state) {
-      var price = getFreightShippingPrice(state.freight_shipping)
+      var price = getFreightShippingPrice(state.freight_option_list, state.freight_shipping)
       return {id: state.freight_shipping, shipping_price: price}
     },
     get_fedex_shipping_price (state) {
@@ -290,7 +300,7 @@ const cart = {
     get_total (state) {
       var totalPrice = 0
       var discountAmount = 0
-      var freight_shipping_price = getFreightShippingPrice(state.freight_shipping)
+      var freight_shipping_price = getFreightShippingPrice(state.freight_option_list, state.freight_shipping)
       var fedex_shipping_price = getFedexShippingPrice(state.fedex_shipping_list, state.fedex_shipping)
       // console.log('fedex shipping price in calculating total: ', fedex_shipping_price)
       var validPeriod = checkDiscountPeriodValidation(state.discount_data.startsAt, state.discount_data.endsAt)

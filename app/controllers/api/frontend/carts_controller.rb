@@ -141,6 +141,11 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     })
   end
 
+  def freight_options
+    freightoptions = @shop.freightoptions
+    http_success_response({ freightoptions: freightoptions })
+  end
+
   private
     def cart_params
       params.except(:controller, :action, :id)

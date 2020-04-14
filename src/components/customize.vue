@@ -102,8 +102,8 @@ export default {
 
       const shipDays = getShippingPeriod(this.product.metafield.value, this.quantity)
       const currentDate = new Date()
-      const estimateDateFrom = getAfterNDays(shipDays.shipPeriodFrom)
-      const estimateDateTo = getAfterNDays(shipDays.shipPeriodTo)
+      const estimateDateFrom = getAfterNDays(shipDays.shipPeriodFrom + 1)
+      const estimateDateTo = getAfterNDays(shipDays.shipPeriodTo + 5)
       return monthList[estimateDateFrom.getMonth()] + ' ' + estimateDateFrom.getDate() +
               ' - ' + (estimateDateFrom.getMonth() != estimateDateTo.getMonth() ? monthList[estimateDateTo.getMonth()] + ' ' : '') +
               estimateDateTo.getDate()

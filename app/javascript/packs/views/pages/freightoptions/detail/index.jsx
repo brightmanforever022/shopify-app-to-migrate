@@ -127,7 +127,7 @@ class NewFreightoption extends Component {
                         <TextField
                           value={description}
                           onChange={this.handleChange('description')}
-                          label="Description (This would be appeared as tooltip)"
+                          label="Description (This appears as tooltip)"
                           multiline
                         />
                       </FormLayout.Group>

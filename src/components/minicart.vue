@@ -61,7 +61,7 @@
       <div class="show-shipping-options">
         <h2>Shipping Options</h2>
         <p>
-          <IconFlagFlag />
+          <IconFlagCanada />
           <span>
             Shipping to Canada? <a @click.prevent="showQuoteExplain">?</a>
             <div class="explain-quote-block" v-show="explainQuoteFlag">
@@ -135,29 +135,16 @@
           </div>
           <div class="freight-shipping-body">
             <ul>
-              <li @click.prevent="freightShipping(1)" id="freight-shipping-option-1" class="active">
-                <span>Commercial Basic Free Freight Delivery (Standard Dock to Dock Service)</span>
-                <span>$0.00</span>
-              </li>
-              <li @click.prevent="freightShipping(2)" id="freight-shipping-option-2">
-                <span>Commercial Lift-Gate Freight Delivery (Commercial Lift-Gate Service)</span>
-                <span>$125.00</span>
-              </li>
-              <li @click.prevent="freightShipping(3)" id="freight-shipping-option-3">
-                <span>Commercial Special Freight Delivery (Commercial Lift-Gate & Inside Service)</span>
-                <span>$300.00</span>
-              </li>
-              <li @click.prevent="freightShipping(4)" id="freight-shipping-option-4">
-                <span>Commercial Freight Delivery (Inside Service to Exact Location)</span>
-                <span>$450.00</span>
-              </li>
-              <li @click.prevent="freightShipping(5)" id="freight-shipping-option-5">
-                <span>RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)</span>
-                <span>$130.00</span>
-              </li>
-              <li @click.prevent="freightShipping(6)" id="freight-shipping-option-6">
-                <span>RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)</span>
-                <span>$325.00</span>
+              <li
+                v-for="(freightItem, key) in freight_option_list"
+                :key="`freightoption-${key}`"
+                :value="freightItem.id"
+                :id="`freight-shipping-option-${freightItem.id}`"
+                @click.prevent="freightShipping(freightItem.id)"
+              >
+                <span>{{ freightItem.label }}</span>
+                <span>${{ freightItem.price.toFixed(2) }}</span>
+                <icon-question-circle v-tooltip.bottom-left="freightItem.description" :class="freight-option-circle" />
               </li>
             </ul>
             <p>* Delivery Estimate refers to the Shipping Time or transit time of your order once the items have been shipped. The delivery estimates above refer to standard ground delivery.</p>
@@ -245,6 +232,8 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import { VTooltip } from 'v-tooltip'
 import MinicartFormSelection from '@/components/minicart-form-selection'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
@@ -262,6 +251,7 @@ import IconPaypal from '@/components/icons/icon-paypal'
 import IconLock from '@/components/icons/icon-lock'
 import IconFlagCanada from '@/components/icons/icon-flag-canada'
 import IconClose from '@/components/icons/icon-close'
+import IconQuestionCircle from '@/components/icons/icon-question-circle'
 
 export default {
   name: 'Minicart',
@@ -279,6 +269,7 @@ export default {
     IconLock,
     IconFlagCanada,
     IconClose,
+    IconQuestionCircle,
     Loading,
   },
   props: {
@@ -294,6 +285,7 @@ export default {
       sub_total: 'cart/get_sub_total',
       cal_total: 'cart/get_total',
       discount_total: 'cart/get_discount',
+      freight_option_list: 'cart/get_freight_options',
       freight_shipping: 'cart/get_freight_shipping_price',
       fedex_shipping: 'cart/get_fedex_shipping_price',
       fedex_shipping_list: 'cart/get_shipping_list',
@@ -345,6 +337,9 @@ export default {
       .then(res => {
         console.log('initialized wishlist state with localstorage data', res);
       })
+
+    Vue.use(VTooltip)
+    Vue.directive('tooltip', VTooltip)
   },
   data() {
     return {

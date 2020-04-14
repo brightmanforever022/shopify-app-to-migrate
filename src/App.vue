@@ -26,6 +26,7 @@
 <script>
 import $ from 'jquery'
 import { get } from '@/api/product'
+import { getFreightOptions } from '@/api/cart'
 import Loading from 'vue-loading-overlay'
 import Customize from '@/components/customize'
 import Minicart from '@/components/minicart'
@@ -53,6 +54,7 @@ export default {
       this.loading = false
     })
     this.loadProduct()
+    this.loadFreightoptions()
   },
   methods: {
     loadProduct () {
@@ -62,6 +64,7 @@ export default {
         this.isPDP = true
         get(id).then(res => {
           let product = res.data.product.data
+          // this.$store.dispatch('cart/setFreightOptionList', res.data.freightoptions)
           this.$store.dispatch('product/set', product)
           this.$store.dispatch('order/setVariant', product.variants.edges[0].node)
           this.$store.dispatch('template/set_template', res.data.template[0])
@@ -71,6 +74,15 @@ export default {
           this.loading = false
         })
       }
+    },
+
+    loadFreightoptions () {
+      getFreightOptions().then(res => {
+        const freightOptions = res.data.freightoptions
+        this.$store.dispatch('cart/setFreightOptionList', freightOptions)
+      }).catch(err => {
+        console.log('load freight options error: ', err)
+      })
     },
 
     openDisplayCart () {
