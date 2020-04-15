@@ -43,7 +43,7 @@
                   {{line_item.calculated_item_price | money}}
                 </div>
                 <div class="detail-total">
-                  {{line_item.calculated_price | money}}
+                  {{ lineItemPrice(line_item) | money }}
                 </div>
               </div>
               <div class="selections">
@@ -256,6 +256,7 @@ import IconLock from '@/components/icons/icon-lock'
 import IconFlagCanada from '@/components/icons/icon-flag-canada'
 import IconClose from '@/components/icons/icon-close'
 import IconQuestionCircle from '@/components/icons/icon-question-circle'
+import { getDiscountByQuantity } from '@/helpers'
 
 export default {
   name: 'Minicart',
@@ -381,6 +382,10 @@ export default {
         }).catch(err => {
           console.log(err)
         })
+    },
+    lineItemPrice (lineItem) {
+      const discountByQuantity = getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)
+      return lineItem.calculated_item_price * lineItem.quantity * (100 - discountByQuantity) / 100
     },
     togglePromo () {
       this.isPromoCode = !this.isPromoCode
