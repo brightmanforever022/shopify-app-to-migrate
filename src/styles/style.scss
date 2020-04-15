@@ -515,6 +515,7 @@
           display: block;
           float: right;
           position: relative;
+          margin-top: -10px;
           
           .explain-quote-block {
             position: absolute;
@@ -565,12 +566,13 @@
           }
           a {
             color: #000;
-            border: 1px solid #000;
-            border-radius: 50%;
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            padding: 0px 5px;
+            display: block;
+            text-align: center;
+
+            &:hover {
+              color: #888888;
+              border: none!important;
+            }
           }
         }
         svg {

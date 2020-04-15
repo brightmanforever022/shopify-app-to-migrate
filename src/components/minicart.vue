@@ -62,7 +62,7 @@
         <h2>Shipping Options</h2>
         <p>
           <IconFlagCanada />
-          <span>
+          <!-- <span>
             Shipping to Canada? <a @click.prevent="showQuoteExplain">?</a>
             <div class="explain-quote-block" v-show="explainQuoteFlag">
               <div class="explain-block-header">
@@ -70,6 +70,10 @@
               </div>
               Click to Request a Quote
             </div>
+          </span> -->
+          <span>
+            Shipping to Canada?<br />
+            <a @click.prevent="showRequestQuote">Request Quote</a>
           </span>
         </p>
         <div class="zip-code-form">
@@ -386,6 +390,7 @@ export default {
         $('.promo-code-check label').removeClass('checked')
       }
     },
+
     showQuoteExplain () {
       this.explainQuoteFlag = true
     },
