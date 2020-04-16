@@ -40,7 +40,7 @@
                   <cart-input-quantity :quantity="line_item.quantity" :line_id="line_item.lineId"></cart-input-quantity>
                 </div>
                 <div class="detail-price">
-                  {{line_item.calculated_item_price | money}}
+                  <span class="compare-at">{{ line_item.calculated_item_price | money }}</span> - <span>{{ lineItemSinglePrice(line_item) | money }}</span>
                 </div>
                 <div class="detail-total">
                   {{ lineItemPrice(line_item) | money }}
@@ -383,9 +383,11 @@ export default {
           console.log(err)
         })
     },
+    lineItemSinglePrice (lineItem) {
+      return (100 - getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)) * lineItem.calculated_item_price / 100
+    },
     lineItemPrice (lineItem) {
-      const discountByQuantity = getDiscountByQuantity(lineItem.shipping_summary, lineItem.quantity)
-      return lineItem.calculated_item_price * lineItem.quantity * (100 - discountByQuantity) / 100
+      return this.lineItemSinglePrice(lineItem) * lineItem.quantity
     },
     togglePromo () {
       this.isPromoCode = !this.isPromoCode

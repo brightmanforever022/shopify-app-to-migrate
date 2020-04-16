@@ -435,12 +435,15 @@
                 }
               }
               .detail-price {
-                width: 80px;
+                width: 160px;
                 display: inline-block;
                 margin-left: 22px;
                 margin-right: 10px;
                 text-align: left;
                 float: left;
+                .compare-at {
+                  text-decoration: line-through;
+                }
               }
               .detail-total {
                 display: inline-block;
