@@ -78,7 +78,7 @@
         </p>
         <div class="zip-code-form">
           <label for="zip_code">ZIP Code</label>
-          <input type="text" id="zip_code" v-model="zipCode" v-on:keyup="showShippingOptions" placeholder="12345">
+          <input type="text" id="zip_code" v-model="zipCode" v-on:keyup="showShippingOptions" placeholder="Enter Zip Code">
           <button @click.prevent="fetchShipping">SHOW SHIPPING OPTIONS</button>
         </div>
         <loading

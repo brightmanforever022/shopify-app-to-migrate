@@ -120,12 +120,26 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
           value: option[:label] + '<br/>'
         })        
       end
-      discountedCustomPrice = customPrice * (100 - getDiscountByQuantity(item[:shipping_summary], item[:quantity])) / 100
+      discountPercent = getDiscountByQuantity(item[:shipping_summary], item[:quantity])
+      discountedCustomPrice = customPrice * (100 - discountPercent) / 100
+      discountAmount = customPrice * item[:quantity].to_i * discountPercent / 100
+      # line_items.push({
+      #   title: 'Selections for above product',
+      #   quantity: item[:quantity].to_i,
+      #   price: discountedCustomPrice,
+      #   properties: customDescription
+      # })
       line_items.push({
-        title: 'You selected following options in above product',
+        title: 'Selections for above product',
         quantity: item[:quantity].to_i,
-        price: discountedCustomPrice,
-        properties: customDescription
+        price: customPrice,
+        properties: customDescription,
+        applied_discount: {
+          title: 'Discount by quantity',
+          value: discountPercent,
+          value_type: 'percentage',
+          amount: discountAmount
+        }
       })
     end
     # Add freight shipping into line item list

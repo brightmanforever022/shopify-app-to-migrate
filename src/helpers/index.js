@@ -48,10 +48,6 @@ export function getDiscountByQuantity(summary, quantity) {
 		const qtyTo = parseInt(shippingQty[1])
 		if (quantity >= qtyFrom && quantity <= qtyTo) {
 			discountPercent = parseInt(shippingLineItems[1].replace('%', ''))
-			// shipDuration = shippingLineItems[2]
-			// let shipPeriod = shippingLineItems[2].split('-')
-			// shipPeriodFrom = parseInt(shipPeriod[0].replace('Usually Ships in ', ''))
-			// shipPeriodTo = parseInt(shipPeriod[1])
 		}
 		
 	})

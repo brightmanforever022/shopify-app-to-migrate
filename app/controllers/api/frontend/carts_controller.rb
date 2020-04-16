@@ -23,14 +23,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       :drop_off_type => "REGULAR_PICKUP"
     }
 
-    # fedex = Fedex::Shipment.new(
-    #   :key => 'h8cacZZYQvu7iebt',
-    #   :password => 'SJ8UjWWR5ylk1NOUNEZGrllFW',
-    #   :account_number => '510087240',
-    #   :meter => '114043658',
-    #   :mode => 'development'
-    # )
-
     fedex = Fedex::Shipment.new(
       :key => 'VdEPZewybWZInKdc',
       :password => 'fXAfdUUqWo5mlukgPsdAcvQ7P',
@@ -76,7 +68,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         shippingMarkup = 0
         packages = []
         lineItem[:custom_options].each do |co|
-          puts co
           if co[:weight] > 0
             realWeight = co[:weight] * 2.2
             packages << {
@@ -122,7 +113,8 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :country_code => "US",
           :residential => "true"
         }
-        puts "-----------------packages: #{packages}"
+        puts "-----------------packages----------------------:"
+        puts packages
         lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
         lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
         lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i

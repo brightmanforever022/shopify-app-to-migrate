@@ -568,10 +568,13 @@
             color: #000;
             display: block;
             text-align: center;
+            border: none!important;
+            transition: none!important;
 
             &:hover {
               color: #888888;
               border: none!important;
+              transition: none!important;
             }
           }
         }
