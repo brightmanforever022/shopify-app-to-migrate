@@ -118,7 +118,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
         customDescription.push({
           name: ' - ' + option[:group],
           value: option[:label] + '<br/>'
-        })        
+        })
       end
       discountPercent = getDiscountByQuantity(item[:shipping_summary], item[:quantity])
       discountedCustomPrice = customPrice * (100 - discountPercent) / 100
@@ -214,7 +214,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     line_items = []
     line_items << {
       variant_id: params[:variantId],
-      quantity: productQuantity,      
+      quantity: productQuantity,
     }
     subTotalPrice = 0.0
     quoteDetail.each do |option|
@@ -264,17 +264,14 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     }
 
     billingAddress = {
-      address1: contactDetail[:address1],
-      address2: contactDetail[:address2],
-      city: contactDetail[:townCity],
-      country: contactDetail[:contactCountry],
-      province: contactDetail[:contactState],
-      zip: contactDetail[:postalCode],
+      address1: contactDetail[:billingAddress1],
+      address2: contactDetail[:billingAddress2],
+      city: contactDetail[:billingTownCity],
+      country: contactDetail[:billingCountry],
+      province: contactDetail[:billingState],
+      zip: contactDetail[:billingPostalCode],
     }
-    if contactDetail[:isSameAddress]
-      billingAddress = shippingAddress
-    end
-
+    
     # get discount rules from product
     metaShipping = contactDetail[:metaShipping][:value]
     mapShippingLines = metaShipping.split("\n")
@@ -394,9 +391,159 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
   # create draft order based on the data in cart
   def createQuoteWithCart
-    lineItemList = params[:lines]
+    cartItemList = params[:lines]
     contactDetail = params[:contactDetail]
-    render json: { data: 'created a quote with cart' }
+
+    # Make LineItems
+    line_items = []
+    cartItemList.each do |cartItem|
+      line_items << {
+        variant_id: cartItem[:variant_id],
+        quantity: cartItem[:quantity].to_i,
+      }
+      customPrice = 0.0
+      customDescription = []
+      cartItem[:custom_options].each do |cartOption|
+        customPrice += cartOption[:price_type] ? cartOption[:original_price].to_f * cartOption[:price].to_f / 100 : cartOption[:price]
+        customDescription.push({
+          name: ' - ' + cartOption[:group],
+          value: cartOption[:label]
+        })
+      end
+      discountPercent = getDiscountByQuantity(cartItem[:shipping_summary], cartItem[:quantity])
+      discountedCustomPrice = customPrice * (100 - discountPercent) / 100
+      discountAmount = customPrice * cartItem[:quantity].to_i * discountPercent / 100
+
+      line_items.push({
+        title: 'Selections for above product',
+        quantity: cartItem[:quantity].to_i,
+        price: customPrice,
+        properties: customDescription,
+        applied_discount: {
+          title: 'Discount by quantity',
+          value: discountPercent,
+          value_type: 'percentage',
+          amount: discountAmount
+        }
+      })
+    end
+    customerName = contactDetail[:contactName].split(' ')
+    customerData = {
+      email: contactDetail[:contactEmail],
+      first_name: customerName[0],
+      last_name: customerName[1] ? customerName[1] : '',
+    }
+    if contactDetail[:contactPhone] != ''
+      customerData[:phone] = contactDetail[:contactPhone]
+    end
+
+    shippingAddress = {
+      address1: contactDetail[:address1],
+      address2: contactDetail[:address2],
+      city: contactDetail[:townCity],
+      company: contactDetail[:contactCompany],
+      country: contactDetail[:contactCountry],
+      province: contactDetail[:contactState],
+      first_name: customerName[0],
+      last_name: customerName[1] ? customerName[1] : '',
+      name: contactDetail[:contactName],
+      phone: contactDetail[:contactPhone],
+      zip: contactDetail[:postalCode],
+    }
+
+    billingAddress = {
+      address1: contactDetail[:billingAddress1],
+      address2: contactDetail[:billingAddress2],
+      city: contactDetail[:billingTownCity],
+      country: contactDetail[:billingCountry],
+      province: contactDetail[:billingState],
+      zip: contactDetail[:billingPostalCode],
+    }
+    
+    draft_order = ShopifyAPI::DraftOrder.new({
+      line_items: line_items,
+      email: contactDetail[:contactEmail],
+      customer: customerData,
+      shipping_address: shippingAddress,
+      billing_address: billingAddress,
+      metafields: [
+        {
+          namespace: 'contact',
+          key: 'isOutUS',
+          value_type: 'integer',
+          value: contactDetail[:isOutUS] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'outAddress',
+          value_type: 'string',
+          value: (contactDetail[:outAddress] == '') ? 'empty' : contactDetail[:outAddress],
+        },
+        {
+          namespace: 'contact',
+          key: 'isResidential',
+          value_type: 'integer',
+          value: contactDetail[:isResidential] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'shippingFedexMethod',
+          value_type: 'string',
+          value: contactDetail[:shippingFedexMethod],
+        },
+        {
+          namespace: 'contact',
+          key: 'shippingFreightMethod',
+          value_type: 'string',
+          value: contactDetail[:shippingFreightMethod],
+        },
+        {
+          namespace: 'contact',
+          key: 'isLiftGate',
+          value_type: 'integer',
+          value: contactDetail[:isLiftGate] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'isFreight',
+          value_type: 'integer',
+          value: contactDetail[:isFreight] ? 1 : 0,
+        },
+        {
+          namespace: 'contact',
+          key: 'quoteElseKnow',
+          value_type: 'string',
+          value: (contactDetail[:quoteElseKnow] == '') ? 'empty' : contactDetail[:quoteElseKnow],
+        },
+      ],
+    })
+    
+    if draft_order.save
+      sleep 1.second
+      draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
+      draft_order.send_invoice(draft_order_invoice)
+      # store draftorder id and file url. file url is in contactDetail[:uploadedFile].url
+      if contactDetail[:uploadedFile].present?
+        @quote = Quote.new(
+          dorder_id: draft_order.id,
+          dorder_name: draft_order.name,
+          dorder_invoice_url: draft_order.invoice_url,
+          uploaded_file_url: contactDetail[:uploadedFile][:url],
+          uploaded_file_name: contactDetail[:uploadedFile][:name],
+          shop: @shop
+        )
+        if @quote.save
+          render json: { quote: @quote, error: nil }
+        else
+          render json: { quote: @quote, error: @quote.errors.full_messages }
+        end
+      else
+        render json: { quote: draft_order, error: nil }
+      end
+    else
+      puts draft_order.errors.full_messages
+      render json: { draft_order: draft_order, error: 'Could not create quote. Please check your data.' }
+    end
   end
   
   def checkDiscount(startsAt, endsAt)

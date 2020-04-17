@@ -244,11 +244,6 @@
               <p class="item-id">{{ productSKU }}</p>
             </div>
             <div class="form__row__full">
-              <label for="quote-quantity">Quantity *</label>
-              <input type="text" id="quote-quantity" v-model="quoteQuantity" v-on:input="setQuantity" placeholder="Can be entered as a number or range">
-              <span :class="['quote-form-errors', validateElement('quote-quantity')]">This field is invalid</span>
-            </div>
-            <div class="form__row__full">
               <div class="flex__row__full">
                 <label for="quote-else-know">Anything Else You'd Like us to Know?</label>
                 <icon-question-circle v-tooltip.bottom-left="`Please indicate any product details, customizations, due date, or special requests.`" />
@@ -386,8 +381,8 @@
         isOutUS: false,
         outAddress: '',
         isResidential: false,
-        shippingFedexMethod: 'ground',
-        shippingFreightMethod: 1,
+        shippingFedexMethod: '',
+        shippingFreightMethod: 0,
         isLiftGate: false,
         isFreight: false,
         isSameAddress: false,
@@ -397,14 +392,12 @@
         billingCountry: 'US',
         billingState: 'AL',
         billingPostalCode: '',
-        quoteQuantity: 1,
         quoteElseKnow: '',
         file: '',
       }
     },
 
     created () {
-      this.quoteQuantity = this.quantity
       Vue.use(VTooltip)
       Vue.directive('tooltip', VTooltip)
     },
@@ -448,7 +441,6 @@
         this.sameWithShipping()
         const validateResult = await this.validateForm()
         if (validateResult) {
-          // /*
           let uploadedFile = null
           if (this.file.size) {
             uploadedFile = await this.submitFile()
@@ -477,14 +469,12 @@
             billingCountry: this.billingCountry,
             billingState: this.billingState,
             billingPostalCode: this.billingPostalCode,
-            quoteQuantity: this.quoteQuantity,
             quoteElseKnow: this.quoteElseKnow,
             originalPrice: this.original_price,
             uploadedFile: uploadedFile
           })
           console.log('created quote: ', quoteWithCart)
-          this.closeQuoteCart()
-          // */
+          // this.closeQuoteCart()
         } else {
           alert('please fill the form with correct data')
           return false
@@ -561,14 +551,7 @@
               return regex.test(this.billingPostalCode) ? true : false
             }
             break
-          case 'quote-quantity':
-            regex = /^\d*$/
-            if (checkLevel == 0) {
-              return (this.quoteQuantity == 0) ? true : (regex.test(this.quoteQuantity) ? true : false)
-            } else {
-              return regex.test(this.quoteQuantity) ? true : false
-            }
-            break
+          
         }
       },
       async validateForm () {
@@ -581,7 +564,6 @@
           'billing-address1',
           'billing-town_city',
           'billing-postal_code',
-          'quote-quantity'
         ]
         let validateResult = true
         elementList.map(el => {
@@ -592,14 +574,6 @@
         return validateResult
       },
 
-      setQuantity (e) {
-        const quoteQuantity = parseInt(e.target.value)
-        if (quoteQuantity > 0) {
-          this.$store.dispatch('order/setQuantity', quoteQuantity)
-        }
-      }
-      
     }
-
   }
 </script>

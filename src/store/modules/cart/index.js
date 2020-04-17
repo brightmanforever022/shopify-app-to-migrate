@@ -142,6 +142,7 @@ const cart = {
         return newQuote.data
       } catch (error) {
         console.log('error generated when creating new quote')
+        return false
       }
     },
     
