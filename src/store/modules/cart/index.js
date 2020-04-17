@@ -136,14 +136,15 @@ const cart = {
       }
     },
 
-    async createQuoteWithCart ({ commit, state, getters }) {
+    async createQuoteWithCart ({ commit, state, getters }, contactData) {
       try {
-        const newQuote = await createQuoteWithCart({ lines: state.line_items })
-        console.log('created quote: ', newQuote.data)
+        const newQuote = await createQuoteWithCart({ lines: state.line_items, contactDetail: contactData })
+        return newQuote.data
       } catch (error) {
         console.log('error generated when creating new quote')
       }
     },
+    
   },
   mutations: {
     SET_CART: (state, data) => {

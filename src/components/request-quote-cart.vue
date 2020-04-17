@@ -265,7 +265,7 @@
             </div>
           </div>
 
-          <button @click.prevent="submitQuoteRequest">SUBMIT QUOTE REQUEST</button>
+          <button @click.prevent="submitQuoteCartRequest">SUBMIT QUOTE REQUEST</button>
         </div>
       </div>
 
@@ -444,7 +444,7 @@
       emailUs () {
         window.location = 'mailto:info@displays4sale.com'
       },
-      async submitQuoteRequest () {
+      async submitQuoteCartRequest () {
         this.sameWithShipping()
         const validateResult = await this.validateForm()
         if (validateResult) {
@@ -453,7 +453,7 @@
           if (this.file.size) {
             uploadedFile = await this.submitFile()
           }
-          const createdQuote = await this.$store.dispatch('order/createQuote', {
+          const quoteWithCart = await this.$store.dispatch('cart/createQuoteWithCart', {
             contactName: this.contactName,
             contactCompany: this.contactCompany,
             contactEmail: this.contactEmail,
@@ -467,7 +467,8 @@
             isOutUS: this.isOutUS,
             outAddress: this.outAddress,
             isResidential: this.isResidential,
-            shippingMethod: this.shippingMethod,
+            shippingFedexMethod: this.shippingFedexMethod,
+            shippingFreightMethod: this.shippingFreightMethod,
             isLiftGate: this.isLiftGate,
             isFreight: this.isFreight,
             billingAddress1: this.billingAddress1,
@@ -479,10 +480,10 @@
             quoteQuantity: this.quoteQuantity,
             quoteElseKnow: this.quoteElseKnow,
             originalPrice: this.original_price,
-            metaShipping: this.productData.metafield,
             uploadedFile: uploadedFile
           })
-          console.log('created quote: ', createdQuote)
+          console.log('created quote: ', quoteWithCart)
+          this.closeQuoteCart()
           // */
         } else {
           alert('please fill the form with correct data')

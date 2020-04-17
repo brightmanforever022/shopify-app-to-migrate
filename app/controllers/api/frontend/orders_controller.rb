@@ -394,7 +394,9 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
 
   # create draft order based on the data in cart
   def createQuoteWithCart
-    puts "here, it creates draftorder with cart data"
+    lineItemList = params[:lines]
+    contactDetail = params[:contactDetail]
+    render json: { data: 'created a quote with cart' }
   end
   
   def checkDiscount(startsAt, endsAt)
