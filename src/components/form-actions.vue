@@ -369,6 +369,7 @@ export default {
         custom_options: this.custom_options,
         quantity: this.quantity,
         sku: this.variant.sku,
+        tags: this.productData.tags,
         shipping_summary: this.productData.metafield.value,
         original_price: this.original_price,
         calculated_item_price: this.calculated_item_price,

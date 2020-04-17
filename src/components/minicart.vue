@@ -40,7 +40,7 @@
                   <cart-input-quantity :quantity="line_item.quantity" :line_id="line_item.lineId"></cart-input-quantity>
                 </div>
                 <div class="detail-price">
-                  <span class="compare-at">{{ line_item.calculated_item_price | money }}</span> - <span>{{ lineItemSinglePrice(line_item) | money }}</span>
+                  <span class="compare-at">{{ line_item.calculated_item_price | money }}</span>&nbsp;&nbsp;<span>{{ lineItemSinglePrice(line_item) | money }}</span>
                 </div>
                 <div class="detail-total">
                   {{ lineItemPrice(line_item) | money }}
@@ -62,18 +62,9 @@
         <h2>Shipping Options</h2>
         <p>
           <IconFlagCanada />
-          <!-- <span>
-            Shipping to Canada? <a @click.prevent="showQuoteExplain">?</a>
-            <div class="explain-quote-block" v-show="explainQuoteFlag">
-              <div class="explain-block-header">
-                <a @click.prevent="hideQuoteExplain"><icon-close/></a>
-              </div>
-              Click to Request a Quote
-            </div>
-          </span> -->
           <span>
             Shipping to Canada?<br />
-            <a @click.prevent="showRequestQuote">Request Quote</a>
+            <a @click.prevent="openQuoteCartModal">Request Quote</a>
           </span>
         </p>
         <div class="zip-code-form">
@@ -128,7 +119,7 @@
             <p>
               When requesting an estimate, we review all aspects of the order including product, size and weight, quantity, boxing, shipping method and any special request or custom option to provide you the best possible quote.
             </p>
-            <h6><a @click.prevent="showRequestQuote"><icon-quote />&nbsp;Request a Quote</a></h6>
+            <h6><a @click.prevent="openQuoteCartModal"><icon-quote />&nbsp;Request a Quote</a></h6>
           </div>
         </div>
         <div v-if="freight_exist" class="freight-shipping-options">
@@ -198,18 +189,6 @@
                   <span class="summary-title">{{freightShippingList[freight_shipping.id - 1]}}:</span>
                   <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
                 </li>
-                <!-- <li>
-                  <span class="summary-title">
-                    Sales Tax (8.625%): <a @click.prevent="showExplain">?</a>
-                    <div class="explain-block" v-show="explainFlag">
-                      <div class="explain-block-header">
-                        <a @click.prevent="hideExplain"><icon-close/></a>
-                      </div>
-                      Tax Exempt? Once your order is placed, please send us your Resale or Tax Exempt Certificate, and we will refund the Tax collected.
-                    </div>
-                  </span>
-                  <span class="summary-price">{{sub_total*0.08625 | money}}</span>
-                </li> -->
               </ul>
             </div>
             <div class="order-total">
@@ -233,6 +212,18 @@
         </div>
       </div>
     </div>
+    <div
+      class="overlay__bg"
+      :key="quote-request-cart"
+      :class="{'visibled': isQuoteCartModal}"
+      @click.prevent="closeQuoteCartModal"
+    ></div>
+    <request-quote-cart
+      v-if="isQuoteCartModal"
+      :isQuoteCartModal="isQuoteCartModal"
+      :closeQuoteCart="closeQuoteCartModal"
+    >
+    </request-quote-cart>
   </div>
 </template>
 <script>
@@ -256,6 +247,7 @@ import IconLock from '@/components/icons/icon-lock'
 import IconFlagCanada from '@/components/icons/icon-flag-canada'
 import IconClose from '@/components/icons/icon-close'
 import IconQuestionCircle from '@/components/icons/icon-question-circle'
+import RequestQuoteCart from '@/components/request-quote-cart'
 import { getDiscountByQuantity } from '@/helpers'
 
 export default {
@@ -275,6 +267,7 @@ export default {
     IconFlagCanada,
     IconClose,
     IconQuestionCircle,
+    RequestQuoteCart,
     Loading,
   },
   props: {
@@ -351,8 +344,6 @@ export default {
       isPromoCode: false,
       promoCode: '',
       zipCode: '',
-      explainFlag: false,
-      explainQuoteFlag: false,
       shippingLoading: false,
       discountLoading: false,
       checkoutLoading: false,
@@ -371,7 +362,8 @@ export default {
         'Commercial Freight Delivery (Inside Service to Exact Location)',
         'RESIDENTIAL Freight Delivery (Residential Lift-Gate & Call Ahead Service)',
         'RESIDENTIAL Special Freight Delivery (Residential Lift-Gate & Inside Service 2/Call Ahead)'
-      ]
+      ],
+      isQuoteCartModal: false,
     }
   },
   methods: {
@@ -398,24 +390,15 @@ export default {
       }
     },
 
-    showQuoteExplain () {
-      this.explainQuoteFlag = true
+    openQuoteCartModal () {
+      $('#shopify-section-header .header').css('z-index', '-1')
+      $('.product__details').css('z-index', -1)
+      this.isQuoteCartModal = true
     },
-    hideQuoteExplain () {
-      this.explainQuoteFlag = false
-    },
-    showExplain () {
-      this.explainFlag = true
-    },
-    hideExplain () {
-      this.explainFlag = false
-    },
-    showRequestQuote () {
-      console.log('request quote will come soon')
-      alert('request quote will come soon')
-    },
-    hideRequestQuote () {
-      console.log('request quote has been hidden')
+    closeQuoteCartModal () {
+      // $('#shopify-section-header .header').css('z-index', '101')
+      // $('.product__details').css('z-index', 'initial')
+      this.isQuoteCartModal = false
     },
     showShippingOptions (e) {
       if (e.key == "Enter") {

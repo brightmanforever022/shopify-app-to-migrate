@@ -443,6 +443,7 @@
                 float: left;
                 .compare-at {
                   text-decoration: line-through;
+                  color: #777;
                 }
               }
               .detail-total {
@@ -1261,6 +1262,8 @@
           margin-bottom: 25px;
           a {
             display: flex;
+            border: none!important;
+            transition: none!important;
             span {
               display: inline-block;
               &.link-title {
@@ -1277,10 +1280,7 @@
 
             &:hover, &:link {
               border: none;
-              transition: unset;
-              -webkit-transition: unset;
-              -moz-transition: unset;
-              -o-transition: unset;
+              transition: none!important;
             }
           }
           &:last-of-type {

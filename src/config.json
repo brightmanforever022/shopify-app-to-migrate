@@ -1,4 +1,4 @@
 {
-  "API_HOST": "https://display4sale-order-app.herokuapp.com/",
+  "API_HOST": "http://localhost:4040",
   "API_NAMESPACE": "api/frontend"
 }
