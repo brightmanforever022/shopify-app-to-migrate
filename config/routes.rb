@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       resources :carts
       post 'carts/fedex/options/list' => 'carts#fedex_options_list'
       post 'carts/freightoptions' => 'carts#freight_options'
+      post 'contact/sendmail' => 'contact#sendContactMail'
     end
   end
 

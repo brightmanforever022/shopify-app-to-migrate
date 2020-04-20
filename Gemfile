@@ -80,3 +80,4 @@ gem 'json'
 
 gem "fedex", "~> 3.10"
 gem 'aws-sdk'
+gem 'sendgrid-ruby'
