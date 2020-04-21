@@ -16,6 +16,10 @@ class Home extends Component {
 	
 	gotoFreightoption = () => {
     this.props.history.push(`/freightoptions`)
+	}
+	
+	gotoVendor = () => {
+    this.props.history.push(`/vendors`)
   }
 
   render () {
@@ -33,6 +37,9 @@ class Home extends Component {
 								</ButtonGroup>
 								<ButtonGroup fullWidth={true}>
 									<Button primary={true} onClick={this.gotoFreightoption}>Manage Freight Options</Button>
+								</ButtonGroup>
+								<ButtonGroup fullWidth={true}>
+									<Button primary={true} onClick={this.gotoVendor}>Manage Vendors</Button>
 								</ButtonGroup>
 							</FormLayout>
 						</Card>

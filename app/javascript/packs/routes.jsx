@@ -12,6 +12,10 @@ import Freightoption from './views/pages/freightoptions'
 import NewFreightoption from './views/pages/freightoptions/detail'
 import EditFreightoption from './views/pages/freightoptions/detail'
 
+import Vendor from './views/pages/vendors'
+import NewVendor from './views/pages/vendors/detail'
+import EditVendor from './views/pages/vendors/detail'
+
 const routes = [
   {
     path: '/',
@@ -62,6 +66,21 @@ const routes = [
     path: '/freightoptions/:id/edit',
     exact: true,
     component: EditFreightoption
+  },
+  {
+    path: '/vendors',
+    exact: true,
+    component: Vendor
+  },
+  {
+    path: '/vendors/new',
+    exact: true,
+    component: NewVendor
+  },
+  {
+    path: '/vendors/:id/edit',
+    exact: true,
+    component: EditVendor
   }
 ]
 

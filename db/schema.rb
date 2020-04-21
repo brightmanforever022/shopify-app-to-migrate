@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_144232) do
+ActiveRecord::Schema.define(version: 2020_04_20_213319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -129,6 +129,11 @@ ActiveRecord::Schema.define(version: 2020_04_14_144232) do
     t.datetime "updated_at", null: false
     t.bigint "template_id"
     t.index ["template_id"], name: "index_variants_on_template_id"
+  end
+
+  create_table "vendors", force: :cascade do |t|
+    t.string "vendor_name"
+    t.string "zip_code"
   end
 
   add_foreign_key "freightoptions", "shops"
