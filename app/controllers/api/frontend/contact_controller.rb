@@ -21,26 +21,26 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     referral = params[:referral]
     attached = params[:attach]
 
-    mailContent += "Contact Name: " + userName + "\n"
+    mailContent += "<b>Contact Name</b>: " + userName + "<br>"
     if company.present?
-      mailContent += "Company Name: " + company + "\n"
+      mailContent += "<b>Company Name</b>: " + company + "<br>"
     end
     if phone.present?
-      mailContent += "Daytime Telephone: " + phone + "\n"
+      mailContent += "<b>Daytime Telephone</b>: " + phone + "<br>"
     end
-    mailContent += "Address Line 1: " + address1 + "\n"
+    mailContent += "<b>Address Line 1</b>: " + address1 + "<br>"
     if address2.present?
-      mailContent += "Address Line 2: " + address2 + "\n"
+      mailContent += "<b>Address Line 2</b>: " + address2 + "<br>"
     end
-    mailContent += "Town/City: " + city + "\nCountry: " + country + "\nPostal Code: " + zipcode + "\nHow they found us: " + referral + "\n"
-    mailContent += "-----------------------------------------\n"
+    mailContent += "<b>Town/City</b>: " + city + "<br><b>Country</b>: " + country + "<br><b>Postal Code</b>: " + zipcode + "<br><b>How they found us</b>: " + referral + "<br>"
+    mailContent += "__________________________________________<br><br>"
     mailContent += message
 
     from = SendGrid::Email.new(email: userEmail)
-    to = SendGrid::Email.new(email: 'info@displays4sale.com')
-    # to = SendGrid::Email.new(email: 'yong@halfhelix.com')
+    # to = SendGrid::Email.new(email: 'info@displays4sale.com')
+    to = SendGrid::Email.new(email: 'yong@halfhelix.com')
     subject = mailSubject
-    content = SendGrid::Content.new(type: 'text/plain', value: mailContent)
+    content = SendGrid::Content.new(type: 'text/html', value: mailContent)
     mail = SendGrid::Mail.new(from, subject, to, content)
 
     # Add attachment
