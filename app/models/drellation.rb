@@ -1,4 +1,6 @@
 class Drellation < ApplicationRecord
+  default_scope { order(id: :asc) }
+
   belongs_to :group
   belongs_to :dattribute
   

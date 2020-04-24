@@ -124,13 +124,13 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       discountedCustomPrice = customPrice * (100 - discountPercent) / 100
       discountAmount = customPrice * item[:quantity].to_i * discountPercent / 100
       # line_items.push({
-      #   title: 'Selections for above product',
+      #   title: 'Selections',
       #   quantity: item[:quantity].to_i,
       #   price: discountedCustomPrice,
       #   properties: customDescription
       # })
       line_items.push({
-        title: 'Selections for above product',
+        title: 'Selections',
         quantity: item[:quantity].to_i,
         price: customPrice,
         properties: customDescription,
@@ -415,7 +415,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       discountAmount = customPrice * cartItem[:quantity].to_i * discountPercent / 100
 
       line_items.push({
-        title: 'Selections for above product',
+        title: 'Selections',
         quantity: cartItem[:quantity].to_i,
         price: customPrice,
         properties: customDescription,
