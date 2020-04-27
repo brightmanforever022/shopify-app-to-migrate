@@ -342,7 +342,6 @@ export default {
         } catch (error) {
           console.log('Error in upsert customization: ', error)
         }
-        console.log('except list: ', this.except_list)
       }
     },
     saveSelection () {

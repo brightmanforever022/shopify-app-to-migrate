@@ -37,8 +37,8 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     mailContent += message
 
     from = SendGrid::Email.new(email: userEmail)
-    # to = SendGrid::Email.new(email: 'info@displays4sale.com')
-    to = SendGrid::Email.new(email: 'yong@halfhelix.com')
+    to = SendGrid::Email.new(email: ENV['CONTACT_EMAIL'])
+    # to = SendGrid::Email.new(email: 'yong@halfhelix.com')
     subject = mailSubject
     content = SendGrid::Content.new(type: 'text/html', value: mailContent)
     mail = SendGrid::Mail.new(from, subject, to, content)
