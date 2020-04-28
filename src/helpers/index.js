@@ -39,7 +39,7 @@ export function getDiscountByQuantity(summary, quantity) {
 	let shipPeriodFrom = 0
 	let shipPeriodTo = 0
 
-	const summaryLines = summary.split('\n')
+	const summaryLines = summary.split('<newline>')
 	summaryLines.forEach(summaryLine => {
 		let shippingLineItems = summaryLine.split(',')
 		const shippingQtyItems = shippingLineItems[0].split(' ')
@@ -65,7 +65,7 @@ export function getShippingPeriod(summary, quantity) {
 		'September', 'October', 'November', 'December'
 	]
 
-	const summaryLines = summary.split('\n')
+	const summaryLines = summary.split('<newline>')
 	summaryLines.forEach(summaryLine => {
 		let shippingLineItems = summaryLine.split(',')
 		const shippingQtyItems = shippingLineItems[0].split(' ')

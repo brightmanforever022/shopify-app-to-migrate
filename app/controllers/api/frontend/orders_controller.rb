@@ -566,7 +566,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
       shipPeriodFrom = 0
       shipPeriodTo = 0
     
-      summaryLines = summary.split("\n")
+      summaryLines = summary.split("<newline>")
       summaryLines.each do |summaryLine|
         shippingLineItems = summaryLine.split(',')
         shippingQtyItems = shippingLineItems[0].split(' ')
