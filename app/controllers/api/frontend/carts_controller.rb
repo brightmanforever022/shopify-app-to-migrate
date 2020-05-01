@@ -30,22 +30,15 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       :meter => '251121044',
       :mode => 'production'
     )
-    
-    # shipper = {
-    #   :name => "Test Fedex Sender",
-    #   :company => "Home",
-    #   :postal_code => "80125",
-    #   :country_code => "US"
-    # }
-    
-    # recipient = {
-    #   :name => "Test Fedex Recipient",
-    #   :company => "Home",
-    #   :postal_code => zipCode,
-    #   :country_code => "US",
-    #   :residential => "true"
-    # }
 
+    recipient = {
+      :name => "Test Fedex Recipient",
+      :company => "Home",
+      :postal_code => zipCode,
+      :country_code => "US",
+      :residential => "true"
+    }
+    
     # packages = []
     shippingMarkup = 0.0
     lineRateList = {
@@ -64,64 +57,89 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         end
       end
       
+      if lineItem[:is_freight]
+        isFreight = true
+      end
+      
       if !isFreight
         shippingMarkup = 0
         packages = []
         lineItem[:custom_options].each do |co|
           if co[:weight] > 0
             realWeight = co[:weight] * 2.2
-            packages << {
-              :weight => {:units => "LB", :value => co[:weight]},
-              :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
-            }
+            # packages << {
+            #   :weight => {:units => "LB", :value => co[:weight]},
+            #   :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
+            # }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
+            shipper = {
+              :name => "Test Fedex Sender",
+              :company => "Home",
+              :postal_code => co[:postal_code].to_i,
+              :country_code => "US"
+            }
+            
+            lineRate = get_rates_list([{
+                :weight => {:units => "LB", :value => co[:weight]},
+                :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
+              }], shipper, recipient, shipping_options, fedex)
+            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
           end
           if co[:weight2] > 0
-            packages << {
-              :weight => {:units => "LB", :value => co[:weight2] * 2.2},
-              :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
-            }
+            # packages << {
+            #   :weight => {:units => "LB", :value => co[:weight2] * 2.2},
+            #   :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
+            # }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
+            shipper = {
+              :name => "Test Fedex Sender",
+              :company => "Home",
+              :postal_code => co[:postal_code].to_i,
+              :country_code => "US"
+            }
+            
+            lineRate = get_rates_list([{
+                :weight => {:units => "LB", :value => co[:weight2] * 2.2},
+                :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
+              }], shipper, recipient, shipping_options, fedex)
+            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
           end
           if co[:weight3] > 0
-            packages << {
-              :weight => {:units => "LB", :value => co[:weight3] * 2.2},
-              :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
-            }
+            # packages << {
+            #   :weight => {:units => "LB", :value => co[:weight3] * 2.2},
+            #   :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
+            # }
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
+
+            shipper = {
+              :name => "Test Fedex Sender",
+              :company => "Home",
+              :postal_code => co[:postal_code].to_i,
+              :country_code => "US"
+            }
+            
+            lineRate = get_rates_list([{
+                :weight => {:units => "LB", :value => co[:weight3] * 2.2},
+                :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
+              }], shipper, recipient, shipping_options, fedex)
+            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
           end
 
         end
-        
-        # get rate per lineitem
-        # shipper postal code should be from product info. In product table, there is a field - dropshippingid, dropshipping table has zipcode.
-        # zipcode should be in lineItem
-        shipper = {
-          :name => "Test Fedex Sender",
-          :company => "Home",
-          :postal_code => "80125",
-          :country_code => "US"
-        }
-        
-        recipient = {
-          :name => "Test Fedex Recipient",
-          :company => "Home",
-          :postal_code => zipCode,
-          :country_code => "US",
-          :residential => "true"
-        }
-        puts "-----------------packages----------------------:"
-        puts packages
-        lineRate = get_rates_list(packages, shipper, recipient, shipping_options, fedex)
-        lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-        lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-        lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-        lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
-        lineRateList[:shippingMarkup] += shippingMarkup
 
+        lineRateList[:shippingMarkup] += shippingMarkup
       end
     end
     http_success_response({
