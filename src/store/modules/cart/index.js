@@ -209,6 +209,9 @@ const cart = {
       let isFreightExist = false
       const { line_items } = state
       line_items.map(lineItem => {
+        if(lineItem.is_freight) {
+          isFreightExist = true
+        }
         lineItem.custom_options.map(co => {
           if (co.freight) {
             isFreightExist = true
@@ -227,7 +230,7 @@ const cart = {
             isFreight = true
           }
         })
-        if (isFreight) {
+        if (isFreight || lineItem.is_freight) {
           numberOfFreight++
         }
       })

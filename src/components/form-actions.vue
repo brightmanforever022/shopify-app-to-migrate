@@ -321,6 +321,7 @@ export default {
       let item_id = evt.target.value
       let group = this.group(evt.target.dataset.group)
       let item = group.dattributes.find(i => i.id === +item_id)
+      console.log('change attribute: ', group_id, item_id)
       if (item) {
         item['group'] = group.label
   
@@ -379,6 +380,7 @@ export default {
         calculated_item_price: this.calculated_item_price,
         calculated_price: this.calculated_price,
         free_ground: this.productData.tags.includes('free-ground') ? true : false,
+        is_freight: this.productData.tags.includes('is-freight') ? true : false,
         wishlisted: false,
       }
       
@@ -409,6 +411,7 @@ export default {
         sku: this.variant.sku,
         calculated_item_price: this.calculated_item_price,
         free_ground: this.productData.tags.includes('free-ground') ? true : false,
+        is_freight: this.productData.tags.includes('is-freight') ? true : false,
       }
       try {
         const res = await this.$store.dispatch('wishlist/addWish', wishItem)
