@@ -53,7 +53,7 @@
                 :value="item.id"
               >
                 <span v-if="item.price_type && item.price>0">{{item.label}} ({{item.price}}% Upcharge)</span>
-                <span v-if="!item.price_type && item.price>0">{{item.label}} (+ ${{item.price}})</span>
+                <span v-if="!item.price_type && item.price>0">{{item.label}} (+ ${{item.price.toFixed(2)}})</span>
                 <span v-if="item.price==0">{{item.label}}</span>
               </option>
             </select>
@@ -74,7 +74,7 @@
                 :selected="true"
               >
                 <span v-if="item.price_type && item.price>0">{{item.label}} ({{item.price}}% Upcharge)</span>
-                <span v-if="!item.price_type && item.price>0">{{item.label}} (+ ${{item.price}})</span>
+                <span v-if="!item.price_type && item.price>0">{{item.label}} (+ ${{item.price.toFixed(2)}})</span>
                 <span v-if="item.price==0">{{item.label}}</span>
               </option>
             </select>

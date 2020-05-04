@@ -66,7 +66,6 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         packages = []
         lineItem[:custom_options].each do |co|
           if co[:weight] > 0
-            realWeight = co[:weight] * 2.2
             # packages << {
             #   :weight => {:units => "LB", :value => co[:weight]},
             #   :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
@@ -81,7 +80,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             }
             
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight]},
+                :weight => {:units => "LB", :value => co[:weight] * 2.2},
                 :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i

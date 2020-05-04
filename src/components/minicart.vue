@@ -90,22 +90,21 @@
               <li @click.prevent="fedexShipping('ground')" id="fedex-shipping-option-ground" class="active">
                 <span>Ground</span>
                 <span>{{ groundMoney }}</span>
-                <!-- <span>Get it by October 26</span> -->
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
-                <span>{{fedex_shipping_list.threeday | money}}</span>
+                <span>{{fedex_shipping_list.threeday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
-                <span>{{fedex_shipping_list.twoday | money}}</span>
+                <span>{{fedex_shipping_list.twoday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
-                <span>{{fedex_shipping_list.nextday | money}}</span>
+                <span>{{fedex_shipping_list.nextday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
             </ul>
@@ -175,25 +174,25 @@
               <ul>
                 <li>
                   <span class="summary-title">Product Subtotal:</span>
-                  <span class="summary-price">{{sub_total | money}}</span>
+                  <span class="summary-price">{{sub_total.toFixed(2) | money}}</span>
                 </li>
                 <li v-if="isPromoCode">
                   <span class="summary-title">Discount:</span>
-                  <span class="summary-price">{{discount_total | money}}</span>
+                  <span class="summary-price">{{discount_total.toFixed(2) | money}}</span>
                 </li>
                 <li v-if="fedex_exist">
                   <span class="summary-title">UPS / Fedex (Ground) Shipping:</span>
-                  <span class="summary-price">{{fedex_shipping.shipping_price | money}}</span>
+                  <span class="summary-price">{{fedex_shipping.shipping_price.toFixed(2) | money}}</span>
                 </li>
                 <li v-if="freight_exist">
                   <span class="summary-title">{{freightShippingList[freight_shipping.id - 1]}}:</span>
-                  <span class="summary-price">{{freight_shipping.shipping_price | money}}</span>
+                  <span class="summary-price">{{freight_shipping.shipping_price.toFixed(2) | money}}</span>
                 </li>
               </ul>
             </div>
             <div class="order-total">
               <span class="total-title">Order Total:</span>
-              <span class="total-price">{{cal_total | money}}</span>
+              <span class="total-price">{{cal_total.toFixed(2) | money}}</span>
             </div>
           </div>
           <div class="checkout-buttons">
@@ -323,7 +322,7 @@ export default {
       }
     },
     groundMoney () {
-      return (this.fedex_shipping_list.ground > 0 ? '$' + this.fedex_shipping_list.ground : 'Free Ground')
+      return (this.fedex_shipping_list.ground > 0 ? '$' + this.fedex_shipping_list.ground.toFixed(2) : 'Free Ground')
     }
   },
   created () {
