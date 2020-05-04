@@ -259,8 +259,12 @@
               <input type="file" ref="file" id="quote-upload" v-on:change="handleFileUpload()" name="uploadFile" />
             </div>
           </div>
+          <loading
+            :active.sync="quoteRequestLoading"
+            :is-full-page="false"
+          />
 
-          <button @click.prevent="submitQuoteCartRequest">SUBMIT QUOTE REQUEST</button>
+          <button @click.prevent="submitQuoteCartRequest">{{btnText}}</button>
         </div>
       </div>
 
@@ -394,6 +398,8 @@
         billingPostalCode: '',
         quoteElseKnow: '',
         file: '',
+        btnText: 'SUBMIT QUOTE REQUEST',
+        quoteRequestLoading: false,
       }
     },
 
@@ -441,6 +447,7 @@
         this.sameWithShipping()
         const validateResult = await this.validateForm()
         if (validateResult) {
+          this.quoteRequestLoading = true
           let uploadedFile = null
           if (this.file.size) {
             uploadedFile = await this.submitFile()
@@ -473,8 +480,10 @@
             originalPrice: this.original_price,
             uploadedFile: uploadedFile
           })
-          console.log('created quote: ', quoteWithCart)
-          // this.closeQuoteCart()
+          // console.log('created quote: ', quoteWithCart)
+          this.btnText = "YOU SUBMITTED QUOTE REQUEST"
+          this.quoteRequestLoading = false
+          setTimeout(this.closeQuoteCart, 1200)
         } else {
           alert('please fill the form with correct data')
           return false

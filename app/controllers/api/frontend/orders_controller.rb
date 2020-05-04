@@ -362,8 +362,8 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     
     if draft_order.save
       sleep 1.second
-      draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
-      draft_order.send_invoice(draft_order_invoice)
+      # draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
+      # draft_order.send_invoice(draft_order_invoice)
       # store draftorder id and file url. file url is in contactDetail[:uploadedFile].url
       if contactDetail[:uploadedFile].present?
         @quote = Quote.new(
@@ -520,8 +520,8 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
     
     if draft_order.save
       sleep 1.second
-      draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
-      draft_order.send_invoice(draft_order_invoice)
+      # draft_order_invoice = ShopifyAPI::DraftOrderInvoice.new
+      # draft_order.send_invoice(draft_order_invoice)
       # store draftorder id and file url. file url is in contactDetail[:uploadedFile].url
       if contactDetail[:uploadedFile].present?
         @quote = Quote.new(

@@ -1232,7 +1232,7 @@
 
         &:last-of-type {
           margin-bottom: 0;
-        }
+        }        
       }
       button {
         width: 100%;
@@ -1243,6 +1243,11 @@
         font-size: 14px;
         line-height: 18px;
         text-transform: uppercase;
+      }
+      .vld-overlay {
+        left: 150px;
+        width: 40%;
+        bottom: 100px;
       }
     }
 

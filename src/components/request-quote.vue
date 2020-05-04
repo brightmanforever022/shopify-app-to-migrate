@@ -249,7 +249,12 @@
             </div>
           </div>
 
-          <button @click.prevent="submitQuoteRequest">SUBMIT QUOTE REQUEST</button>
+          <loading
+            :active.sync="quoteRequestLoading"
+            :is-full-page="false"
+          />
+
+          <button @click.prevent="submitQuoteRequest">{{btnText}}</button>
         </div>
       </div>
 
@@ -291,6 +296,7 @@
   import { VTooltip } from 'v-tooltip'
   import { mapGetters } from 'vuex'
   import $ from 'jquery'
+  import Loading from 'vue-loading-overlay'
   import IconEmailUs from '@/components/icons/icon-email-us'
   import IconLiveChat from '@/components/icons/icon-live-chat'
   import IconPhoneSupport from '@/components/icons/icon-phone-support'
@@ -316,7 +322,8 @@
       IconLiveChat,
       IconPhoneSupport,
       QuoteItemDetail,
-      IconQuestionCircle
+      IconQuestionCircle,
+      Loading,
     },
     computed: {
       ...mapGetters({
@@ -402,6 +409,8 @@
         quoteQuantity: 1,
         quoteElseKnow: '',
         file: '',
+        btnText: 'SUBMIT QUOTE REQUEST',
+        quoteRequestLoading: false,
       }
     },
 
@@ -451,6 +460,7 @@
         const validateResult = await this.validateForm()
         if (validateResult) {
           // /*
+          this.quoteRequestLoading = true
           let uploadedFile = null
           if (this.file.size) {
             uploadedFile = await this.submitFile()
@@ -484,7 +494,9 @@
             metaShipping: this.productData.metafield,
             uploadedFile: uploadedFile
           })
-          console.log('created quote: ', createdQuote)
+          this.btnText = "YOU SUBMITTED QUOTE REQUEST"
+          this.quoteRequestLoading = false
+          setTimeout(this.closeQuote, 1200)
           // */
         } else {
           alert('please fill the form with correct data')
