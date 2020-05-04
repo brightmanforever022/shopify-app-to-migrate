@@ -527,7 +527,7 @@
             }
             break
           case 'address1':
-            regex = /^[a-zA-Z0-9\s,'-]*$/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.address1 == '') ? true : (regex.test(this.address1) ? true : false)
             } else {
@@ -535,7 +535,7 @@
             }
             break
           case 'town_city':
-            regex = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.townCity == '') ? true : (regex.test(this.townCity) ? true : false)
             } else {
@@ -543,7 +543,7 @@
             }
             break
           case 'postal_code':
-            regex = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.postalCode == '') ? true : (regex.test(this.postalCode) ? true : false)
             } else {
@@ -551,7 +551,7 @@
             }
             break
           case 'billing-address1':
-            regex = /^[a-zA-Z0-9\s,'-]*$/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.billingAddress1 == '') ? true : (regex.test(this.billingAddress1) ? true : false)
             } else {
@@ -559,7 +559,7 @@
             }
             break
           case 'billing-town_city':
-            regex = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.billingTownCity == '') ? true : (regex.test(this.billingTownCity) ? true : false)
             } else {
@@ -567,7 +567,7 @@
             }
             break
           case 'billing-postal_code':
-            regex = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+            regex = /([^\s])/
             if (checkLevel == 0) {
               return (this.billingPostalCode == '') ? true : (regex.test(this.billingPostalCode) ? true : false)
             } else {
