@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_20_213319) do
+ActiveRecord::Schema.define(version: 2020_05_04_214836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -40,6 +40,18 @@ ActiveRecord::Schema.define(version: 2020_04_20_213319) do
     t.integer "min_ship_quantity", default: 0
     t.integer "max_ship_quantity", default: 0
     t.float "ship_price_percent", default: 0.0
+    t.float "width4", default: 0.0
+    t.float "length4", default: 0.0
+    t.float "girth4", default: 0.0
+    t.float "weight4", default: 0.0
+    t.float "width5", default: 0.0
+    t.float "length5", default: 0.0
+    t.float "girth5", default: 0.0
+    t.float "weight5", default: 0.0
+    t.float "width6", default: 0.0
+    t.float "length6", default: 0.0
+    t.float "girth6", default: 0.0
+    t.float "weight6", default: 0.0
   end
 
   create_table "drellations", force: :cascade do |t|

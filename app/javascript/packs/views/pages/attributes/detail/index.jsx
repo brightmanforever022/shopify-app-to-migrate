@@ -36,6 +36,18 @@ class NewAttribute extends Component {
       width3: 0,
       length3: 0,
       girth3: 0,
+      weight4: 0,
+      width4: 0,
+      length4: 0,
+      girth4: 0,
+      weight5: 0,
+      width5: 0,
+      length5: 0,
+      girth5: 0,
+      weight6: 0,
+      width6: 0,
+      length6: 0,
+      girth6: 0,
       attribute_code: '',
       postal_code: '',
       freight: false,
@@ -85,6 +97,18 @@ class NewAttribute extends Component {
             width3: data.attribute.width3,
             length3: data.attribute.length3,
             girth3: data.attribute.girth3,
+            weight4: data.attribute.weight4,
+            width4: data.attribute.width4,
+            length4: data.attribute.length4,
+            girth4: data.attribute.girth4,
+            weight5: data.attribute.weight5,
+            width5: data.attribute.width5,
+            length5: data.attribute.length5,
+            girth5: data.attribute.girth5,
+            weight6: data.attribute.weight6,
+            width6: data.attribute.width6,
+            length6: data.attribute.length6,
+            girth6: data.attribute.girth6,
             attribute_code: data.attribute.attribute_code,
             postal_code: data.attribute.postal_code,
             freight: data.attribute.freight,
@@ -144,7 +168,13 @@ class NewAttribute extends Component {
   }
 
   handleSave = () => {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, selectedStoreList, vendor_sku, min_ship_quantity, max_ship_quantity, ship_price_percent } = this.state
+    const { 
+      id, label, price, price_type, weight, width, length, girth,
+      weight2, width2, length2, girth2, weight3, width3, length3, girth3,
+      weight4, width4, length4, girth4, weight5, width5, length5, girth5,
+      weight6, width6, length6, girth6, attribute_code, postal_code, freight,
+      selectedStoreList, vendor_sku, min_ship_quantity, max_ship_quantity, ship_price_percent } = this.state
+    
     this.setState({saving: true})
     let store_list = selectedStoreList
     if (id) {
@@ -165,6 +195,18 @@ class NewAttribute extends Component {
         width3,
         length3,
         girth3,
+        weight4,
+        width4,
+        length4,
+        girth4,
+        weight5,
+        width5,
+        length5,
+        girth5,
+        weight6,
+        width6,
+        length6,
+        girth6,
         attribute_code,
         postal_code,
         freight,
@@ -194,6 +236,18 @@ class NewAttribute extends Component {
         width3,
         length3,
         girth3,
+        weight4,
+        width4,
+        length4,
+        girth4,
+        weight5,
+        width5,
+        length5,
+        girth5,
+        weight6,
+        width6,
+        length6,
+        girth6,
         attribute_code,
         postal_code,
         freight,
@@ -213,7 +267,13 @@ class NewAttribute extends Component {
   }
 
   render () {
-    const { id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2, weight3, width3, length3, girth3, attribute_code, postal_code, freight, store_list, selectedStoreList, vendor_sku, min_ship_quantity, max_ship_quantity, ship_price_percent, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
+    const { 
+      id, label, price, price_type, weight, width, length, girth, weight2, width2, length2, girth2,
+      weight3, width3, length3, girth3, weight4, width4, length4, girth4,
+      weight5, width5, length5, girth5, weight6, width6, length6, girth6,
+      attribute_code, postal_code, freight, store_list, selectedStoreList, vendor_sku,
+      min_ship_quantity, max_ship_quantity, ship_price_percent, loading, saving, confirmModal, storeSelectModal, confirming } = this.state
+    
     const primaryAction = {
       content: 'Save',
       loading: saving,
@@ -351,6 +411,66 @@ class NewAttribute extends Component {
                           value={weight3}
                           onChange={this.handleChange('weight3')}
                           label="Third Weight"
+                        />
+                        <TextField
+                          value={width4}
+                          onChange={this.handleChange('width4')}
+                          label="Fourth Width"
+                        />
+                        <TextField
+                          value={length4}
+                          onChange={this.handleChange('length4')}
+                          label="Fourth Length"
+                        />
+                        <TextField
+                          value={girth4}
+                          onChange={this.handleChange('girth4')}
+                          label="Fourth Height"
+                        />
+                        <TextField
+                          value={width5}
+                          onChange={this.handleChange('width5')}
+                          label="Fifth Width"
+                        />
+                        <TextField
+                          value={length5}
+                          onChange={this.handleChange('length5')}
+                          label="Fifth Length"
+                        />
+                        <TextField
+                          value={girth5}
+                          onChange={this.handleChange('girth5')}
+                          label="Fifth Height"
+                        />
+                        <TextField
+                          value={width6}
+                          onChange={this.handleChange('width6')}
+                          label="Sixth Width"
+                        />
+                        <TextField
+                          value={length6}
+                          onChange={this.handleChange('length6')}
+                          label="Sixth Length"
+                        />
+                        <TextField
+                          value={girth6}
+                          onChange={this.handleChange('girth6')}
+                          label="Sixth Height"
+                        />
+                        <TextField
+                          value={weight4}
+                          onChange={this.handleChange('weight4')}
+                          label="Fourth Weight"
+                        />
+                        <TextField
+                          value={weight5}
+                          onChange={this.handleChange('weight5')}
+                          label="Fifth Weight"
+                        />
+                        <TextField
+                          value={weight6}
+                          onChange={this.handleChange('weight6')}
+                          label="Sixth Weight"
                         />
                         <Checkbox
                           label="Freight"
