@@ -209,6 +209,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :shipping_options => shipping_options
         )
 
+        puts "------------------rateNextDay rate: #{rateNextDay}"
         rateGroundData = JSON.parse(rateGround[0].to_json)
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
