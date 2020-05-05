@@ -163,13 +163,15 @@
       </div>
     </div>
     <div class="form__actions">
-      <a
+      <button
         class="btn form__btn btn--block"
+        :disabled="!customizable"
+        :class="{'inactive': !customizable}"
         @click.prevent="openSelection"
       >
         <span v-if="fully_customized && customizable">Edit selections</span>
         <span v-else>Make selections</span>
-      </a>
+      </button>
       <button class="btn form__btn btn--block add-to-cart"
         :class="{'inactive': !fully_customized && customizable}"
         :disabled="!fully_customized && customizable"

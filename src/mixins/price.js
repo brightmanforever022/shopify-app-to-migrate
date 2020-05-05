@@ -29,7 +29,15 @@ export default {
       return this.options.length === this.template.groups.length
     },
     customizable () {
-      return this.template.groups ? this.template.groups.length > 0 : false
+      let returnValue = false
+      if (this.template.groups && this.template.groups.length > 0) {
+        this.template.groups.map(gr => {
+          if (gr.dattributes.length > 1) {
+            returnValue = ture
+          }
+        })
+      }
+      return returnValue
     }
   }
 }

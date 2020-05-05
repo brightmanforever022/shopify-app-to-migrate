@@ -1,7 +1,8 @@
 <template>
   <div class="form__selections-view">
     <div class="quote__price">
-      <span class="price">{{calculated_price | money}}</span>
+      <span class="item-price">{{calculated_item_price}}/ea</span>
+      <span class="price sub-total">SubTotal&nbsp;&nbsp;{{calculated_price | money}}</span>
     </div>
     <input-quantity></input-quantity>
     <quote-selection
