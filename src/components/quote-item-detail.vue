@@ -1,6 +1,6 @@
 <template>
   <div class="form__selections-view">
-    <div class="quote__price">
+    <div class="quote__price" v-if="existPrice">
       <span class="item-price">{{calculated_item_price}}/ea</span>
       <span class="price sub-total">SubTotal&nbsp;&nbsp;{{calculated_price | money}}</span>
     </div>
@@ -27,7 +27,10 @@ export default {
   computed: {
     ...mapGetters({
       quantity: 'order/quantity'
-    })
+    }),
+    existPrice() {
+      return this.fully_customized
+    }
   }
 }
 </script>
