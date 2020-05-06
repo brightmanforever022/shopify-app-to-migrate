@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { Plugin } from 'vue-fragment'
+import Notifications from 'vue-notification'
 
 import App from './App.vue'
 import store from './store'
@@ -14,7 +15,7 @@ Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueI18n)
 Vue.use(Plugin)
-
+Vue.use(Notifications)
 
 Vue.component('v-style', {
   render: (createElement) => {

@@ -241,6 +241,7 @@ export default {
       is_opened: false,
       addtocart_confirm_opened: false,
       selectedOptions: [],
+      lastSelected: 0,
     }
   },
   created () {
@@ -321,33 +322,42 @@ export default {
     async setAddOn (evt) {
       let group_id = evt.target.dataset.group
       let item_id = evt.target.value
-      let group = this.group(evt.target.dataset.group)
-      let item = group.dattributes.find(i => i.id === +item_id)
-      console.log('change attribute: ', group_id, item_id)
-      if (item) {
-        item['group'] = group.label
-  
-        // get excepts for selected item
-        const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
-        const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
-          return {
-            groupId: drellation.group_id,
-            groupLabel: group.label,
-            exceptId: parseInt(ex)
-          }
-        })
-        try {
-          const customOptions = await this.$store.dispatch('order/upsert_customization', item)
-          await this.$store.dispatch('order/setExcepts',
-           {
+      if (item_id != 'noselected') {
+        this.lastSelected = evt.target.selectedIndex
+      }
+      // console.log('last selected option: ', this.lastSelected)
+      if (item_id == 'noselected') {
+        evt.target.selectedIndex = this.lastSelected
+        return false
+      } else {
+        let group = this.group(evt.target.dataset.group)
+        let item = group.dattributes.find(i => i.id === +item_id)
+        console.log('change attribute: ', group_id, item_id)
+        if (item) {
+          item['group'] = group.label
+
+          // get excepts for selected item
+          const drellation = group.drellations.find(dr => dr.dattribute_id == item.id)
+          const newExcepts = drellation.excepts == '' ? [] : drellation.excepts.split(',').map(ex => {
+            return {
               groupId: drellation.group_id,
-              groupLabelList: this.exceptGroupList(drellation.excepts),
-              exceptData: newExcepts
+              groupLabel: group.label,
+              exceptId: parseInt(ex)
             }
-          )
-          this.checkGroupOneAttribute()
-        } catch (error) {
-          console.log('Error in upsert customization: ', error)
+          })
+          try {
+            const customOptions = await this.$store.dispatch('order/upsert_customization', item)
+            await this.$store.dispatch('order/setExcepts',
+             {
+                groupId: drellation.group_id,
+                groupLabelList: this.exceptGroupList(drellation.excepts),
+                exceptData: newExcepts
+              }
+            )
+            this.checkGroupOneAttribute()
+          } catch (error) {
+            console.log('Error in upsert customization: ', error)
+          }
         }
       }
     },

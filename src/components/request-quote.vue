@@ -254,6 +254,8 @@
             :is-full-page="false"
           />
 
+          <notifications group="request-quote" position="top center" />
+
           <button @click.prevent="submitQuoteRequest">{{btnText}}</button>
         </div>
       </div>
@@ -496,7 +498,13 @@
           })
           this.btnText = "YOU SUBMITTED QUOTE REQUEST"
           this.quoteRequestLoading = false
-          setTimeout(this.closeQuote, 1200)
+          this.$notify({
+            group: 'request-quote',
+            title: 'Request Quote',
+            text: 'You submitted a quote successfully!'
+          });
+          setTimeout(this.closeQuote, 2000)
+
           // */
         } else {
           alert('please fill the form with correct data')
