@@ -80,7 +80,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight]},
                 :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -92,7 +92,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           if co[:weight2] > 0
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight2] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight2]},
                 :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -104,7 +104,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           if co[:weight3] > 0
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight3] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight3]},
                 :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -117,7 +117,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
 
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight4] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight4]},
                 :dimensions => {:length => co[:length4], :width => co[:width4], :height => co[:girth4], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -130,7 +130,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
 
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight5] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight5]},
                 :dimensions => {:length => co[:length5], :width => co[:width5], :height => co[:girth5], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -143,7 +143,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             shippingMarkup += lineItem[:calculated_price] * 5 / 100
 
             lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight6] * 2.2},
+                :weight => {:units => "LB", :value => co[:weight6]},
                 :dimensions => {:length => co[:length6], :width => co[:width6], :height => co[:girth6], :units => "IN"}
               }], shipper, recipient, shipping_options, fedex)
             
@@ -209,17 +209,18 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           :shipping_options => shipping_options
         )
 
-        puts "------------------rateNextDay rate: #{rateNextDay}"
         rateGroundData = JSON.parse(rateGround[0].to_json)
         rateNextDayData = JSON.parse(rateNextDay[0].to_json)
         rateTwoDayData = JSON.parse(rateTwoDay[0].to_json)
         rateThreeDayData = JSON.parse(rateThreeDay[0].to_json)
+
+        # exclude discounts and increase 10%
         
         return {
-          rateGround: rateGroundData['total_net_charge'],
-          rateNextDay: rateNextDayData['total_net_charge'],
-          rateTwoDay: rateTwoDayData['total_net_charge'],
-          rateThreeDay: rateThreeDayData['total_net_charge'],
+          rateGround: (rateGroundData['total_surcharges'].to_f + rateGroundData['total_base_charge'].to_f) * 1.1,
+          rateNextDay: (rateNextDayData['total_surcharges'].to_f + rateNextDayData['total_base_charge'].to_f) * 1.1,
+          rateTwoDay: (rateTwoDayData['total_surcharges'].to_f + rateTwoDayData['total_base_charge'].to_f) * 1.1,
+          rateThreeDay: (rateThreeDayData['total_surcharges'].to_f + rateThreeDayData['total_base_charge'].to_f) * 1.1,
         }
       else
         return {
