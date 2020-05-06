@@ -25,8 +25,9 @@
 </template>
 <script>
 import $ from 'jquery'
-import { get } from '@/api/product'
+import { getProduct } from '@/api/product'
 import { getFreightOptions } from '@/api/cart'
+import { getSettings } from '@/api/settings'
 import Loading from 'vue-loading-overlay'
 import Customize from '@/components/customize'
 import Minicart from '@/components/minicart'
@@ -54,6 +55,7 @@ export default {
       this.loading = false
     })
     this.loadProduct()
+    this.loadSettings()
     this.loadFreightoptions()
   },
   methods: {
@@ -62,7 +64,7 @@ export default {
       if (id != 'empty') {
         this.loading = true
         this.isPDP = true
-        get(id).then(res => {
+        getProduct(id).then(res => {
           let product = res.data.product.data
           // this.$store.dispatch('cart/setFreightOptionList', res.data.freightoptions)
           this.$store.dispatch('product/set', product)
@@ -82,6 +84,15 @@ export default {
         this.$store.dispatch('cart/setFreightOptionList', freightOptions)
       }).catch(err => {
         console.log('load freight options error: ', err)
+      })
+    },
+
+    loadSettings() {
+      getSettings().then(res => {
+        const settings = res.data.settings
+        this.$store.dispatch('settings/setSettings', settings)
+      }).catch(err => {
+        console.log('load settings error: ', err)
       })
     },
 

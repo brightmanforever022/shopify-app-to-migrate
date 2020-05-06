@@ -20,6 +20,10 @@ class Home extends Component {
 	
 	gotoVendor = () => {
     this.props.history.push(`/vendors`)
+	}
+	
+	gotoSettings = () => {
+    this.props.history.push(`/settings`)
   }
 
   render () {
@@ -40,6 +44,9 @@ class Home extends Component {
 								</ButtonGroup>
 								<ButtonGroup fullWidth={true}>
 									<Button primary={true} onClick={this.gotoVendor}>Manage Vendors</Button>
+								</ButtonGroup>
+								<ButtonGroup fullWidth={true}>
+									<Button primary={true} onClick={this.gotoSettings}>Manage Settings</Button>
 								</ButtonGroup>
 							</FormLayout>
 						</Card>

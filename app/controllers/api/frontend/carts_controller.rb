@@ -2,6 +2,8 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
   require 'fedex'
   require 'json'
 
+  before_action :set_settings, only: [:fedex_options_list]
+
   def index
     
   end
@@ -177,6 +179,10 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       params.except(:controller, :action, :id)
     end
 
+    def set_settings
+      @settings = Settings.first
+    end
+
     def get_rates_list(packages, shipper, recipient, shipping_options, fedexInstance)
       if packages.length() > 0
         rateGround = fedexInstance.rate(
@@ -217,10 +223,10 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
         # exclude discounts and increase 10%
         
         return {
-          rateGround: (rateGroundData['total_surcharges'].to_f + rateGroundData['total_base_charge'].to_f) * 1.1,
-          rateNextDay: (rateNextDayData['total_surcharges'].to_f + rateNextDayData['total_base_charge'].to_f) * 1.1,
-          rateTwoDay: (rateTwoDayData['total_surcharges'].to_f + rateTwoDayData['total_base_charge'].to_f) * 1.1,
-          rateThreeDay: (rateThreeDayData['total_surcharges'].to_f + rateThreeDayData['total_base_charge'].to_f) * 1.1,
+          rateGround: (rateGroundData['total_surcharges'].to_f + rateGroundData['total_base_charge'].to_f) * (@settings.shipping_markup + 100) / 100,
+          rateNextDay: (rateNextDayData['total_surcharges'].to_f + rateNextDayData['total_base_charge'].to_f) * (@settings.shipping_markup + 100) / 100,
+          rateTwoDay: (rateTwoDayData['total_surcharges'].to_f + rateTwoDayData['total_base_charge'].to_f) * (@settings.shipping_markup + 100) / 100,
+          rateThreeDay: (rateThreeDayData['total_surcharges'].to_f + rateThreeDayData['total_base_charge'].to_f) * (@settings.shipping_markup + 100) / 100,
         }
       else
         return {

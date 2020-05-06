@@ -50,5 +50,10 @@ export const DELETE_VENDOR = 'DELETE_VENDOR'
 export const VENDORS_TOGGLE = 'VENDORS_TOGGLE'
 export const VENDOR_TOGGLE = 'VENDOR_TOGGLE'
 
+// Settings
+export const LOAD_SETTINGS = 'LOAD_SETTINGS'
+export const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
+export const SETTINGS_TOGGLE = 'SETTINGS_TOGGLE'
+
 // Toaster
 export const TOAST_TOGGLE = 'TOAST_TOGGLE'

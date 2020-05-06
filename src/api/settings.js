@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getProduct (id) {
+export function getSettings (id) {
   return request({
-    url: `/products/${id}`,
+    url: `/settings`,
     method: 'get'
   })
 }

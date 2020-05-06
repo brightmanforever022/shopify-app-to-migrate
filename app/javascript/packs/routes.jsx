@@ -16,6 +16,8 @@ import Vendor from './views/pages/vendors'
 import NewVendor from './views/pages/vendors/detail'
 import EditVendor from './views/pages/vendors/detail'
 
+import Settings from './views/pages/settings'
+
 const routes = [
   {
     path: '/',
@@ -81,7 +83,12 @@ const routes = [
     path: '/vendors/:id/edit',
     exact: true,
     component: EditVendor
-  }
+  },
+  {
+    path: '/settings',
+    exact: true,
+    component: Settings
+  },
 ]
 
 export default routes

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'vendors' => 'home#index'
   get 'vendors/new' => 'home#index'
   get 'vendors/:id/edit' => 'home#index'
+  get 'settings' => 'home#index'
 
   namespace :api do
     namespace :v1 do
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
       get 'attributes/list/stores' => 'attributes#list_stores'
       resources :freightoptions
       resources :vendors
+      resources :settings
     end
 
     namespace :frontend do
@@ -42,6 +44,7 @@ Rails.application.routes.draw do
       post 'carts/fedex/options/list' => 'carts#fedex_options_list'
       post 'carts/freightoptions' => 'carts#freight_options'
       post 'contact/sendmail' => 'contact#sendContactMail'
+      get 'settings' => 'settings#index'
     end
   end
 

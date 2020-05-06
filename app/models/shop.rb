@@ -5,7 +5,7 @@ class Shop < ActiveRecord::Base
 
   has_many :templates, dependent: :destroy
   has_many :freightoptions
-
+  
   def api_version
     ShopifyApp.configuration.api_version
   end
