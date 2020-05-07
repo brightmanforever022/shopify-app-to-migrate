@@ -15,7 +15,7 @@
       <div class="product__form-container--header">
         <div class="product__form--price">
           From
-          <span class="price">{{calculated_price | money}}</span>
+          <span class="price">{{estimatedPrice | money}}</span>
         </div>
       </div>
 
@@ -59,7 +59,7 @@ import IconQuestionCircle from '@/components/icons/icon-question-circle'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
 import priceMixin from '@/mixins/price'
-import { getShippingPeriod, getAfterNDays } from '@/helpers'
+import { getShippingPeriod, getAfterNDays, getDiscountByQuantity } from '@/helpers'
 
 export default {
   name: 'Customize',
@@ -113,6 +113,9 @@ export default {
       return monthList[estimateDateFrom.getMonth()] + ' ' + estimateDateFrom.getDate() +
               ' - ' + (estimateDateFrom.getMonth() != estimateDateTo.getMonth() ? monthList[estimateDateTo.getMonth()] + ' ' : '') +
               estimateDateTo.getDate()
+    },
+    estimatedPrice() {
+      return (100 - getDiscountByQuantity(this.product.metafield.value, this.quantity)) * this.calculated_item_price / 100 * this.quantity
     }
   },
   data () {
