@@ -55,7 +55,7 @@ export default {
       this.loading = false
     })
     this.loadProduct()
-    this.loadSettings()
+    // this.loadSettings()
     this.loadFreightoptions()
   },
   methods: {

@@ -229,7 +229,7 @@
             </div>
             <div class="form__row__full">
               <label for="quote-quantity">Quantity *</label>
-              <input type="text" id="quote-quantity" v-model="quoteQuantity" v-on:input="setQuantity" placeholder="Can be entered as a number or range">
+              <input type="text" id="quote-quantity" v-model="quantity" placeholder="Can be entered as a number or range">
               <span :class="['quote-form-errors', validateElement('quote-quantity')]">This field is invalid</span>
             </div>
             <div class="form__row__full">
@@ -330,9 +330,20 @@
     computed: {
       ...mapGetters({
         productData: 'product/get',
-        variant: 'product/variant',
-        quantity: 'order/quantity',
+        variant: 'product/variant'
       }),
+      quantity: {
+        get() {
+          const { quantity } = this.$store.state.order;
+          return quantity
+        },
+        set(value) {
+          const quoteQuantity = parseInt(value)
+          if (quoteQuantity > 0) {
+            this.$store.dispatch('order/setQuantity', quoteQuantity)
+          }
+        }
+      },
       productSKU() {
         return this.variant.sku
       },
@@ -417,7 +428,6 @@
     },
 
     created () {
-      this.quoteQuantity = this.quantity
       Vue.use(VTooltip)
       Vue.directive('tooltip', VTooltip)
     },
@@ -490,7 +500,7 @@
             billingCountry: this.billingCountry,
             billingState: this.billingState,
             billingPostalCode: this.billingPostalCode,
-            quoteQuantity: this.quoteQuantity,
+            quoteQuantity: this.quantity,
             quoteElseKnow: this.quoteElseKnow,
             originalPrice: this.original_price,
             metaShipping: this.productData.metafield,
@@ -585,9 +595,9 @@
           case 'quote-quantity':
             regex = /^\d*$/
             if (checkLevel == 0) {
-              return (this.quoteQuantity == 0) ? true : (regex.test(this.quoteQuantity) ? true : false)
+              return (this.quantity == 0) ? true : (regex.test(this.quantity) ? true : false)
             } else {
-              return regex.test(this.quoteQuantity) ? true : false
+              return regex.test(this.quantity) ? true : false
             }
             break
         }
@@ -611,15 +621,7 @@
           }
         })
         return validateResult
-      },
-
-      setQuantity (e) {
-        const quoteQuantity = parseInt(e.target.value)
-        if (quoteQuantity > 0) {
-          this.$store.dispatch('order/setQuantity', quoteQuantity)
-        }
-      }
-      
+      }      
     }
 
   }

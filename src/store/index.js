@@ -6,7 +6,7 @@ import order from './modules/order'
 import cart from './modules/cart'
 import wishlist from './modules/wishlist'
 import template from './modules/template'
-import settings from './modules/settings'
+// import settings from './modules/settings'
 
 Vue.use(Vuex)
 
@@ -17,6 +17,6 @@ export default new Vuex.Store({
     cart,
     wishlist,
     template,
-    settings,
+    // settings,
   }
 })
