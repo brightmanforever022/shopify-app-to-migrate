@@ -9,6 +9,7 @@
 </template>
 <script>
 import Vue from 'vue'
+import $ from 'jquery'
 import { mapGetters } from 'vuex'
 import { longClickDirective } from 'vue-long-click'
 export default {
@@ -25,7 +26,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      lineQuantity: 'cart/get_quantity_by_id'
+      lineQuantity: 'cart/get_quantity_by_id',
+      cart_count: 'cart/get_cart_count',
     })
   },
   created () {
@@ -41,8 +43,10 @@ export default {
       let quantity = this.quantity
       if (action === 'plus') {
         this.$store.dispatch('cart/plusCart', this.line_id)
+        $('.cart-count').text(this.cart_count)
       } else {
         this.$store.dispatch('cart/minusCart', this.line_id)
+        $('.cart-count').text(this.cart_count)
       }
     }
   }

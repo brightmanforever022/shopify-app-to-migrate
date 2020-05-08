@@ -216,6 +216,8 @@ export default {
       productData: 'product/get',
       custom_options: 'order/custom_options',
       except_list: 'order/except_list',
+      cart_count: 'cart/get_cart_count',
+      optionsSaved: 'order/is_saved'
     })
   },
   props: {
@@ -255,6 +257,9 @@ export default {
     },
     closeSelection () {
       this.is_opened = false
+      if(!this.fully_customized || !this.optionsSaved) {
+        this.$store.dispatch('order/initCustomization')
+      }
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
     },
@@ -362,6 +367,7 @@ export default {
       }
     },
     saveSelection () {
+      this.$store.dispatch('order/setSaved')
       this.is_opened = false
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
@@ -398,6 +404,7 @@ export default {
       
       try {
         const res = await this.$store.dispatch('cart/addCart', cartItem)
+        $('.cart-count').text(this.cart_count)
         this.openConfirm()
       } catch (error) {
         console.log(error)

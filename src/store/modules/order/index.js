@@ -8,6 +8,7 @@ const order = {
     custom_options: [],
     current_excepts: [],
     except_list: [],
+    saved: false,
   },
   actions: {
     setQuantity ({commit}, quantity) {
@@ -18,6 +19,9 @@ const order = {
     },
     initCustomization ({commit}) {
       commit('SET_INIT')
+    },
+    setSaved({commit}) {
+      commit('SET_SAVED')
     },
     upsert_customization ({commit}, option) {
       commit('UPSERT_OPTION', option)
@@ -62,6 +66,9 @@ const order = {
       state.custom_options = []
       state.except_list = []
     },
+    SET_SAVED: (state) => {
+      state.saved = true
+    },
     UPSERT_OPTION: (state, option) => {
       let options = state.custom_options
       if (option) {
@@ -93,6 +100,9 @@ const order = {
     },
     except_list (state) {
       return state.except_list.map(ex => ex.exceptId)
+    },
+    is_saved (state) {
+      return state.saved
     }
   }
 }

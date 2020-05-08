@@ -92,22 +92,28 @@
                 <span>{{ groundMoney }}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
+              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
                 <span>{{fedex_shipping_list.threeday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
+              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
                 <span>{{fedex_shipping_list.twoday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
+              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
                 <span>{{fedex_shipping_list.nextday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
             </ul>
+          </div>
+          <div v-if="fedex_shipping_list.isBeyond" class="volume-shipping">
+            <h4>Volume shipping</h4>
+            <p>
+              For the quantity selected, shipping cost savings may be available. Please submit a quote hereunder or contact customer service at 800-289-1539 for a volume shipping estimate.
+            </p>
           </div>
           <div class="fedex-shipping-date">
             <span>Lead time to ship</span>: {{ shipPeriod.leadFrom }} - {{ shipPeriod.leadTo }}<br /><br />
@@ -278,6 +284,7 @@ export default {
   computed: {
     ...mapGetters({
       line_items: 'cart/get_line_items',
+      cart_count: 'cart/get_cart_count',
       wish_id_list: 'wishlist/get_wish_id_list',
       sub_total: 'cart/get_sub_total',
       cal_total: 'cart/get_total',
@@ -370,6 +377,7 @@ export default {
       this.$store.dispatch('cart/removeCart', line_id)
         .then(res => {
           console.log('removed line successfully.')
+          $('.cart-count').text(this.cart_count)
         }).catch(err => {
           console.log(err)
         })

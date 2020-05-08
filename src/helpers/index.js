@@ -55,6 +55,7 @@ export function getDiscountByQuantity(summary, quantity) {
 }
 
 export function getShippingPeriod(summary, quantity) {
+	console.log('shipping summary: ', summary)
 	let shipDuration = ''
 	let shipPeriodFrom = 0
 	let shipPeriodTo = 0
@@ -76,7 +77,7 @@ export function getShippingPeriod(summary, quantity) {
 			shipDuration = shippingLineItems[2]
 			let shipPeriod = shippingLineItems[2].split('-')
 			shipPeriodFrom = parseInt(shipPeriod[0].replace('Usually Ships in ', ''))
-			shipPeriodTo = parseInt(shipPeriod[1])
+			shipPeriodTo = shipPeriod[1] ? parseInt(shipPeriod[1]) : shipPeriodFrom
 		}
 		
 	})

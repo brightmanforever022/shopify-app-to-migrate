@@ -42,13 +42,14 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     }
     
     # packages = []
-    shippingMarkup = 0.0
+    isVolume = 0
     lineRateList = {
       ground: 0.0,
       nextday: 0.0,
       twoday: 0.0,
       threeday: 0.0,
-      shippingMarkup: 0.0,
+      isVolume: 0,
+      isBeyond: 0,
     }
 
     lineItemList.each do |lineItem|
@@ -64,9 +65,9 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       end
       
       if !isFreight
-        shippingMarkup = 0
-        packages = []
+        discountPercent = getDiscountByQuantity(lineItem[:shipping_summary], lineItem[:quantity]) / 100
         lineItem[:custom_options].each do |co|
+          shipPercentCase = 0
           shipper = {
             :name => "Test Fedex Sender",
             :company => "Home",
@@ -74,90 +75,120 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
             :country_code => "US"
           }
 
+          # shipPercentCase Value List
+          # 0: there are no shipping discount rule, 1: call fedex api, 
+          # 2: shipping price is subtotal * ship_price_percent / 100, Only ground rate is stored, others should be null.
+          # 3: call fedex api and notify some sentence
+
           if co[:weight] > 0
-            # packages << {
-            #   :weight => {:units => "LB", :value => co[:weight]},
-            #   :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
-            # }
-            # shippingMarkup += lineItem.calculated_price * lineItem.markupPercent / 100
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight]},
-                :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight]},
+                  :dimensions => {:length => co[:length], :width => co[:width], :height => co[:girth], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
           if co[:weight2] > 0
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight2]},
-                :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight2]},
+                  :dimensions => {:length => co[:length2], :width => co[:width2], :height => co[:girth2], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
           if co[:weight3] > 0
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight3]},
-                :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight3]},
+                  :dimensions => {:length => co[:length3], :width => co[:width3], :height => co[:girth3], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
           if co[:weight4] > 0
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight4]},
-                :dimensions => {:length => co[:length4], :width => co[:width4], :height => co[:girth4], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight4]},
+                  :dimensions => {:length => co[:length4], :width => co[:width4], :height => co[:girth4], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
           if co[:weight5] > 0
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight5]},
-                :dimensions => {:length => co[:length5], :width => co[:width5], :height => co[:girth5], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight5]},
+                  :dimensions => {:length => co[:length5], :width => co[:width5], :height => co[:girth5], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
           if co[:weight6] > 0
-            shippingMarkup += lineItem[:calculated_price] * 5 / 100
-
-            lineRate = get_rates_list([{
-                :weight => {:units => "LB", :value => co[:weight6]},
-                :dimensions => {:length => co[:length6], :width => co[:width6], :height => co[:girth6], :units => "IN"}
-              }], shipper, recipient, shipping_options, fedex)
-            
-            lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
-            lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
-            lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
+            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
+            if shipPercentCase != 2
+              lineRate = get_rates_list([{
+                  :weight => {:units => "LB", :value => co[:weight6]},
+                  :dimensions => {:length => co[:length6], :width => co[:width6], :height => co[:girth6], :units => "IN"}
+                }], shipper, recipient, shipping_options, fedex)
+              
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : lineRate[:rateGround].to_f * lineItem[:quantity].to_i
+              lineRateList[:nextday] += lineRate[:rateNextDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
+              lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
+            else
+              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+            end
           end
-
         end
-
-        lineRateList[:shippingMarkup] += shippingMarkup
       end
     end
     http_success_response({
@@ -165,7 +196,8 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       nextday: lineRateList[:nextday].round(2),
       twoday: lineRateList[:twoday].round(2),
       threeday: lineRateList[:threeday].round(2),
-      shippingMarkup: lineRateList[:shippingMarkup].round(2),
+      isVolume: lineRateList[:isVolume] > 0 ? 1 : 0,
+      isBeyond: lineRateList[:isBeyond] > 0 ? 1 : 0,
     })
   end
 
@@ -181,6 +213,21 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
 
     def set_settings
       @settings = Settings.first
+    end
+
+    def get_ship_percent_case(quantity, opt)
+      retCase = 0
+      if opt[:ship_price_percent] > 0
+        if quantity < opt[:min_ship_quantity]
+          retCase = 1
+        elsif quantity >= opt[:min_ship_quantity] && quantity <= opt[:max_ship_quantity]
+          retCase = 2
+        else
+          retCase = 3
+        end
+      end
+
+      return retCase
     end
 
     def get_rates_list(packages, shipper, recipient, shipping_options, fedexInstance)
@@ -236,5 +283,32 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           rateNextDay: 0,
         }
       end
+    end
+
+    def getDiscountByQuantity(summary, quantity)
+      discountPercent = 0
+      shipDuration = ''
+      shipPeriodFrom = 0
+      shipPeriodTo = 0
+    
+      summaryLines = summary.split("<newline>")
+      summaryLines.each do |summaryLine|
+        shippingLineItems = summaryLine.split(',')
+        shippingQtyItems = shippingLineItems[0].split(' ')
+        shippingQty = shippingQtyItems[1].split('-')
+        qtyFrom = shippingQty[0].to_i
+        qtyTo = shippingQty[1].to_i
+        if quantity >= qtyFrom and quantity <= qtyTo
+          shippingLineItems[1]["%"] = ""
+          discountPercent = shippingLineItems[1].to_i
+          shipDuration = shippingLineItems[2]
+          shipPeriod = shippingLineItems[2].split('-')
+          shipPeriod[0]["Usually Ships in "] = ""
+          shipPeriodFrom = shipPeriod[0].to_i
+          shipPeriodTo = shipPeriod[1].to_i
+        end
+      end
+
+      return discountPercent.to_f
     end
 end

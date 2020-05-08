@@ -871,7 +871,7 @@
           color: #000;
         }
       }
-      .need-quote {
+      .need-quote, .volume-shipping {
         margin-top: 24px;
         padding: 25px 15px;
         background: rgba(242, 201, 76, 0.16);
@@ -899,6 +899,9 @@
             text-decoration: none!important;
           }
         }
+      }
+      .volume-shipping {
+        margin-bottom: 20px;
       }
     }
     .order-summary {

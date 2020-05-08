@@ -17,7 +17,8 @@ const cart = {
       twoday: 0,
       threeday: 0,
       nextday: 0,
-      shippingMarkup: 0,
+      isVolume: 0,
+      isBeyond: 0,
     },
   },
   actions: {
@@ -173,6 +174,13 @@ const cart = {
     },
     get_line_items (state) {
       return state.line_items
+    },
+    get_cart_count (state) {
+      let totalCount = 0
+      state.line_items.map(li => {
+        totalCount += li.quantity
+      })
+      return totalCount
     },
     get_freight_options (state) {
       return state.freight_option_list
