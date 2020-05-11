@@ -177,7 +177,6 @@
               <div class="form__row">
                 <label for="billing-address1">Address Line 1</label>
                 <input type="text" id="billing-address1" v-model="billingAddress1" placeholder="Type address">
-                <span :class="['quote-form-errors', validateElement('billing-address1')]">This field is invalid</span>
               </div>
               <div class="form__row">
                 <label for="billing-address2">Address Line 2 (optional)</label>
@@ -186,7 +185,6 @@
               <div class="form__row">
                 <label for="billing-town_city">Town/City</label>
                 <input type="text" id="billing-town_city" v-model="billingTownCity" placeholder="Type town/city">
-                <span :class="['quote-form-errors', validateElement('billing-town_city')]">This field is invalid</span>
               </div>
               <div class="form__row">
                 <label for="billing-country">Country</label>
@@ -231,7 +229,6 @@
               <div class="form__row">
                 <label for="billing-postal_code">Postal Code</label>
                 <input type="text" id="billing-postal_code" v-model="billingPostalCode" placeholder="Type postal code">
-                <span :class="['quote-form-errors', validateElement('billing-postal_code')]">This field is invalid</span>
               </div>
             </template>
           </div>
@@ -306,6 +303,7 @@
   import { VTooltip } from 'v-tooltip'
   import { mapGetters } from 'vuex'
   import $ from 'jquery'
+  import Loading from 'vue-loading-overlay'
   import IconEmailUs from '@/components/icons/icon-email-us'
   import IconLiveChat from '@/components/icons/icon-live-chat'
   import IconPhoneSupport from '@/components/icons/icon-phone-support'
@@ -331,7 +329,8 @@
       IconLiveChat,
       IconPhoneSupport,
       QuoteCartDetail,
-      IconQuestionCircle
+      IconQuestionCircle,
+      Loading,
     },
     computed: {
       ...mapGetters({
@@ -536,30 +535,6 @@
               return regex.test(this.postalCode) ? true : false
             }
             break
-          case 'billing-address1':
-            regex = /([^\s])/
-            if (checkLevel == 0) {
-              return (this.billingAddress1 == '') ? true : (regex.test(this.billingAddress1) ? true : false)
-            } else {
-              return regex.test(this.billingAddress1) ? true : false
-            }
-            break
-          case 'billing-town_city':
-            regex = /([^\s])/
-            if (checkLevel == 0) {
-              return (this.billingTownCity == '') ? true : (regex.test(this.billingTownCity) ? true : false)
-            } else {
-              return regex.test(this.billingTownCity) ? true : false
-            }
-            break
-          case 'billing-postal_code':
-            regex = /([^\s])/
-            if (checkLevel == 0) {
-              return (this.billingPostalCode == '') ? true : (regex.test(this.billingPostalCode) ? true : false)
-            } else {
-              return regex.test(this.billingPostalCode) ? true : false
-            }
-            break
           
         }
       },
@@ -570,9 +545,6 @@
           'address1',
           'town_city',
           'postal_code',
-          'billing-address1',
-          'billing-town_city',
-          'billing-postal_code',
         ]
         let validateResult = true
         elementList.map(el => {
