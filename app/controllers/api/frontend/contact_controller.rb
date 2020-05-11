@@ -16,6 +16,7 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     address1 = params[:address_1]
     address2 = params[:address_2]
     city = params[:city]
+    state = params[:state]
     country = params[:country]
     zipcode = params[:zip]
     referral = params[:referral]
@@ -32,7 +33,7 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     if address2.present?
       mailContent += "<b>Address Line 2</b>: " + address2 + "<br>"
     end
-    mailContent += "<b>Town/City</b>: " + city + "<br><b>Country</b>: " + country + "<br><b>Postal Code</b>: " + zipcode + "<br><b>How they found us</b>: " + referral + "<br>"
+    mailContent += "<b>Town/City</b>: " + city + "<b>Province/State</b>: " + state + "<br><b>Country</b>: " + country + "<br><b>Postal Code</b>: " + zipcode + "<br><b>How they found us</b>: " + referral + "<br>"
     mailContent += "__________________________________________<br><br>"
     mailContent += message
 
