@@ -40,7 +40,7 @@
                   <cart-input-quantity :quantity="line_item.quantity" :line_id="line_item.lineId"></cart-input-quantity>
                 </div>
                 <div class="detail-price">
-                  <span class="compare-at">{{ line_item.calculated_item_price | money }}</span>&nbsp;&nbsp;<span>{{ lineItemSinglePrice(line_item) | money }}</span>
+                  <span v-bind:class="{'compare-at': line_item.calculated_item_price != lineItemSinglePrice(line_item)}">{{ line_item.calculated_item_price | money }}</span>&nbsp;&nbsp;<span v-if="line_item.calculated_item_price != lineItemSinglePrice(line_item)">{{ lineItemSinglePrice(line_item) | money }}</span>
                 </div>
                 <div class="detail-total">
                   {{ lineItemPrice(line_item) | money }}
