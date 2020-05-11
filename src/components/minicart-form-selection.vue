@@ -2,17 +2,10 @@
   <div class="form__selections-view">
     <h4>Your selections</h4>
     <ul>
-      <!-- <li>Number of doors: {{options.quantity}}</li>
-      <li v-for="(opt, index) in options.original"
-        :key="index"
-      >
-        {{opt.name}}: {{opt.value}}
-      </li> -->
       <li
         v-for="(option, index) in options.custom"
         :key="index"
       >{{option.group}}: {{option.label}}</li>
-      <!-- <li>Shipping method: Free ground freight</li> -->
     </ul>
   </div>
 </template>

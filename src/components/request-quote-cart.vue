@@ -292,9 +292,9 @@
           </ul>
         </div>
 
-        <!-- <div class="quote-sidebar-app">
-          <quote-item-detail></quote-item-detail>
-        </div> -->
+        <div class="quote-sidebar-app">
+          <quote-cart-detail></quote-cart-detail>
+        </div>
       </div>
 
     </div>
@@ -312,7 +312,7 @@
   import IconQuestionCircle from '@/components/icons/icon-question-circle'
   import priceMixin from '@/mixins/price'
   import constantMixin from '@/mixins/constants'
-  // import QuoteItemCartDetail from '@/components/quote-item-cart-detail'
+  import QuoteCartDetail from '@/components/quote-cart-detail'
   import '@/styles/style.scss'
 
   export default {
@@ -330,7 +330,7 @@
       IconEmailUs,
       IconLiveChat,
       IconPhoneSupport,
-      // QuoteItemCartDetail,
+      QuoteCartDetail,
       IconQuestionCircle
     },
     computed: {
