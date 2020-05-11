@@ -55,7 +55,6 @@ export function getDiscountByQuantity(summary, quantity) {
 }
 
 export function getShippingPeriod(summary, quantity) {
-	console.log('shipping summary: ', summary)
 	let shipDuration = ''
 	let shipPeriodFrom = 0
 	let shipPeriodTo = 0

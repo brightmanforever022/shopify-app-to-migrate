@@ -342,6 +342,8 @@ export default {
         console.log('initialized wishlist state with localstorage data', res);
       })
 
+    $('.cart-count').text(this.cart_count)
+    
     Vue.use(VTooltip)
     Vue.directive('tooltip', VTooltip)
   },
