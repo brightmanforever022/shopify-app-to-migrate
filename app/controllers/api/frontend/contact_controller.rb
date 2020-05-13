@@ -21,7 +21,11 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     zipcode = params[:zip]
     referral = params[:referral]
     attached = params[:attach]
+    orderNumber = params[:order_number]
 
+    if orderNumber.present?
+      mailContent += "<b>Order Number</b>: " + orderNumber + "<br>"
+    end
     mailContent += "<b>Contact Name</b>: " + userName + "<br>"
     if company.present?
       mailContent += "<b>Company Name</b>: " + company + "<br>"

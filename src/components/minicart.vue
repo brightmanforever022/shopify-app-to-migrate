@@ -92,27 +92,34 @@
                 <span>{{ groundMoney }}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
+              <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
                 <span>3 day select</span>
                 <span>{{fedex_shipping_list.threeday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
+              <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
                 <span>2nd day air</span>
                 <span>{{fedex_shipping_list.twoday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
-              <li v-if="!fedex_shipping_list.isVolume" @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
+              <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
                 <span>Next day air</span>
                 <span>{{fedex_shipping_list.nextday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
             </ul>
           </div>
-          <div v-if="fedex_shipping_list.isBeyond" class="volume-shipping">
-            <h4>Volume shipping</h4>
+          <div v-if="fedex_shipping_list.isBetween" class="volume-shipping">
+            <h4>Bulk Shipping Discount</h4>
             <p>
-              For the quantity selected, shipping cost savings may be available. Please submit a quote hereunder or contact customer service at 800-289-1539 for a volume shipping estimate.
+              Your order qualifies for a Bulk Shipping Discount! We've already applied a discount to the Ground Shipping cost above.
+            </p>
+            <p>If you would prefer to ship your order via 3 Day, 2 Day, or Next Day, please contact customer service at 800-289-1539, or Request a Quote below for an estimate.</p>
+          </div>
+          <div v-if="fedex_shipping_list.isBeyond" class="volume-shipping">
+            <h4>Bulk Shipping</h4>
+            <p>
+              For the quantity selected, shipping cost savings may be available. You can Request A Quote below or contact customer service at 800-289-1539 to see if your order qualifies for a bulk shipping estimate.
             </p>
           </div>
           <div class="fedex-shipping-date">

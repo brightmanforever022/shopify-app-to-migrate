@@ -17,7 +17,7 @@ const cart = {
       twoday: 0,
       threeday: 0,
       nextday: 0,
-      isVolume: 0,
+      isBetween: 0,
       isBeyond: 0,
     },
   },

@@ -42,13 +42,12 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
     }
     
     # packages = []
-    isVolume = 0
     lineRateList = {
       ground: 0.0,
       nextday: 0.0,
       twoday: 0.0,
       threeday: 0.0,
-      isVolume: 0,
+      isBetween: 0,
       isBeyond: 0,
     }
 
@@ -82,7 +81,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
 
           if co[:weight] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -100,7 +99,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight2] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -118,7 +117,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight3] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -136,7 +135,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight4] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -154,7 +153,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight5] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -172,7 +171,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
           end
           if co[:weight6] > 0
             shipPercentCase = get_ship_percent_case(lineItem[:quantity].to_i, co)
-            lineRateList[:isVolume] += shipPercentCase == 2 ? 1 : 0
+            lineRateList[:isBetween] += shipPercentCase == 2 ? 1 : 0
             lineRateList[:isBeyond] += shipPercentCase == 3 ? 1 : 0
             if shipPercentCase != 2
               lineRate = get_rates_list([{
@@ -196,7 +195,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
       nextday: lineRateList[:nextday].round(2),
       twoday: lineRateList[:twoday].round(2),
       threeday: lineRateList[:threeday].round(2),
-      isVolume: lineRateList[:isVolume] > 0 ? 1 : 0,
+      isBetween: lineRateList[:isBetween] > 0 ? 1 : 0,
       isBeyond: lineRateList[:isBeyond] > 0 ? 1 : 0,
     })
   end
