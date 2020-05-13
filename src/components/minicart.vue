@@ -116,7 +116,7 @@
             </p>
             <p>If you would prefer to ship your order via 3 Day, 2 Day, or Next Day, please contact customer service at 800-289-1539, or Request a Quote below for an estimate.</p>
           </div>
-          <div v-if="fedex_shipping_list.isBeyond" class="volume-shipping">
+          <div v-if="fedex_shipping_list.isBeyond && !fedex_shipping_list.isBetween" class="volume-shipping">
             <h4>Bulk Shipping</h4>
             <p>
               For the quantity selected, shipping cost savings may be available. You can Request A Quote below or contact customer service at 800-289-1539 to see if your order qualifies for a bulk shipping estimate.
