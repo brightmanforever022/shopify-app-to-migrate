@@ -1,3 +1,8 @@
+const monthList = [
+	'January', 'February', 'March', 'April',
+	'May', 'June', 'July', 'August',
+	'September', 'October', 'November', 'December'
+]
 export function checkDiscountPeriodValidation(startsAt, endsAt) {
 	var currentDate = new Date().getTime()
 	var discountStartsAt = new Date(startsAt).getTime()
@@ -54,16 +59,11 @@ export function getDiscountByQuantity(summary, quantity) {
 	return discountPercent
 }
 
-export function getShippingPeriod(summary, quantity) {
+export function getShippingPeriod(summary, quantity, fedex_type = 'ground') {
 	let shipDuration = ''
 	let shipPeriodFrom = 0
 	let shipPeriodTo = 0
-
-	const monthList = [
-		'January', 'February', 'March', 'April',
-		'May', 'June', 'July', 'August',
-		'September', 'October', 'November', 'December'
-	]
+	let fedexPeriod = 5
 
 	const summaryLines = summary.split('<newline>')
 	summaryLines.forEach(summaryLine => {
@@ -77,8 +77,7 @@ export function getShippingPeriod(summary, quantity) {
 			let shipPeriod = shippingLineItems[2].split('-')
 			shipPeriodFrom = parseInt(shipPeriod[0].replace('Usually Ships in ', ''))
 			shipPeriodTo = shipPeriod[1] ? parseInt(shipPeriod[1]) : shipPeriodFrom
-		}
-		
+		}		
 	})
 
 	shipPeriodFrom = shipDuration.includes('Weeks') ? shipPeriodFrom * 5 : shipPeriodFrom
@@ -90,7 +89,21 @@ export function getShippingPeriod(summary, quantity) {
 	const estimateFrom = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
 	estimateDate = getAfterNDays(shipPeriodTo)
 	const leadTimeTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
-	estimateDate = getAfterNDays(shipPeriodTo + 5)
+
+	switch(fedex_type) {
+		case 'twoday':
+			fedexPeriod = 2;
+			break;
+		case 'threeday':
+			fedexPeriod = 3;
+			break;
+		case 'nextday':
+			fedexPeriod = 1;
+			break;
+		default:
+			fedexPeriod = 5
+	}
+	estimateDate = getAfterNDays(shipPeriodTo + fedexPeriod)
 	const estimateTo = monthList[estimateDate.getMonth()] + ' ' + estimateDate.getDate() + ', ' + estimateDate.getFullYear()
 
 	return {

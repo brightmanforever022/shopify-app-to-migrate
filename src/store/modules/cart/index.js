@@ -211,7 +211,7 @@ const cart = {
       return totalPrice
     },
     get_ship_period: (state) => (lineItem) => {
-      return getShippingPeriod(lineItem.shipping_summary, lineItem.quantity)
+      return getShippingPeriod(lineItem.shipping_summary, lineItem.quantity, state.fedex_shipping)
     },
     freight_exist (state) {
       let isFreightExist = false
