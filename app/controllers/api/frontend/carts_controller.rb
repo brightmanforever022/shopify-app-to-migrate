@@ -95,7 +95,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
           if co[:weight2] > 0
@@ -113,7 +113,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
           if co[:weight3] > 0
@@ -131,7 +131,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
           if co[:weight4] > 0
@@ -149,7 +149,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
           if co[:weight5] > 0
@@ -167,7 +167,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
           if co[:weight6] > 0
@@ -185,7 +185,7 @@ class Api::Frontend::CartsController < Api::Frontend::BaseController
               lineRateList[:twoday] += lineRate[:rateTwoDay].to_f * lineItem[:quantity].to_i
               lineRateList[:threeday] += lineRate[:rateThreeDay].to_f * lineItem[:quantity].to_i
             else
-              lineRateList[:ground] += (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
+              lineRateList[:ground] += lineItem[:free_ground] ? 0 : (1 - discountPercent) * lineItem[:calculated_price].to_f * co[:ship_price_percent] / 10000 * (@settings.shipping_markup + 100)
             end
           end
         end

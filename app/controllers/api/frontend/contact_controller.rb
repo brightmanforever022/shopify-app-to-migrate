@@ -33,7 +33,7 @@ class Api::Frontend::ContactController < Api::Frontend::BaseController
     if address2.present?
       mailContent += "<b>Address Line 2</b>: " + address2 + "<br>"
     end
-    mailContent += "<b>Town/City</b>: " + city + "<b>Province/State</b>: " + state + "<br><b>Country</b>: " + country + "<br><b>Postal Code</b>: " + zipcode + "<br><b>How they found us</b>: " + referral + "<br>"
+    mailContent += "<b>Town/City</b>: " + city + "<br><b>Province/State</b>: " + state + "<br><b>Country</b>: " + country + "<br><b>Postal Code</b>: " + zipcode + "<br><b>How they found us</b>: " + referral + "<br>"
     mailContent += "__________________________________________<br><br>"
     mailContent += message
 
