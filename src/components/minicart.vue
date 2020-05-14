@@ -407,13 +407,9 @@ export default {
     },
 
     openQuoteCartModal () {
-      $('#shopify-section-header .header').css('z-index', '-1')
-      $('.product__details').css('z-index', -1)
       this.isQuoteCartModal = true
     },
     closeQuoteCartModal () {
-      // $('#shopify-section-header .header').css('z-index', '101')
-      // $('.product__details').css('z-index', 'initial')
       this.isQuoteCartModal = false
     },
     showShippingOptions (e) {

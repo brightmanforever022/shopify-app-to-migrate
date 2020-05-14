@@ -100,11 +100,13 @@ export default {
       this.display_cart_opened = true
       $('.product__details').css('z-index', '-1')
       $('#shopify-section-header .header').css('z-index', '-1')
+      $('body').css('position', 'fixed');
     },
     closeDisplayCart () {
       this.display_cart_opened = false
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
+      $('body').css('position', 'inherit');
     }
     
   }

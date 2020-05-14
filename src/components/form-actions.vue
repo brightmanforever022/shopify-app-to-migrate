@@ -254,6 +254,7 @@ export default {
       this.is_opened = true
       $('.product__details').css('z-index', -1)
       $('#shopify-section-header .header').css('z-index', '-1')
+      $('.wrapper').css({'position': 'fixed', 'width': '100%'});
     },
     closeSelection () {
       this.is_opened = false
@@ -262,16 +263,19 @@ export default {
       }
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
+      $('.wrapper').css({'position': 'inherit', 'width': 'inherit'});
     },
     openConfirm () {
       this.addtocart_confirm_opened = true
       $('.product__details').css('z-index', -1)
       $('#shopify-section-header .header').css('z-index', '-1')
+      $('.wrapper').css({'position': 'fixed', 'width': '100%'});
     },
     closeConfirm () {
       this.addtocart_confirm_opened = false
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
+      $('.wrapper').css({'position': 'inherit', 'width': 'inherit'});
     },
     continueShopping () {
       this.closeConfirm()

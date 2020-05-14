@@ -133,11 +133,13 @@ export default {
     openQuoteModal () {
       $('#shopify-section-header .header').css('z-index', '-1')
       $('.product__details').css('z-index', -1)
+      $('.wrapper').css({'position': 'fixed', 'width': '100%'});
       this.isQuoteModal = true
     },
     closeQuoteModal () {
       $('#shopify-section-header .header').css('z-index', '101')
       $('.product__details').css('z-index', 'initial')
+      $('.wrapper').css({'position': 'inherit', 'width': 'inherit'});
       this.isQuoteModal = false
     }
   },
