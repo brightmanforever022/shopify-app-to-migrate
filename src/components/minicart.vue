@@ -10,7 +10,7 @@
     <div class="display_cart-wrapper">
       <div class="checkout-buttons">
         <div class="checkout-button">
-          <button @click.prevent="createOrder" :disabled="checkoutLoading || !shippingDetailShow"><icon-lock/>SECURE CHECKOUT</button>
+          <button @click.prevent="createOrder" :disabled="checkoutLoading || !shippingDetailShow" :class="{'inactive': checkoutLoading || !shippingDetailShow}"><icon-lock/>SECURE CHECKOUT</button>
           <p v-if="!shippingDetailShow">Please Choose a shipping selection below</p>
         </div>
         <div class="card-list">

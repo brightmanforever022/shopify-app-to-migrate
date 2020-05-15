@@ -322,6 +322,9 @@
             margin-bottom: 10px;
             vertical-align: middle;
           }
+          .inactive {
+            background-color: #C8C8C8;
+          }
         }
         p {
           font-size: 10px;
@@ -1023,6 +1026,9 @@
 }
 
 .form__actions {
+  button.inactive {
+    background-color: #C8C8C8;
+  }
   a.request-quote, a.save-wishlist {
     border: none;
     font-family: 'Inter';
