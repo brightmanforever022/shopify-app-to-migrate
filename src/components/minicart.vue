@@ -225,7 +225,7 @@
       </div>
     </div>
     <div
-      class="overlay__bg"
+      class="overlay__bg request-quote-cart"
       :key="quote-request-cart"
       :class="{'visibled': isQuoteCartModal}"
       @click.prevent="closeQuoteCartModal"

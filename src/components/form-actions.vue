@@ -1,8 +1,8 @@
 <template>
   <fragment>
     <div
-      class="overlay__bg"
-      :key="variant-selection"
+      class="overlay__bg make-selection"
+      :key="make-selection"
       :class="{'visibled': is_opened}"
       @click.prevent="closeSelection"
     ></div>
@@ -28,7 +28,6 @@
           />
         </div>
         <input-quantity :inSelect="1"></input-quantity>
-        <!-- <variant-selection></variant-selection> -->
         <div
           v-for="(group, index) in template.groups"
           :key="index"
@@ -111,7 +110,7 @@
     </div>
 
     <div
-      class="overlay__bg"
+      class="overlay__bg added_confirm"
       v-if="addtocart_confirm_opened"
       :key="addtocart-confirm"
       @click.prevent="closeConfirm"
@@ -198,7 +197,6 @@ import $ from 'jquery'
 import Loading from 'vue-loading-overlay'
 import priceMixin from '@/mixins/price'
 import InputQuantity from '@/components/quantity'
-// import VariantSelection from '@/components/variant-selection'
 import IconHeart from '@/components/icons/icon-heart'
 import IconRequestQuote from '@/components/icons/icon-request-quote'
 import IconWishlist from '@/components/icons/icon-wishlist'

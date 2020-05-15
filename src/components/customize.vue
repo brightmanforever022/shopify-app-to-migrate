@@ -33,7 +33,7 @@
       </div>
     </div>
     <div
-      class="overlay__bg"
+      class="overlay__bg quote-request"
       :key="quote-request"
       :class="{'visibled': isQuoteModal}"
       @click.prevent="closeQuoteModal"

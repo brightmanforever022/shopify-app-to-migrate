@@ -7,7 +7,7 @@
     <customize
       v-if="!loading && isPDP"
       :openDisplayCart="openDisplayCart"
-      :closeDiaplayCart="closeDiaplayCart"
+      :closeDisplayCart="closeDisplayCart"
       
     ></customize>
     <div
@@ -98,15 +98,17 @@ export default {
 
     openDisplayCart () {
       this.display_cart_opened = true
-      $('.product__details').css('z-index', '-1')
       $('#shopify-section-header .header').css('z-index', '-1')
-      $('body').css('position', 'fixed');
+      $('body').css({'position': 'fixed', 'width': '100%'});
     },
     closeDisplayCart () {
       this.display_cart_opened = false
-      $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
-      $('body').css('position', 'inherit');
+      $("body").css({'position': 'inherit', 'width': 'inherit'});
+      setTimeout(() => {
+        $("body").removeClass("no-scroll");
+      }, 350);
+      
     }
     
   }
