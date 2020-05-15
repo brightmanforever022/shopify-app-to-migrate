@@ -117,7 +117,7 @@ class Api::Frontend::OrdersController < Api::Frontend::BaseController
         customPrice += option[:price_type] ? item[:original_price].to_f * option[:price].to_f / 100 : option[:price]
         customDescription.push({
           name: ' - ' + option[:group],
-          value: option[:label] + '<br/>'
+          value: option[:label]
         })
       end
       discountPercent = getDiscountByQuantity(item[:shipping_summary], item[:quantity])
