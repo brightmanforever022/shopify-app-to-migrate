@@ -111,7 +111,7 @@
 
     <div
       class="overlay__bg added_confirm"
-      v-if="addtocart_confirm_opened"
+      :class="{'visibled': addtocart_confirm_opened}"
       :key="addtocart-confirm"
       @click.prevent="closeConfirm"
     ></div>
