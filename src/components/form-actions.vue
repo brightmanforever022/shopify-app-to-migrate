@@ -373,6 +373,7 @@ export default {
       this.is_opened = false
       $('.product__details').css('z-index', 'initial')
       $('#shopify-section-header .header').css('z-index', '101')
+      $('.wrapper').css({'position': 'inherit', 'width': 'inherit'})
     },
     customized (group_label) {
       return this.custom_options.map(opt => opt.group).includes(group_label)
