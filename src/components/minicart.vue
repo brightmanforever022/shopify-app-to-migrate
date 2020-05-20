@@ -93,17 +93,17 @@
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('threeday')" id="fedex-shipping-option-threeday">
-                <span>3 day select</span>
+                <span>3 Day Service</span>
                 <span>{{fedex_shipping_list.threeday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('twoday')" id="fedex-shipping-option-twoday">
-                <span>2nd day air</span>
+                <span>2nd Day Air</span>
                 <span>{{fedex_shipping_list.twoday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
               <li v-if="!fedex_shipping_list.isBetween" @click.prevent="fedexShipping('nextday')" id="fedex-shipping-option-nextday">
-                <span>Next day air</span>
+                <span>Next Day Air</span>
                 <span>{{fedex_shipping_list.nextday.toFixed(2) | money}}</span>
                 <span>{{ shipPeriod.duration }}</span>
               </li>
