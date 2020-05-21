@@ -85,6 +85,7 @@
             This option requires changes. Click to review.
           </div>
         </div>
+        <form-selection-table :itemId="variant.sku" />
       </div>
       <div class="form__actions">
         <a class="save_to_wishlist"
@@ -200,6 +201,7 @@ import InputQuantity from '@/components/quantity'
 import IconHeart from '@/components/icons/icon-heart'
 import IconRequestQuote from '@/components/icons/icon-request-quote'
 import IconWishlist from '@/components/icons/icon-wishlist'
+import FormSelectionTable from '@/components/form-selection-table'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
@@ -232,7 +234,8 @@ export default {
     IconHeart,
     IconRequestQuote,
     IconWishlist,
-    Loading
+    Loading,
+    FormSelectionTable,
   },
   data () {
     return {

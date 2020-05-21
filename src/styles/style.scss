@@ -31,6 +31,37 @@
     .form__label {
       font-size: 12px;
     }
+    table.option-select-table {
+      background: #E5E5E5;
+      border: 1px solid #828282;
+      border-radius: 4px;
+      font-family: Inter;
+      font-style: normal;
+      text-align: left;
+
+      th, td {
+        border: 1px solid #828282;
+        padding: 10px;
+      }
+        
+      thead {
+        background-color: #E5E5E5;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 18px;
+        color: #000000;
+        tr {
+          height: 50px;
+        }
+      }
+      tbody {
+        background-color: white;
+        font-weight: normal;
+        font-size: 8px;
+        line-height: 12px;
+        color: #000000;
+      }
+    }
   }
 }
 .added_confirm-overlay {
