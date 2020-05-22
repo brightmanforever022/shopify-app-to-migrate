@@ -14,7 +14,7 @@
       <tr v-for="(opn, index) in options" :key="index">
         <td>{{productItemId(itemId)}}</td>
         <td>{{optionLabel(opn)}}</td>
-        <td>{{opn.vendor_sku}}<br/>Postal Code: {{opn.postal_code}}</td>
+        <td><span v-if="opn.vendor_sku != ''">{{opn.vendor_sku}}<br/></span>Postal Code: {{opn.postal_code}}</td>
         <td>{{optionPrice(opn.price)}}</td>
         <td>{{optionWeight(opn.weight)}}</td>
         <td>{{optionDimension(opn)}}</td>
