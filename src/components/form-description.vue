@@ -1,6 +1,6 @@
 <template>
   <div class="form__description text-center">
-    Choose orientation, corner style, frame finish, fabric color and other details...
+    Choose  your size, color, and options when applicable...
   </div>
 </template>
 <script>
